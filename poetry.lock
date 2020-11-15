@@ -46,6 +46,14 @@ python-versions = ">=3.5"
 django = ">=2.2"
 
 [[package]]
+name = "drf-flex-fields"
+version = "0.8.6"
+description = "Flexible, dynamic fields and nested resources for Django REST Framework serializers."
+category = "main"
+optional = false
+python-versions = "*"
+
+[[package]]
 name = "mysqlclient"
 version = "2.0.1"
 description = "Python interface to MySQL"
@@ -72,7 +80,7 @@ python-versions = ">=3.5"
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "cc705367a0b81ebea2f7f8e270198a4a327838adc416130d7d052e56b1e90acc"
+content-hash = "5257db19ff350f7413e0be4eb83b407f3276a8230b2d8344ab299fe23c88c221"
 
 [metadata.files]
 asgiref = [
@@ -89,6 +97,9 @@ django-environ = [
 ]
 djangorestframework = [
     {file = "djangorestframework-3.12.2-py3-none-any.whl", hash = "sha256:0209bafcb7b5010fdfec784034f059d512256424de2a0f084cb82b096d6dd6a7"},
+]
+drf-flex-fields = [
+    {file = "drf-flex-fields-0.8.6.tar.gz", hash = "sha256:13cd1e4371d0ca9580b8e71282b6cabd7a4e4a57e10298321b312c300eabf2b7"},
 ]
 mysqlclient = [
     {file = "mysqlclient-2.0.1-cp36-cp36m-win_amd64.whl", hash = "sha256:edd42ccaa444b00702d5374b2f5f7585c9d0ce201917f15339f1c3cf91c1b1ed"},
