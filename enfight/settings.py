@@ -136,3 +136,13 @@ AUTH_USER_MODEL = 'game.AppUser'
 LOGIN_URL = '/admin/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
+
+# Django CORS headers
+
+CORS_ORIGIN_ALLOW_ALL = DEBUG
+
+CORS_ORIGIN_WHITELIST = [
+    'http://localhost:3000'
+]
+
+CORS_URLS_REGEX = r'^/api/.*$'
