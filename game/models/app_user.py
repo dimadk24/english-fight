@@ -1,5 +1,9 @@
 from django.contrib.auth.models import AbstractUser
+from django.db import models
 
 
 class AppUser(AbstractUser):
-    pass
+    vk_id = models.PositiveBigIntegerField(default=0, verbose_name='VK ID',
+                                           unique=True)
+    score = models.PositiveIntegerField(default=0, verbose_name='Счет',
+                                        blank=True)
