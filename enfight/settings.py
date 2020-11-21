@@ -166,4 +166,12 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ),
     'TEST_REQUEST_DEFAULT_FORMAT': 'json',
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.SessionAuthentication',  # for admin
+        'game.vk_app_authentication.VKAppAuthentication',
+    ),
 }
+
+# VK
+
+VK_SECRET = env('VK_SECRET')
