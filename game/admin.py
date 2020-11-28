@@ -4,7 +4,8 @@ from django.contrib.auth.models import Group
 from django.utils.translation import gettext_lazy as _
 
 from game.admin_pre_filtered_list_filter import PreFilteredListFilter
-from game.models import AppUser, AppGroup, Word, LanguagePair
+from game.constants import QUESTIONS_PER_GAME
+from game.models import AppUser, AppGroup, Word, LanguagePair, Question, Game
 
 
 @admin.register(AppUser)
@@ -50,3 +51,51 @@ class LanguagePairAdmin(admin.ModelAdmin):
     autocomplete_fields = ('english_word', 'russian_word')
     list_filter = (VisibilityFilter,)
     search_fields = ('english_word__text', 'russian_word__text')
+
+
+@admin.register(Question)
+class QuestionAdmin(admin.ModelAdmin):
+    autocomplete_fields = (
+        'question_word',
+        'answer_words',
+        'correct_answer',
+        'selected_answer',
+    )
+    fields = (
+        'question_word',
+        'answer_words',
+        'correct_answer',
+        'selected_answer',
+        'is_correct',
+    )
+    readonly_fields = ('is_correct',)
+
+
+class QuestionInlineAdmin(admin.StackedInline):
+    model = Question
+    autocomplete_fields = (
+        'question_word',
+        'answer_words',
+        'correct_answer',
+        'selected_answer',
+    )
+    fields = (
+        'question_word',
+        'answer_words',
+        'correct_answer',
+        'selected_answer',
+        'is_correct',
+    )
+    readonly_fields = ('is_correct',)
+
+    def get_min_num(self, request, obj: Game = None, **kwargs):
+        return QUESTIONS_PER_GAME
+
+    def get_max_num(self, request, obj: Game = None, **kwargs):
+        return QUESTIONS_PER_GAME
+
+
+@admin.register(Game)
+class GameAdmin(admin.ModelAdmin):
+    readonly_fields = ('created_at',)
+    inlines = (QuestionInlineAdmin,)
