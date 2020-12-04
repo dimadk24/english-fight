@@ -7,30 +7,6 @@ from django.utils import timezone
 from game.models import LanguagePair, Word, AppUser, Game, Question
 
 
-def create_language_pair(ru: str, en: str, visible=True):
-    ru = Word.objects.get(text=ru)
-    en = Word.objects.get(text=en)
-    LanguagePair.objects.create(russian_word=ru, english_word=en,
-                                visible=visible)
-
-
-def create_pairs():
-    Word.objects.bulk_create(Word(text=text) for text in [
-        'Time', 'Время',
-        'Car', 'Машина',
-        'Cat', 'Кот',
-        'Dog', 'Собака',
-        'City', 'Город',
-        'Zero', 'Ноль'
-    ])
-    create_language_pair('Время', 'Time')
-    create_language_pair('Машина', 'Car')
-    create_language_pair('Кот', 'Cat')
-    create_language_pair('Собака', 'Dog')
-    create_language_pair('Город', 'City')
-    create_language_pair('Ноль', 'Zero', False)
-
-
 def authenticate(api_client):
     user = AppUser.objects.create(vk_id=1, username='1', score=2)
     api_client.force_authenticate(user)
@@ -87,8 +63,7 @@ def do_database_asserts():
 
 # run it many times just to ensure it always passes
 @pytest.mark.parametrize('i', range(10))
-def test_creates_with_real_random(i: int, api_client):
-    create_pairs()
+def test_creates_with_real_random(i: int, api_client, create_language_pairs):
     response = call(api_client)
 
     assert response.status_code == 201
@@ -98,15 +73,15 @@ def test_creates_with_real_random(i: int, api_client):
 
 
 @mock.patch('game.views.game_view.GameView.get_random_int')
-def test_creates_with_fake_random(get_random_int, api_client):
+def test_creates_with_fake_random(get_random_int, api_client,
+                                  create_language_pairs):
     get_random_int.side_effect = [
-        *[4, 4, 0, 0, 1, 3, 1, 2, 3, 2, 3, 4],
-        *[3, 3, 4, 0, 1, 2, 3],
-        *[0, 1, 2, 3, 4],
-        *[4, 4, 0, 3, 3, 2, 1, 3, 0, 1, 2, 3, 4],
-        *[1, 1, 2, 2, 3, 3, 4, 4, 4, 1, 0, 0],
+        4, 4, 0, 0, 1, 3, 1, 2, 3, 2, 3, 4,
+        3, 3, 4, 0, 1, 2, 3,
+        0, 1, 2, 3, 4,
+        4, 4, 0, 3, 3, 2, 1, 3, 0, 1, 2, 3, 4,
+        1, 1, 2, 2, 3, 3, 4, 4, 4, 1, 0, 0,
     ]
-    create_pairs()
     response = call(api_client)
     assert response.status_code == 201
     do_database_asserts()
