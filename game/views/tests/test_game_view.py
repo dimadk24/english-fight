@@ -7,18 +7,11 @@ from django.utils import timezone
 from game.models import LanguagePair, Word, AppUser, Game, Question
 
 
-def authenticate(api_client):
-    user = AppUser.objects.create(vk_id=1, username='1', score=2)
-    api_client.force_authenticate(user)
-
-
 def call(api_client):
-    authenticate(api_client)
     return api_client.post('/api/game')
 
 
 def test_raises_when_no_language_pairs(api_client):
-    authenticate(api_client)
     with pytest.raises(
         AssertionError,
         match='Must have at least 5 language pairs to create a game'

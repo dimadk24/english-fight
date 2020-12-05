@@ -3,11 +3,6 @@ from rest_framework.response import Response
 from game.models import AppUser, Question, Game
 
 
-def authenticate_with_user_1(api_client):
-    user = AppUser.objects.create(vk_id=1, username='1')
-    api_client.force_authenticate(user)
-
-
 def authenticate_with_user_2(api_client):
     user = AppUser.objects.create(vk_id=2, username='2')
     api_client.force_authenticate(user)
@@ -53,7 +48,6 @@ def set_incorrect_answer_to_question(api_client, question: dict):
 
 def test_sets_correct_selected_question_of_current_user(api_client,
                                                         create_language_pairs):
-    authenticate_with_user_1(api_client)
     game = create_game(api_client)
     question_1 = game['questions'][0]
     (response, correct_answer_word) = set_correct_answer_to_question(
@@ -72,7 +66,6 @@ def test_sets_correct_selected_question_of_current_user(api_client,
 def test_sets_incorrect_selected_question_of_current_user(api_client,
                                                           create_language_pairs
                                                           ):
-    authenticate_with_user_1(api_client)
     game = create_game(api_client)
     question_1 = game['questions'][0]
     (response, correct_answer_word,
@@ -93,7 +86,6 @@ def test_raises_when_try_to_set_selected_question_of_another_user(
     api_client,
     create_language_pairs
 ):
-    authenticate_with_user_1(api_client)
     game = create_game(api_client)
     question_1 = game['questions'][0]
 
@@ -120,8 +112,6 @@ def test_updates_points_of_game_when_no_correct_questions(
     api_client,
     create_language_pairs
 ):
-    authenticate_with_user_1(api_client)
-
     game = create_game(api_client)
     questions = game['questions']
     assert len(questions) == 5
@@ -142,8 +132,6 @@ def test_updates_points_of_game_when_has_correct_questions(
     api_client,
     create_language_pairs
 ):
-    authenticate_with_user_1(api_client)
-
     game = create_game(api_client)
     questions = game['questions']
 
@@ -166,8 +154,6 @@ def test_updates_points_of_game_when_all_correct_questions(
     api_client,
     create_language_pairs
 ):
-    authenticate_with_user_1(api_client)
-
     game = create_game(api_client)
     questions = game['questions']
     assert len(questions) == 5
@@ -186,8 +172,6 @@ def test_updates_points_of_game_when_all_correct_questions(
 
 def test_set_correct_score_to_user_after_2_games(api_client,
                                                  create_language_pairs):
-    authenticate_with_user_1(api_client)
-
     game1 = create_game(api_client)
     questions = game1['questions']
 
