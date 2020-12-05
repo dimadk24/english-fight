@@ -9,4 +9,6 @@ from game.serializers.question_with_answer_serializer import \
 class QuestionView(UpdateAPIView):
     serializer_class = QuestionWithAnswerSerializer
     permission_classes = [OwnQuestionPermission]
-    queryset = Question.objects.all()
+
+    def get_queryset(self):
+        return Question.objects.filter(game__player=self.request.user)

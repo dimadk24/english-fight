@@ -97,9 +97,8 @@ def test_raises_when_try_to_set_selected_question_of_another_user(
 
     response = call(api_client, question_1['id'],
                     {'selected_answer': correct_answer_word.text})
-    assert response.status_code == 403
-    assert (response.data['detail'] ==
-            'У вас недостаточно прав для выполнения данного действия.')
+    assert response.status_code == 404
+    assert response.data['detail'] == 'Страница не найдена.'
 
     question_instance = Question.objects.get(pk=question_1['id'])
     assert question_instance.selected_answer is None
