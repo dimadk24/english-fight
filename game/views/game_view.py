@@ -1,27 +1,31 @@
 from random import randint, shuffle
 from typing import List
 
-from rest_framework.generics import CreateAPIView
+from rest_framework.generics import CreateAPIView, RetrieveAPIView
 
 from game.constants import QUESTIONS_PER_GAME, ANSWERS_PER_QUESTION
 from game.models import LanguagePair, Word, Question, Game
 from game.serializers.game_serializer import GameSerializer
 
 
-class GameView(CreateAPIView):
+class GameView(CreateAPIView, RetrieveAPIView):
     serializer_class = GameSerializer
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.filtered_pairs = ()
+
+    def get_queryset(self):
+        return Game.objects.filter(player=self.request.user)
+
+    def perform_create(self, serializer: GameSerializer):
+        serializer.save()
         self.filtered_pairs = LanguagePair.objects.filter(
             visible=True).values('id')
         min_number_of_pairs = max(ANSWERS_PER_QUESTION, QUESTIONS_PER_GAME)
         assert len(self.filtered_pairs) >= min_number_of_pairs, (
             f'Must have at least {min_number_of_pairs} language pairs to '
             'create a game')
-
-    def perform_create(self, serializer: GameSerializer):
-        serializer.save()
         self.create_questions(serializer.instance)
 
     @staticmethod
