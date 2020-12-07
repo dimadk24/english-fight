@@ -47,5 +47,5 @@ def test_result_data():
     language_pairs = LanguagePair.objects.all()
     assert len(language_pairs) == 439
     for language_pair in language_pairs:
-        assert now - language_pair.created_at < timedelta(seconds=1)
+        assert now - language_pair.created_at < timedelta(minutes=1)
         assert language_pair.visible
