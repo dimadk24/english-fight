@@ -141,6 +141,15 @@ LOGIN_URL = '/admin/login'
 LOGIN_REDIRECT_URL = '/'
 LOGOUT_REDIRECT_URL = '/'
 
+if not DEBUG:
+    # SSL related settings not suitable for local environment
+    SECURE_SSL_REDIRECT = True
+    SESSION_COOKIE_SECURE = True
+    CSRF_COOKIE_SECURE = True
+    SECURE_HSTS_SECONDS = 3600
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
+
 # Django CORS headers
 
 CORS_ORIGIN_ALLOW_ALL = DEBUG
