@@ -23,17 +23,18 @@ class VKAppAuthentication(BaseAuthentication):
 
         query_params_dict = dict(parse_qsl(auth_query_params,
                                            keep_blank_values=True))
-        result = VKAppAuthentication.is_valid_vk_query(query_params_dict,
-                                                       settings.VK_SECRET)
-        if not result:
+        is_valid = VKAppAuthentication.is_valid_vk_query(query_params_dict,
+                                                         settings.VK_SECRET)
+        if not is_valid:
             raise AuthenticationFailed('Incorrect VK query string.')
-        vk_user_id = query_params_dict['vk_user_id']
-        try:
-            user = AppUser.objects.get(vk_id=vk_user_id)
-        except AppUser.DoesNotExist:
-            user = AppUser.objects.create(
-                vk_id=vk_user_id,
-                username=vk_user_id)
+        vk_user_id = int(query_params_dict['vk_user_id'])
+
+        if not self.is_user_allowed(vk_user_id):
+            raise AuthenticationFailed(
+                "You don't have permissions to use the app")
+        user, _ = AppUser.objects.get_or_create(
+            vk_id=vk_user_id,
+            defaults={'username': vk_user_id})
         return user, query_params_dict
 
     @staticmethod
@@ -52,3 +53,7 @@ class VKAppAuthentication(BaseAuthentication):
             .replace('+', '-') \
             .replace('/', '_')
         return query_params["sign"] == decoded_hash_code
+
+    def is_user_allowed(self, user_vk_id: int):
+        allow_all_users = settings.VK_ALLOWED_USERS[0] == '*'
+        return allow_all_users or user_vk_id in settings.VK_ALLOWED_USERS

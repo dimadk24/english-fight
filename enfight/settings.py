@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-from environ import environ
+from environ import environ, ImproperlyConfigured
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -177,3 +177,10 @@ REST_FRAMEWORK = {
 # VK
 
 VK_SECRET = env('VK_SECRET')
+VK_ALLOWED_USERS = env.list('VK_ALLOWED_USERS')
+if not len(VK_ALLOWED_USERS):
+    raise ImproperlyConfigured(
+        'You should define VK_ALLOWED_USERS either as "*" or '
+        'as list of valid user VK ids')
+if not VK_ALLOWED_USERS[0] == '*':
+    VK_ALLOWED_USERS = [int(vk_id) for vk_id in VK_ALLOWED_USERS]
