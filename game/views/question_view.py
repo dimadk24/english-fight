@@ -11,4 +11,6 @@ class QuestionView(UpdateAPIView):
     permission_classes = [OwnQuestionPermission]
 
     def get_queryset(self):
-        return Question.objects.filter(game__player=self.request.user)
+        return Question.objects.filter(
+            game__player=self.request.user
+        ).select_related('game__player')

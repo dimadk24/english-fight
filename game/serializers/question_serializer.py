@@ -1,19 +1,14 @@
 from rest_flex_fields import FlexFieldsModelSerializer
 from rest_framework import serializers
 
-from game.models import Question, Word
-
-all_words = Word.objects.all()
+from game.models import Question
 
 
 class QuestionSerializer(FlexFieldsModelSerializer):
-    question_word = serializers.SlugRelatedField(slug_field='text',
-                                                 queryset=all_words)
-    answer_words = serializers.SlugRelatedField(many=True, slug_field='text',
-                                                queryset=all_words)
+    question_word = serializers.CharField()
+    answer_words = serializers.JSONField()
     correct_answer = serializers.SerializerMethodField()
-    selected_answer = serializers.SlugRelatedField(slug_field='text',
-                                                   queryset=all_words)
+    selected_answer = serializers.CharField()
     is_correct = serializers.BooleanField(read_only=True)
 
     def get_correct_answer(self, obj):

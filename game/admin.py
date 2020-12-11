@@ -5,7 +5,7 @@ from django.utils.translation import gettext_lazy as _
 
 from game.admin_pre_filtered_list_filter import PreFilteredListFilter
 from game.constants import QUESTIONS_PER_GAME
-from game.models import AppUser, AppGroup, Word, LanguagePair, Question, Game
+from game.models import AppUser, AppGroup, Question, Game
 
 
 @admin.register(AppUser)
@@ -28,11 +28,6 @@ admin.site.unregister(Group)
 admin.site.register(AppGroup, GroupAdmin)
 
 
-@admin.register(Word)
-class WordAdmin(admin.ModelAdmin):
-    search_fields = ('text',)
-
-
 class VisibilityFilter(PreFilteredListFilter):
     default_value = True
     title = 'Visible'
@@ -45,22 +40,8 @@ class VisibilityFilter(PreFilteredListFilter):
         ]
 
 
-@admin.register(LanguagePair)
-class LanguagePairAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_at',)
-    autocomplete_fields = ('english_word', 'russian_word')
-    list_filter = (VisibilityFilter,)
-    search_fields = ('english_word__text', 'russian_word__text')
-
-
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
-    autocomplete_fields = (
-        'question_word',
-        'answer_words',
-        'correct_answer',
-        'selected_answer',
-    )
     fields = (
         'question_word',
         'answer_words',
@@ -73,12 +54,6 @@ class QuestionAdmin(admin.ModelAdmin):
 
 class QuestionInlineAdmin(admin.StackedInline):
     model = Question
-    autocomplete_fields = (
-        'question_word',
-        'answer_words',
-        'correct_answer',
-        'selected_answer',
-    )
     fields = (
         'question_word',
         'answer_words',

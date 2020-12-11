@@ -32,6 +32,8 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env('DEBUG', cast=bool)
 
+DEBUG_SQL_QUERIES = env('DEBUG_SQL_QUERIES', cast=bool)
+
 ALLOWED_HOSTS = [
     '127.0.0.1'
 ] if not DEBUG else ['*']
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'corsheaders',
+    'debug_toolbar',
 
     'game',
 ]
@@ -56,10 +59,12 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'debug_toolbar.middleware.DebugToolbarMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django_cprofile_middleware.middleware.ProfilerMiddleware',
 ]
 
 ROOT_URLCONF = 'enfight.urls'
@@ -88,6 +93,8 @@ WSGI_APPLICATION = 'enfight.wsgi.application'
 DATABASES = {
     'default': {
         **env.db(),
+        'CONN_MAX_AGE': 28800,
+        # Default MySQL connection timeout
         'TEST': {
             'CHARSET': 'utf8mb4',
             'COLLATION': 'utf8mb4_unicode_ci',
@@ -196,3 +203,31 @@ if not len(VK_ALLOWED_USERS):
         'as list of valid user VK ids')
 if not VK_ALLOWED_USERS[0] == '*':
     VK_ALLOWED_USERS = [int(vk_id) for vk_id in VK_ALLOWED_USERS]
+
+# cProfile middleware
+
+DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
+
+# Debug toolbar
+
+INTERNAL_IPS = [
+    '127.0.0.1',
+]
+
+if DEBUG and DEBUG_SQL_QUERIES:
+    LOGGING = {
+        'version': 1,
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+            },
+        },
+        'loggers': {
+            'django.db.backends': {
+                'level': 'DEBUG',
+            },
+        },
+        'root': {
+            'handlers': ['console'],
+        }
+    }

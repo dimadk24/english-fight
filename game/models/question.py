@@ -4,24 +4,17 @@ from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
 from game.constants import QUESTIONS_PER_GAME
 from game.game_utils import get_score_for_game
-from game.models import Word
+from json_encoder import UnicodeJSONEncoder
 
 
 class Question(LifecycleModel):
     game = models.ForeignKey('Game', on_delete=models.CASCADE,
                              related_name='questions')
-    question_word = models.ForeignKey(Word, on_delete=models.CASCADE,
-                                      related_name='questions_with_question')
-    answer_words = models.ManyToManyField(Word,
-                                          related_name='questions_with_answers'
-                                          )
-    correct_answer = models.ForeignKey(
-        Word, on_delete=models.CASCADE,
-        related_name='questions_with_correct_answer')
-    selected_answer = models.ForeignKey(
-        Word, on_delete=models.CASCADE,
-        related_name='questions_with_selected_answer',
-        null=True, blank=True)
+    question_word = models.CharField(max_length=50, blank=False)
+    answer_words = models.JSONField(default=list, blank=False,
+                                    encoder=UnicodeJSONEncoder)
+    correct_answer = models.CharField(max_length=50, blank=False)
+    selected_answer = models.CharField(max_length=50, blank=True, default='')
 
     @property
     def is_correct(self) -> bool:
@@ -33,10 +26,10 @@ class Question(LifecycleModel):
             f'selected - {self.selected_answer}'
         )
 
-    @hook(AFTER_UPDATE, when='selected_answer', was=None, is_not=None)
+    @hook(AFTER_UPDATE, when='selected_answer', was='', is_not='')
     def update_game_score(self):
         number_of_not_completed_questions_in_game = self.game.questions.filter(
-            selected_answer__isnull=True,
+            selected_answer='',
         ).count()
         if number_of_not_completed_questions_in_game == 0:
             correct_questions_number = self.game.questions.filter(

@@ -2,7 +2,7 @@ from base64 import b64encode
 from collections import OrderedDict
 from hashlib import sha256
 from hmac import HMAC
-from urllib.parse import urlparse, parse_qsl, urlencode
+from urllib.parse import parse_qsl, urlencode
 
 from django.conf import settings
 from django.http import HttpRequest

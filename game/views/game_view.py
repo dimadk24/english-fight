@@ -1,29 +1,26 @@
 from random import randint, shuffle
 from typing import List
 
+from django.db import transaction
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 
 from game.constants import QUESTIONS_PER_GAME, ANSWERS_PER_QUESTION
-from game.models import LanguagePair, Word, Question, Game
+from game.models import Question, Game
 from game.serializers.game_serializer import GameSerializer
+from language_pairs import LANGUAGE_PAIRS
 
 
 class GameView(CreateAPIView, RetrieveAPIView):
     serializer_class = GameSerializer
 
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.filtered_pairs = ()
-
     def get_queryset(self):
         return Game.objects.filter(player=self.request.user)
 
+    @transaction.atomic
     def perform_create(self, serializer: GameSerializer):
         serializer.save()
-        self.filtered_pairs = LanguagePair.objects.filter(
-            visible=True).values('id')
         min_number_of_pairs = max(ANSWERS_PER_QUESTION, QUESTIONS_PER_GAME)
-        assert len(self.filtered_pairs) >= min_number_of_pairs, (
+        assert len(LANGUAGE_PAIRS) >= min_number_of_pairs, (
             f'Must have at least {min_number_of_pairs} language pairs to '
             'create a game')
         self.create_questions(serializer.instance)
@@ -32,42 +29,45 @@ class GameView(CreateAPIView, RetrieveAPIView):
     def get_random_int(min_num: int, max_num: int):
         return randint(min_num, max_num)
 
-    def get_random_language_pair(self) -> LanguagePair:
-        index = GameView.get_random_int(0, len(self.filtered_pairs) - 1)
-        pk = self.filtered_pairs[index]['id']
-        return LanguagePair.objects.get(pk=pk)
+    def get_random_language_pair(self) -> dict:
+        index = GameView.get_random_int(0, len(LANGUAGE_PAIRS) - 1)
+        return LANGUAGE_PAIRS[index]
 
     def create_questions(self, game: Game):
+        questions = []
         for _ in range(QUESTIONS_PER_GAME):
-            self.create_question(game)
+            questions.append(self.get_question_to_create(game, questions))
+        Question.objects.bulk_create(questions)
 
-    def create_question(self, game: Game):
+    def get_question_to_create(
+        self, game: Game, existing_questions: List[Question]
+    ) -> Question:
         while True:
-            question_pair: LanguagePair = self.get_random_language_pair()
-            existing_question_words = [question.question_word for
-                                       question in game.questions.all()]
-            new_question_word = question_pair.english_word
+            question_pair = self.get_random_language_pair()
+            existing_question_words = [
+                question.question_word for question in existing_questions
+            ]
+            new_question_word = question_pair['english_word']
             if new_question_word not in existing_question_words:
                 answer_words = self.get_question_answers(question_pair)
-                question = Question.objects.create(
+                return Question(
                     game=game,
                     question_word=new_question_word,
-                    correct_answer=question_pair.russian_word,
+                    correct_answer=question_pair['russian_word'],
+                    answer_words=answer_words
                 )
-                question.answer_words.set(answer_words)
-                return
 
     def get_question_answers(
-        self, question_pair: LanguagePair
-    ) -> List[Word]:
-        answers = [question_pair.russian_word]
+        self, question_pair: dict
+    ) -> List[str]:
+        answers = [question_pair['russian_word']]
         for _ in range(ANSWERS_PER_QUESTION - 1):
             answers.append(self.get_wrong_answer(answers))
         shuffle(answers)
         return answers
 
-    def get_wrong_answer(self, existing_answers: List[Word]) -> Word:
+    def get_wrong_answer(self, existing_answers: List[str]) -> str:
         while True:
             random_language_pair = self.get_random_language_pair()
-            if random_language_pair.russian_word not in existing_answers:
-                return random_language_pair.russian_word
+            if random_language_pair['russian_word'] not in existing_answers:
+                return random_language_pair['russian_word']
