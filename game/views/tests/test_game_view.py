@@ -35,7 +35,7 @@ def do_database_asserts():
     assert game.player == AppUser.objects.get(vk_id=1)
     assert game.points == 0
     now = timezone.now()
-    assert now - game.created_at < timedelta(seconds=1)
+    assert now - game.created_at < timedelta(minutes=1)
 
     question_words = [question.question_word for question in
                       game.questions.all()]
