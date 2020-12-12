@@ -163,7 +163,8 @@ if not DEBUG:
 CORS_ORIGIN_ALLOW_ALL = DEBUG
 
 CORS_ORIGIN_WHITELIST = [
-    'http://localhost:3000'
+    'http://localhost:3000',
+    'https://localhost:3000',
 ]
 
 CORS_URLS_REGEX = r'^/api/.*$'
