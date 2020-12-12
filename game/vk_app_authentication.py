@@ -26,12 +26,11 @@ class VKAppAuthentication(BaseAuthentication):
         is_valid = VKAppAuthentication.is_valid_vk_query(query_params_dict,
                                                          settings.VK_SECRET)
         if not is_valid:
-            raise AuthenticationFailed('Incorrect VK query string.')
+            raise AuthenticationFailed('Неверная строка запроса VK')
         vk_user_id = int(query_params_dict['vk_user_id'])
 
         if not self.is_user_allowed(vk_user_id):
-            raise AuthenticationFailed(
-                "You don't have permissions to use the app")
+            raise AuthenticationFailed('У вас нет доступа к приложению')
         user, _ = AppUser.objects.get_or_create(
             vk_id=vk_user_id,
             defaults={'username': vk_user_id})

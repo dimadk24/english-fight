@@ -49,7 +49,7 @@ def test_raises_when_check_function_returned_false(mock_valid_query):
             'HTTP_AUTHORIZATION': 'QueryString vk_user_id=1&vk_app_id=2',
         }
         VKAppAuthentication().authenticate(request)
-    assert 'Incorrect VK query string' in str(excinfo.value)
+    assert 'Неверная строка запроса VK' in str(excinfo.value)
 
 
 def run_test_with_existing_user():
@@ -110,7 +110,7 @@ def test_raises_when_new_user_is_not_allowed():
             'HTTP_AUTHORIZATION': 'QueryString vk_user_id=2&vk_app_id=2',
         }
         VKAppAuthentication().authenticate(request)
-    assert "You don't have permissions to use the app" in str(excinfo.value)
+    assert 'У вас нет доступа к приложению' in str(excinfo.value)
 
 
 @override_settings(VK_ALLOWED_USERS=[1])
@@ -126,7 +126,7 @@ def test_raises_when_existing_user_is_no_longer_allowed():
             'HTTP_AUTHORIZATION': 'QueryString vk_user_id=2&vk_app_id=2',
         }
         VKAppAuthentication().authenticate(request)
-    assert "You don't have permissions to use the app" in str(excinfo.value)
+    assert 'У вас нет доступа к приложению' in str(excinfo.value)
 
 
 @override_settings(VK_ALLOWED_USERS=['*'])
