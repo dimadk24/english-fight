@@ -12,9 +12,11 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+import sentry_sdk
 from environ import environ, ImproperlyConfigured
+from sentry_sdk.integrations.django import DjangoIntegration
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 env = environ.Env(
@@ -37,6 +39,15 @@ DEBUG_SQL_QUERIES = env('DEBUG_SQL_QUERIES', cast=bool)
 ALLOWED_HOSTS = [
     '127.0.0.1'
 ] if not DEBUG else ['*']
+
+# Sentry
+
+if not DEBUG:
+    sentry_sdk.init(
+        dsn=env('SENTRY_DSN'),
+        integrations=[DjangoIntegration()],
+        traces_sample_rate=0.5,
+    )
 
 # Application definition
 
