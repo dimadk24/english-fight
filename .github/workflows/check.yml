@@ -29,15 +29,12 @@ jobs:
       - name: Lint with black
         run: poetry run black --check .
 
-      - name: Check migrations
+      - name: Check no new migrations are required
         run: |
           # start mysql for tests
           sudo systemctl start mysql.service
           poetry run python manage.py createdb
-          poetry run python manage.py migrate
-
-      - name: Check no new migrations are required
-        run: poetry run python manage.py makemigrations --check --dry-run
+          poetry run python manage.py makemigrations --check --dry-run
 
       - name: Test with pytest
         run: poetry run pytest

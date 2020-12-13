@@ -23,7 +23,8 @@ env = environ.Env(
     DEBUG=(bool, False),
 )
 dotenv_file = BASE_DIR / ".env"
-environ.Env.read_env(str(dotenv_file))
+if dotenv_file.exists():
+    environ.Env.read_env(str(dotenv_file))
 
 example_dot_env = BASE_DIR / ".env.example"
 environ.Env.read_env(str(example_dot_env))
