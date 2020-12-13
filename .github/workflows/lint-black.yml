@@ -1,0 +1,33 @@
+name: Lint black
+on: push
+jobs:
+  check:
+    name: Lint and test
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install poetry
+        env:
+          # To install specific version, not latest release
+          POETRY_VERSION: 1.1.4
+        run: |
+          # https://python-poetry.org/docs/#installation
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
+          # Add "poetry" executable to $PATH
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint with black
+        run: poetry run black --check .
+
+      - name: Test with pytest
+        run: poetry run pytest
