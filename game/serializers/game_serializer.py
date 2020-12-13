@@ -12,7 +12,5 @@ class GameSerializer(FlexFieldsModelSerializer):
 
     class Meta:
         model = Game
-        fields = ['id', 'player', 'questions', 'points']
-        expandable_fields = {
-            'questions': (QuestionSerializer, {'many': True})
-        }
+        fields = ["id", "player", "questions", "points"]
+        expandable_fields = {"questions": (QuestionSerializer, {"many": True})}

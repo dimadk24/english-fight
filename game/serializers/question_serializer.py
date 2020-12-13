@@ -19,10 +19,10 @@ class QuestionSerializer(FlexFieldsModelSerializer):
     class Meta:
         model = Question
         fields = (
-            'id',
-            'question_word',
-            'answer_words',
-            'correct_answer',
-            'selected_answer',
-            'is_correct',
+            "id",
+            "question_word",
+            "answer_words",
+            "correct_answer",
+            "selected_answer",
+            "is_correct",
         )

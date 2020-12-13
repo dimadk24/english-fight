@@ -17,9 +17,9 @@ class Game(LifecycleModel):
         return super().save(*args, **kwargs)
 
     def __str__(self):
-        return f'Player {str(self.player)} - points {self.points}'
+        return f"Player {str(self.player)} - points {self.points}"
 
-    @hook(AFTER_UPDATE, when='points', was=0, is_not=0)
+    @hook(AFTER_UPDATE, when="points", was=0, is_not=0)
     def update_user_score(self):
         self.player.score += self.points
         self.player.save()

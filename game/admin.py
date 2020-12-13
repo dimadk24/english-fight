@@ -11,16 +11,26 @@ from game.models import AppUser, AppGroup, Question, Game
 @admin.register(AppUser)
 class AppUserAdmin(UserAdmin):
     fieldsets = (
-        (None, {'fields': ('username', 'password')}),
-        (_('Personal info'),
-         {'fields': ('first_name', 'last_name', 'email', 'vk_id', 'score')}),
-        (_('Permissions'), {
-            'fields': ('is_active', 'is_staff', 'is_superuser', 'groups',
-                       'user_permissions'),
-        }),
-        (_('Important dates'), {'fields': ('last_login', 'date_joined')}),
+        (None, {"fields": ("username", "password")}),
+        (
+            _("Personal info"),
+            {"fields": ("first_name", "last_name", "email", "vk_id", "score")},
+        ),
+        (
+            _("Permissions"),
+            {
+                "fields": (
+                    "is_active",
+                    "is_staff",
+                    "is_superuser",
+                    "groups",
+                    "user_permissions",
+                ),
+            },
+        ),
+        (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ('__str__', 'email', 'first_name', 'last_name', 'is_staff')
+    list_display = ("__str__", "email", "first_name", "last_name", "is_staff")
 
 
 # Move Group to the same app as User
@@ -30,38 +40,38 @@ admin.site.register(AppGroup, GroupAdmin)
 
 class VisibilityFilter(PreFilteredListFilter):
     default_value = True
-    title = 'Visible'
-    parameter_name = 'visible'
+    title = "Visible"
+    parameter_name = "visible"
 
     def get_lookups(self):
         return [
-            (True, 'True'),
-            (False, 'False'),
+            (True, "True"),
+            (False, "False"),
         ]
 
 
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     fields = (
-        'question_word',
-        'answer_words',
-        'correct_answer',
-        'selected_answer',
-        'is_correct',
+        "question_word",
+        "answer_words",
+        "correct_answer",
+        "selected_answer",
+        "is_correct",
     )
-    readonly_fields = ('is_correct',)
+    readonly_fields = ("is_correct",)
 
 
 class QuestionInlineAdmin(admin.StackedInline):
     model = Question
     fields = (
-        'question_word',
-        'answer_words',
-        'correct_answer',
-        'selected_answer',
-        'is_correct',
+        "question_word",
+        "answer_words",
+        "correct_answer",
+        "selected_answer",
+        "is_correct",
     )
-    readonly_fields = ('is_correct',)
+    readonly_fields = ("is_correct",)
 
     def get_min_num(self, request, obj: Game = None, **kwargs):
         return QUESTIONS_PER_GAME
@@ -72,5 +82,5 @@ class QuestionInlineAdmin(admin.StackedInline):
 
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
-    readonly_fields = ('created_at',)
+    readonly_fields = ("created_at",)
     inlines = (QuestionInlineAdmin,)

@@ -15,19 +15,21 @@ def show_command_time(fn):
 
         end_time = timezone.now()
         timedelta = end_time - start_time
-        click.secho(f'Done in {timedelta.total_seconds()}s')
+        click.secho(f"Done in {timedelta.total_seconds()}s")
         return result
 
     return wrapper
 
 
 @contextmanager
-def read_stream_with_progress(stream: TextIOWrapper, progress_label: str,
-                              length: int = None, reader=None):
+def read_stream_with_progress(
+    stream: TextIOWrapper, progress_label: str, length: int = None, reader=None
+):
     length = length or sum(1 for _ in stream)
     reader = reader or stream
     stream.seek(0)
-    click.secho(f'Found {length} lines')
-    with click.progressbar(reader, length=length,
-                           label=progress_label) as progress_reader:
+    click.secho(f"Found {length} lines")
+    with click.progressbar(
+        reader, length=length, label=progress_label
+    ) as progress_reader:
         yield progress_reader

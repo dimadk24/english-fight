@@ -3,18 +3,19 @@ from typing import List, Tuple, Any
 from django.contrib.admin.filters import SimpleListFilter
 from django.contrib.admin.options import IncorrectLookupParameters
 from django.contrib.admin.views.main import ChangeList
+from django.core.exceptions import ValidationError
 from django.db.models.query import QuerySet
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
-from django.core.exceptions import ValidationError
 
 
 class PreFilteredListFilter(SimpleListFilter):
     """Taken from https://stackoverflow.com/a/62292513/7119080"""
+
     # Either set this or override .get_default_value()
     default_value = None
 
-    no_filter_value = 'all'
+    no_filter_value = "all"
     no_filter_name = _("All")
 
     # Human-readable title which will be displayed in the
@@ -28,9 +29,9 @@ class PreFilteredListFilter(SimpleListFilter):
         if self.default_value is not None:
             return self.default_value
         raise NotImplementedError(
-            'Either the .default_value attribute needs to be set or '
-            'the .get_default_value() method must be overridden to '
-            'return a URL query argument for parameter_name.'
+            "Either the .default_value attribute needs to be set or "
+            "the .get_default_value() method must be overridden to "
+            "return a URL query argument for parameter_name."
         )
 
     def get_lookups(self) -> List[Tuple[Any, str]]:
@@ -42,14 +43,15 @@ class PreFilteredListFilter(SimpleListFilter):
         in the right sidebar.
         """
         raise NotImplementedError(
-            'The .get_lookups() method must be overridden to '
-            'return a list of tuples (value, verbose value).'
+            "The .get_lookups() method must be overridden to "
+            "return a list of tuples (value, verbose value)."
         )
 
     # Overriding parent class:
     def lookups(self, request, model_admin) -> List[Tuple[Any, str]]:
-        return [(self.no_filter_value,
-                 self.no_filter_name)] + self.get_lookups()
+        return [
+            (self.no_filter_value, self.no_filter_name)
+        ] + self.get_lookups()
 
     # Overriding parent class:
     def queryset(self, request, queryset: QuerySet) -> QuerySet:
@@ -66,7 +68,8 @@ class PreFilteredListFilter(SimpleListFilter):
 
     def get_default_queryset(self, queryset: QuerySet) -> QuerySet:
         return queryset.filter(
-            **{self.parameter_name: self.get_default_value()})
+            **{self.parameter_name: self.get_default_value()}
+        )
 
     def get_filtered_queryset(self, queryset: QuerySet) -> QuerySet:
         try:
@@ -84,8 +87,9 @@ class PreFilteredListFilter(SimpleListFilter):
         value = self.value() or force_str(self.get_default_value())
         for lookup, title in self.lookup_choices:
             yield {
-                'selected': value == force_str(lookup),
-                'query_string': changelist.get_query_string(
-                    {self.parameter_name: lookup}),
-                'display': title,
+                "selected": value == force_str(lookup),
+                "query_string": changelist.get_query_string(
+                    {self.parameter_name: lookup}
+                ),
+                "display": title,
             }

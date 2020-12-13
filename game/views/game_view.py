@@ -21,8 +21,9 @@ class GameView(CreateAPIView, RetrieveAPIView):
         serializer.save()
         min_number_of_pairs = max(ANSWERS_PER_QUESTION, QUESTIONS_PER_GAME)
         assert len(LANGUAGE_PAIRS) >= min_number_of_pairs, (
-            f'Must have at least {min_number_of_pairs} language pairs to '
-            'create a game')
+            f"Must have at least {min_number_of_pairs} language pairs to "
+            "create a game"
+        )
         self.create_questions(serializer.instance)
 
     @staticmethod
@@ -47,20 +48,18 @@ class GameView(CreateAPIView, RetrieveAPIView):
             existing_question_words = [
                 question.question_word for question in existing_questions
             ]
-            new_question_word = question_pair['english_word']
+            new_question_word = question_pair["english_word"]
             if new_question_word not in existing_question_words:
                 answer_words = self.get_question_answers(question_pair)
                 return Question(
                     game=game,
                     question_word=new_question_word,
-                    correct_answer=question_pair['russian_word'],
-                    answer_words=answer_words
+                    correct_answer=question_pair["russian_word"],
+                    answer_words=answer_words,
                 )
 
-    def get_question_answers(
-        self, question_pair: dict
-    ) -> List[str]:
-        answers = [question_pair['russian_word']]
+    def get_question_answers(self, question_pair: dict) -> List[str]:
+        answers = [question_pair["russian_word"]]
         for _ in range(ANSWERS_PER_QUESTION - 1):
             answers.append(self.get_wrong_answer(answers))
         shuffle(answers)
@@ -69,5 +68,5 @@ class GameView(CreateAPIView, RetrieveAPIView):
     def get_wrong_answer(self, existing_answers: List[str]) -> str:
         while True:
             random_language_pair = self.get_random_language_pair()
-            if random_language_pair['russian_word'] not in existing_answers:
-                return random_language_pair['russian_word']
+            if random_language_pair["russian_word"] not in existing_answers:
+                return random_language_pair["russian_word"]

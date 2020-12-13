@@ -14,26 +14,28 @@ from game.models import AppUser
 
 class VKAppAuthentication(BaseAuthentication):
     def authenticate(self, request: HttpRequest):
-        authorization_header: str = request.headers.get('Authorization', '')
+        authorization_header: str = request.headers.get("Authorization", "")
         if not authorization_header:
             return None
-        if not authorization_header.startswith('QueryString '):
+        if not authorization_header.startswith("QueryString "):
             return None
-        auth_query_params = authorization_header.split(' ')[1]
+        auth_query_params = authorization_header.split(" ")[1]
 
-        query_params_dict = dict(parse_qsl(auth_query_params,
-                                           keep_blank_values=True))
-        is_valid = VKAppAuthentication.is_valid_vk_query(query_params_dict,
-                                                         settings.VK_SECRET)
+        query_params_dict = dict(
+            parse_qsl(auth_query_params, keep_blank_values=True)
+        )
+        is_valid = VKAppAuthentication.is_valid_vk_query(
+            query_params_dict, settings.VK_SECRET
+        )
         if not is_valid:
-            raise AuthenticationFailed('Неверная строка запроса VK')
-        vk_user_id = int(query_params_dict['vk_user_id'])
+            raise AuthenticationFailed("Неверная строка запроса VK")
+        vk_user_id = int(query_params_dict["vk_user_id"])
 
         if not self.is_user_allowed(vk_user_id):
-            raise AuthenticationFailed('У вас нет доступа к приложению')
+            raise AuthenticationFailed("У вас нет доступа к приложению")
         user, _ = AppUser.objects.get_or_create(
-            vk_id=vk_user_id,
-            defaults={'username': vk_user_id})
+            vk_id=vk_user_id, defaults={"username": vk_user_id}
+        )
         return user, query_params_dict
 
     @staticmethod
@@ -43,16 +45,20 @@ class VKAppAuthentication(BaseAuthentication):
         Adapted from https://vk.com/dev/vk_apps_launch_params
         """
         vk_params = OrderedDict(
-            sorted(x for x in query_params.items() if x[0][:3] == "vk_"))
+            sorted(x for x in query_params.items() if x[0][:3] == "vk_")
+        )
         hash_code = b64encode(
-            HMAC(secret.encode(),
-                 urlencode(vk_params, doseq=True).encode(),
-                 sha256).digest())
-        decoded_hash_code = hash_code.decode('utf-8')[:-1] \
-            .replace('+', '-') \
-            .replace('/', '_')
+            HMAC(
+                secret.encode(),
+                urlencode(vk_params, doseq=True).encode(),
+                sha256,
+            ).digest()
+        )
+        decoded_hash_code = (
+            hash_code.decode("utf-8")[:-1].replace("+", "-").replace("/", "_")
+        )
         return query_params["sign"] == decoded_hash_code
 
     def is_user_allowed(self, user_vk_id: int):
-        allow_all_users = settings.VK_ALLOWED_USERS[0] == '*'
+        allow_all_users = settings.VK_ALLOWED_USERS[0] == "*"
         return allow_all_users or user_vk_id in settings.VK_ALLOWED_USERS

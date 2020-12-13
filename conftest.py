@@ -5,7 +5,7 @@ from game.models import AppUser
 
 
 def authenticate(api_client):
-    user = AppUser.objects.create(vk_id=1, username='1')
+    user = AppUser.objects.create(vk_id=1, username="1")
     api_client.force_authenticate(user)
 
 
