@@ -25,6 +25,9 @@ env = environ.Env(
 dotenv_file = BASE_DIR / ".env"
 environ.Env.read_env(str(dotenv_file))
 
+example_dot_env = BASE_DIR / ".env.example"
+environ.Env.read_env(str(example_dot_env))
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
