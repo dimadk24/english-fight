@@ -8,7 +8,7 @@ from django.conf import settings
 def handler():
     dbconfig = settings.DATABASES["default"]
     create_statement = (
-        f"CREATE DATABASE {dbconfig['NAME']} "
+        f"CREATE DATABASE IF NOT EXISTS {dbconfig['NAME']} "
         f"DEFAULT CHARSET = {dbconfig['OPTIONS']['charset']} "
         f"DEFAULT COLLATE = utf8mb4_unicode_ci;"
     )

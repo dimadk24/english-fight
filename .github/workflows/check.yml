@@ -33,7 +33,7 @@ jobs:
         run: |
           # start mysql for tests
           sudo systemctl start mysql.service
-          poetry run python manage.py createdb
+          poetry run python manage.py ensurehasdb
           poetry run python manage.py makemigrations --check --dry-run
 
       - name: Test with pytest
