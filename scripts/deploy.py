@@ -15,6 +15,7 @@ env.read_env(str(dotenv_file))
 @click.command()
 @click.argument("target_environment", type=click.STRING)
 def handler(target_environment):
+    # TODO: remove environment argument
     if target_environment not in ("dev", "prod"):
         raise Exception(f"wrong target env: {target_environment}")
     if target_environment == "dev":
