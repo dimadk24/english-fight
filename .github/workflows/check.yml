@@ -103,7 +103,7 @@ jobs:
   deploy-dev:
     name: Deploy dev server
     runs-on: ubuntu-18.04
-#    needs: [lint, check-no-migrations, test]
+    needs: [lint, check-no-migrations, test]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
