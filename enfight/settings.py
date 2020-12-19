@@ -37,7 +37,7 @@ DEBUG = env("DEBUG", cast=bool)
 
 DEBUG_SQL_QUERIES = env("DEBUG_SQL_QUERIES", cast=bool)
 
-ALLOWED_HOSTS = ["127.0.0.1"] if not DEBUG else ["*"]
+ALLOWED_HOSTS = ["127.0.0.1", env("DEPLOY_HOST")] if not DEBUG else ["*"]
 
 # Sentry
 
