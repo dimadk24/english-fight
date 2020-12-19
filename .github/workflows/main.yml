@@ -103,12 +103,21 @@ jobs:
   deploy-dev:
     name: Deploy dev server
     runs-on: ubuntu-18.04
-    needs: [lint, check-no-migrations, test]
+    needs: [ lint, check-no-migrations, test ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
-      # Stop dev supervisor
-      - name: Copy code to dev folder
+
+      - name: Stop gunicorn via supervisor
+        uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            supervisorctl stop enfight_dev
+
+      - name: Copy code to folder
         uses: burnett01/rsync-deployments@695f58ca67af73a00d68f4ea156d92d427d1fbeb
         with:
           switches: -a --exclude-from=.deployignore
@@ -148,4 +157,12 @@ jobs:
             cd ${{ secrets.DEPLOY_DEV_FOLDER }} || { echo "No dev folder"; exit 1; }
             /home/dimadk/.poetry/bin/poetry run python manage.py ensurehasdb
             /home/dimadk/.poetry/bin/poetry run python manage.py migrate
-      # run dev supervisor
+
+      - name: Start gunicorn via supervisor
+        uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
+        with:
+          host: ${{ secrets.DEPLOY_HOST }}
+          username: ${{ secrets.DEPLOY_USER }}
+          key: ${{ secrets.DEPLOY_KEY }}
+          script: |
+            supervisorctl start enfight_dev
