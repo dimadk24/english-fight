@@ -103,7 +103,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-18.04
-    if: ${{ github.ref == 'ref/head/master' }}
+    if: github.ref == 'refs/heads/master'
     needs: [ lint, check-no-migrations, test ]
     steps:
       - name: Checkout code
