@@ -100,9 +100,10 @@ jobs:
           sudo systemctl start mysql.service
           poetry run pytest
 
-  deploy-dev:
-    name: Deploy dev server
+  deploy:
+    name: Deploy
     runs-on: ubuntu-18.04
+    if: ${{ github.ref == 'ref/head/master' }}
     needs: [ lint, check-no-migrations, test ]
     steps:
       - name: Checkout code
