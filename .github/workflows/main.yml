@@ -129,14 +129,14 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            supervisorctl stop enfight_dev
+            supervisorctl stop enfight
 
       - name: Copy code to folder
         uses: burnett01/rsync-deployments@695f58ca67af73a00d68f4ea156d92d427d1fbeb
         with:
           switches: -a --exclude-from=.deployignore
           path: .
-          remote_path: ${{secrets.DEPLOY_DEV_FOLDER}}
+          remote_path: ${{secrets.DEPLOY_FOLDER}}
           remote_host: ${{secrets.DEPLOY_HOST}}
           remote_user: ${{secrets.DEPLOY_USER}}
           remote_key: ${{secrets.DEPLOY_KEY}}
@@ -148,8 +148,8 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd ${{ secrets.DEPLOY_DEV_FOLDER }} || { echo "No dev folder"; exit 1; }
-            /home/dimadk/.poetry/bin/poetry install --no-dev --remove-untracked
+            cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
+            /home/dima/.poetry/bin/poetry install --no-dev --remove-untracked
 
       - name: Collect static files
         uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
@@ -158,19 +158,19 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd ${{ secrets.DEPLOY_DEV_FOLDER }} || { echo "No dev folder"; exit 1; }
-            /home/dimadk/.poetry/bin/poetry run python manage.py collectstatic --no-input
+            cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
+            /home/dima/.poetry/bin/poetry run python manage.py collectstatic --no-input
 
-      - name: Run dev migrations
+      - name: Run migrations
         uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
         with:
           host: ${{ secrets.DEPLOY_HOST }}
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            cd ${{ secrets.DEPLOY_DEV_FOLDER }} || { echo "No dev folder"; exit 1; }
-            /home/dimadk/.poetry/bin/poetry run python manage.py ensurehasdb
-            /home/dimadk/.poetry/bin/poetry run python manage.py migrate
+            cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
+            /home/dima/.poetry/bin/poetry run python manage.py ensurehasdb
+            /home/dima/.poetry/bin/poetry run python manage.py migrate
 
       - name: Start gunicorn via supervisor
         uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
@@ -179,4 +179,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            supervisorctl start enfight_dev
+            supervisorctl start enfight
