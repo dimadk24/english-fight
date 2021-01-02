@@ -12,12 +12,16 @@ def handler():
         f"DEFAULT CHARSET = {dbconfig['OPTIONS']['charset']} "
         f"DEFAULT COLLATE = utf8mb4_0900_ai_ci;"
     )
-    subprocess.run(
+    subprocess.check_output(
         [
             "mysql",
             "-u",
             dbconfig["USER"],
             f'-p{dbconfig["PASSWORD"]}',
+            "--port",
+            str(dbconfig["PORT"]),
+            "--host",
+            dbconfig["HOST"],
             "--execute",
             create_statement,
         ]

@@ -2,7 +2,7 @@ name: Main workflow
 on: push
 env:
   SECRET_KEY: "398jy60_15v)f-b=rdg@hryajjfxo6hl*c0ll1+bg7ay-gjr)l"
-  DATABASE_URL: "mysql://root:root@127.0.0.1:3306/enfight?charset=utf8mb4"
+  DATABASE_URL: "mysql://root:root@127.0.0.1:8888/enfight?charset=utf8mb4"
   DEBUG: "1"
   DEBUG_SQL_QUERIES: "0"
   DJANGO_ADMIN_NAME: "user"
@@ -39,9 +39,18 @@ jobs:
 
       - name: Lint with black
         run: poetry run black --check .
+
   check-no-migrations:
     name: Check no migrations are required
     runs-on: ubuntu-18.04
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: enfight
+        ports:
+          - '8888:3306'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -66,13 +75,19 @@ jobs:
 
       - name: Check no new migrations are required
         run: |
-          sudo systemctl start mysql.service
           poetry run python manage.py ensurehasdb
           poetry run python manage.py makemigrations --check --dry-run
 
   test:
     name: Test with pytest
     runs-on: ubuntu-18.04
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - '8888:3306'
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -96,9 +111,7 @@ jobs:
         run: poetry install
 
       - name: Test with pytest
-        run: |
-          sudo systemctl start mysql.service
-          poetry run pytest
+        run: poetry run pytest
 
   deploy:
     name: Deploy
