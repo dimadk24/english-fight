@@ -10,7 +10,7 @@ def handler():
     create_statement = (
         f"CREATE DATABASE IF NOT EXISTS {dbconfig['NAME']} "
         f"DEFAULT CHARSET = {dbconfig['OPTIONS']['charset']} "
-        f"DEFAULT COLLATE = utf8mb4_unicode_ci;"
+        f"DEFAULT COLLATE = utf8mb4_0900_ai_ci;"
     )
     subprocess.run(
         [
