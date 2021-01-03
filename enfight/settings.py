@@ -165,7 +165,8 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
-    SECURE_HSTS_PRELOAD = True
+    # Prod is deployed at subdomain, thus cannot use preload
+    SECURE_HSTS_PRELOAD = False
 
 # Django CORS headers
 
