@@ -11,6 +11,7 @@ env:
   VK_SECRET: ""
   VK_ALLOWED_USERS: "*"
   SENTRY_DSN: ""
+  UI_HOST: "https://test.com"
 jobs:
   lint:
     name: Lint with black
