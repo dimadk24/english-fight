@@ -130,7 +130,7 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            supervisorctl stop enfight
+            sudo supervisorctl stop enfight
 
       - name: Copy code to folder
         uses: burnett01/rsync-deployments@695f58ca67af73a00d68f4ea156d92d427d1fbeb
@@ -180,4 +180,4 @@ jobs:
           username: ${{ secrets.DEPLOY_USER }}
           key: ${{ secrets.DEPLOY_KEY }}
           script: |
-            supervisorctl start enfight
+            sudo supervisorctl start enfight
