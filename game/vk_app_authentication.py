@@ -5,6 +5,7 @@ from hmac import HMAC
 from urllib.parse import parse_qsl, urlencode
 
 from django.conf import settings
+from django.contrib.auth.models import update_last_login
 from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
@@ -36,6 +37,7 @@ class VKAppAuthentication(BaseAuthentication):
         user, _ = AppUser.objects.get_or_create(
             vk_id=vk_user_id, defaults={"username": vk_user_id}
         )
+        update_last_login(None, user)
         return user, query_params_dict
 
     @staticmethod
