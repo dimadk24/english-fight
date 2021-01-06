@@ -8,6 +8,14 @@ from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, AppGroup, Question, Game
 
 
+class GameInlineAdmin(admin.StackedInline):
+    model = Game
+    fields = ("points", "created_at")
+    readonly_fields = ("created_at",)
+    extra = 0
+    show_change_link = True
+
+
 @admin.register(AppUser)
 class AppUserAdmin(UserAdmin):
     fieldsets = (
@@ -30,7 +38,9 @@ class AppUserAdmin(UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ("__str__", "email", "first_name", "last_name", "is_staff")
+    list_display = ("__str__", "score", "last_login", "date_joined")
+    inlines = (GameInlineAdmin,)
+    ordering = ("-date_joined",)
 
 
 # Move Group to the same app as User
