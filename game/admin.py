@@ -98,7 +98,33 @@ class QuestionInlineAdmin(admin.StackedInline):
         return QUESTIONS_PER_GAME
 
 
+class CompletedGamesFilter(admin.SimpleListFilter):
+    title = "Завершенные"
+    parameter_name = "completed"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("1", "Да"),
+            ("0", "Нет"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value:
+            if int(value):
+                return queryset.filter(points__gt=0)
+            return queryset.filter(points=0)
+
+
 @admin.register(Game)
 class GameAdmin(admin.ModelAdmin):
     readonly_fields = ("created_at",)
     inlines = (QuestionInlineAdmin,)
+    list_display = (
+        "id",
+        "player",
+        "points",
+        "created_at",
+    )
+    list_filter = ("player", CompletedGamesFilter, "created_at")
+    ordering = ("-created_at",)
