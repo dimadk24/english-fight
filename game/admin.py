@@ -70,6 +70,14 @@ class QuestionAdmin(admin.ModelAdmin):
         "is_correct",
     )
     readonly_fields = ("is_correct",)
+    list_display = (
+        "id",
+        "question_word",
+        "correct_answer",
+        "selected_answer",
+        "is_correct",
+    )
+    ordering = ("-id",)
 
 
 class QuestionInlineAdmin(admin.StackedInline):
