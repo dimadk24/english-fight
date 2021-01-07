@@ -14,5 +14,6 @@ class AppUser(AbstractUser):
     def games_number(self):
         return self.game_set.count()
 
+    @property
     def completed_games_number(self):
         return self.game_set.filter(points__gt=0).count()
