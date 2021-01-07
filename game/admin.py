@@ -1,6 +1,7 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
 from django.contrib.auth.models import Group
+from django.db.models import Count
 from django.utils.translation import gettext_lazy as _
 
 from game.admin_pre_filtered_list_filter import PreFilteredListFilter
@@ -28,6 +29,32 @@ class StaffFilter(PreFilteredListFilter):
         ]
 
 
+class HasPlayedFilter(admin.SimpleListFilter):
+    title = "Начал играть?"
+    parameter_name = "started_game"
+
+    def lookups(self, request, model_admin):
+        return (
+            ("not_finished", "Да, но не прошел игру"),
+            ("finished", "Да, и прошел 1+ игру"),
+            ("not_started", "Нет"),
+        )
+
+    def queryset(self, request, queryset):
+        value = self.value()
+        if value:
+            queryset_with_game_count = queryset.annotate(Count("game"))
+            if value == "not_started":
+                return queryset_with_game_count.filter(game__count=0)
+            queryset_with_game_count = queryset_with_game_count.filter(
+                game__count__gt=0
+            )
+            if value == "not_finished":
+                return queryset_with_game_count.filter(score=0)
+            if value == "finished":
+                return queryset_with_game_count.filter(score__gt=0)
+
+
 @admin.register(AppUser)
 class AppUserAdmin(UserAdmin):
     fieldsets = (
@@ -42,6 +69,7 @@ class AppUserAdmin(UserAdmin):
                     "vk_id",
                     "score",
                     "games_number",
+                    "completed_games_number",
                 )
             },
         ),
@@ -59,17 +87,18 @@ class AppUserAdmin(UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    readonly_fields = ("games_number",)
+    readonly_fields = ("games_number", "completed_games_number")
     list_display = (
         "__str__",
         "score",
         "games_number",
+        "completed_games_number",
         "last_login",
         "date_joined",
     )
     inlines = (GameInlineAdmin,)
     ordering = ("-date_joined",)
-    list_filter = (StaffFilter,)
+    list_filter = (StaffFilter, HasPlayedFilter)
 
 
 # Move Group to the same app as User
