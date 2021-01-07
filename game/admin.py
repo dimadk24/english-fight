@@ -16,6 +16,18 @@ class GameInlineAdmin(admin.StackedInline):
     show_change_link = True
 
 
+class StaffFilter(PreFilteredListFilter):
+    default_value = 0
+    title = "Статус персонала"
+    parameter_name = "is_staff"
+
+    def get_lookups(self):
+        return [
+            (1, "Да"),
+            (0, "Нет"),
+        ]
+
+
 @admin.register(AppUser)
 class AppUserAdmin(UserAdmin):
     fieldsets = (
@@ -41,23 +53,12 @@ class AppUserAdmin(UserAdmin):
     list_display = ("__str__", "score", "last_login", "date_joined")
     inlines = (GameInlineAdmin,)
     ordering = ("-date_joined",)
+    list_filter = (StaffFilter,)
 
 
 # Move Group to the same app as User
 admin.site.unregister(Group)
 admin.site.register(AppGroup, GroupAdmin)
-
-
-class VisibilityFilter(PreFilteredListFilter):
-    default_value = True
-    title = "Visible"
-    parameter_name = "visible"
-
-    def get_lookups(self):
-        return [
-            (True, "True"),
-            (False, "False"),
-        ]
 
 
 @admin.register(Question)
