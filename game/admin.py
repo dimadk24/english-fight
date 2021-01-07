@@ -34,7 +34,16 @@ class AppUserAdmin(UserAdmin):
         (None, {"fields": ("username", "password")}),
         (
             _("Personal info"),
-            {"fields": ("first_name", "last_name", "email", "vk_id", "score")},
+            {
+                "fields": (
+                    "first_name",
+                    "last_name",
+                    "email",
+                    "vk_id",
+                    "score",
+                    "games_number",
+                )
+            },
         ),
         (
             _("Permissions"),
@@ -50,7 +59,14 @@ class AppUserAdmin(UserAdmin):
         ),
         (_("Important dates"), {"fields": ("last_login", "date_joined")}),
     )
-    list_display = ("__str__", "score", "last_login", "date_joined")
+    readonly_fields = ("games_number",)
+    list_display = (
+        "__str__",
+        "score",
+        "games_number",
+        "last_login",
+        "date_joined",
+    )
     inlines = (GameInlineAdmin,)
     ordering = ("-date_joined",)
     list_filter = (StaffFilter,)
