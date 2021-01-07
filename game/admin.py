@@ -126,5 +126,9 @@ class GameAdmin(admin.ModelAdmin):
         "points",
         "created_at",
     )
-    list_filter = ("player", CompletedGamesFilter, "created_at")
+    list_filter = (
+        ("player", admin.RelatedOnlyFieldListFilter),
+        CompletedGamesFilter,
+        "created_at",
+    )
     ordering = ("-created_at",)
