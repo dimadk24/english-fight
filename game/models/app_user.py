@@ -17,3 +17,6 @@ class AppUser(AbstractUser):
     @property
     def completed_games_number(self):
         return self.game_set.filter(points__gt=0).count()
+
+    def __str__(self):
+        return str(self.vk_id)
