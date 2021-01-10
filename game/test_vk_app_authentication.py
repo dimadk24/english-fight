@@ -68,6 +68,7 @@ def run_test_with_existing_user():
     user, query_params = VKAppAuthentication().authenticate(request)
     user1 = AppUser.objects.get(vk_id=1)
     assert user == user1
+    assert user.visits_number == 2
     assert query_params == {
         "vk_user_id": "1",
         "vk_app_id": "2",
@@ -88,12 +89,15 @@ def run_test_with_new_user():
     }
     user, query_params = VKAppAuthentication().authenticate(request)
     assert user == AppUser.objects.get(vk_id=3)
+    assert user.visits_number == 1
     assert query_params == {
         "vk_user_id": "3",
         "vk_app_id": "2",
     }
     user, _ = VKAppAuthentication().authenticate(request)
-    assert user == AppUser.objects.get(vk_id=3)
+    updated_user = AppUser.objects.get(vk_id=3)
+    assert user == updated_user
+    assert updated_user.visits_number == 2
 
 
 @override_settings(VK_ALLOWED_USERS=[1])
