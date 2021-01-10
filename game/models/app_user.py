@@ -9,6 +9,9 @@ class AppUser(AbstractUser):
     score = models.PositiveIntegerField(
         default=0, verbose_name="Счет", blank=True
     )
+    visits_number = models.PositiveIntegerField(
+        default=1, verbose_name="Количество визитов"
+    )
 
     @property
     def games_number(self):
