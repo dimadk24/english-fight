@@ -70,7 +70,6 @@ class AppUserAdmin(UserAdmin):
                     "score",
                     "games_number",
                     "completed_games_number",
-                    "visits_number",
                 )
             },
         ),
@@ -94,7 +93,6 @@ class AppUserAdmin(UserAdmin):
         "score",
         "games_number",
         "completed_games_number",
-        "visits_number",
         "last_login",
         "date_joined",
     )
