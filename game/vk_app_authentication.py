@@ -35,12 +35,9 @@ class VKAppAuthentication(BaseAuthentication):
         if not self.is_user_allowed(vk_user_id):
             raise AuthenticationFailed("У вас нет доступа к приложению")
         user, _ = AppUser.objects.get_or_create(
-            vk_id=vk_user_id,
-            defaults={"username": vk_user_id, "visits_number": 0},
+            vk_id=vk_user_id, defaults={"username": vk_user_id}
         )
         update_last_login(None, user)
-        user.visits_number += 1
-        user.save()
         return user, query_params_dict
 
     @staticmethod
