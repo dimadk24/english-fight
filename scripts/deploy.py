@@ -27,6 +27,7 @@ def handler():
             "rsync",
             "-a",
             "--exclude-from=.deployignore",
+            "--delete",
             ".",
             f'{user}@{host}:"{folder}"',
         ],

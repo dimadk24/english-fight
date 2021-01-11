@@ -135,7 +135,7 @@ jobs:
       - name: Copy code to folder
         uses: burnett01/rsync-deployments@695f58ca67af73a00d68f4ea156d92d427d1fbeb
         with:
-          switches: -a --exclude-from=.deployignore
+          switches: -a --delete --exclude-from=.deployignore
           path: .
           remote_path: ${{secrets.DEPLOY_FOLDER}}
           remote_host: ${{secrets.DEPLOY_HOST}}
