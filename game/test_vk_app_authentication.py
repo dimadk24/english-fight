@@ -1,10 +1,8 @@
-from datetime import timedelta
 from unittest import mock
 
 import pytest
 from django.http import HttpRequest
 from django.test import override_settings
-from django.utils import timezone
 from rest_framework.exceptions import AuthenticationFailed
 
 from game.models import AppUser
@@ -72,9 +70,6 @@ def run_test_with_existing_user():
     user, query_params = VKAppAuthentication().authenticate(request)
     user1 = AppUser.objects.get(vk_id=1)
     assert user == user1
-    now = timezone.now()
-    assert now - user.last_login < timedelta(minutes=1)
-    assert user.visits_number == 2
     assert query_params == {
         "vk_user_id": "1",
         "vk_app_id": "2",
@@ -95,17 +90,12 @@ def run_test_with_new_user():
     }
     user, query_params = VKAppAuthentication().authenticate(request)
     assert user == AppUser.objects.get(vk_id=3)
-    assert user.visits_number == 1
     assert query_params == {
         "vk_user_id": "3",
         "vk_app_id": "2",
     }
     user, _ = VKAppAuthentication().authenticate(request)
-    updated_user = AppUser.objects.get(vk_id=3)
-    now = timezone.now()
-    assert now - user.last_login < timedelta(minutes=1)
-    assert user == updated_user
-    assert updated_user.visits_number == 2
+    assert user == AppUser.objects.get(vk_id=3)
 
 
 @override_settings(VK_ALLOWED_USERS=[1])
