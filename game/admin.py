@@ -70,6 +70,7 @@ class AppUserAdmin(UserAdmin):
                     "last_name",
                     "email",
                     "vk_id",
+                    "photo_url",
                     "score",
                     "games_number",
                     "completed_games_number",
