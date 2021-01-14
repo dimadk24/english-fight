@@ -9,6 +9,7 @@ from django.contrib.auth.models import update_last_login
 from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
+from vk_api import VkApi
 
 from game.models import AppUser
 
@@ -38,6 +39,7 @@ class VKAppAuthentication(BaseAuthentication):
             vk_id=vk_user_id, defaults={"username": vk_user_id}
         )
         update_last_login(None, user)
+        self.set_user_data(user)
         return user, query_params_dict
 
     @staticmethod
@@ -64,3 +66,29 @@ class VKAppAuthentication(BaseAuthentication):
     def is_user_allowed(self, user_vk_id: int):
         allow_all_users = settings.VK_ALLOWED_USERS[0] == "*"
         return allow_all_users or user_vk_id in settings.VK_ALLOWED_USERS
+
+    def set_user_data(self, user: AppUser):
+        if user.photo_url:
+            # if photo_url is set, all user vk data is set
+            # no need to update it
+            return
+        user_data = VKAppAuthentication.get_vk_user_data(user.vk_id)
+        user.first_name = user_data["first_name"]
+        user.last_name = user_data["last_name"]
+        user.photo_url = user_data["photo_200"]
+        user.save()
+
+    @staticmethod
+    def get_vk_user_data(vk_id: AppUser):
+        return (
+            VkApi(
+                token=settings.VK_SERVICE_TOKEN,
+                api_version=settings.VK_API_VERSION,
+            )
+            .get_api()
+            .users.get(
+                user_ids=vk_id,
+                fields="photo_200,first_name,last_name",
+                lang="ru",
+            )
+        )[0]
