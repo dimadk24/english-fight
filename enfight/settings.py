@@ -207,6 +207,8 @@ REST_FRAMEWORK = {
 # VK
 
 VK_SECRET = env("VK_SECRET")
+VK_SERVICE_TOKEN = env("VK_SERVICE_TOKEN")
+VK_API_VERSION = "5.126"
 VK_ALLOWED_USERS = env.list("VK_ALLOWED_USERS")
 if not len(VK_ALLOWED_USERS):
     raise ImproperlyConfigured(
