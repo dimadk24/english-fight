@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "debug_toolbar",
+    "admin_honeypot",
     "game",
 ]
 

@@ -21,6 +21,7 @@ from game.views.app_index_view import AppIndexView
 
 urlpatterns = [
     path("", AppIndexView.as_view()),
+    path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
     path("root/", admin.site.urls),
     path("api/", include("game.urls")),
     path("__debug__/", include(debug_toolbar.urls)),
