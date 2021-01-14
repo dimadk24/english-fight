@@ -1,4 +1,5 @@
 from django.contrib.auth.models import AbstractUser
+from django.core.validators import URLValidator
 from django.db import models
 
 
@@ -8,6 +9,15 @@ class AppUser(AbstractUser):
     )
     score = models.PositiveIntegerField(
         default=0, verbose_name="Счет", blank=True
+    )
+    # VK has photo urls that have length 230 and more,
+    # for MySQL CharField max is 250.
+    # Thus it's safer to use TextField
+    photo_url = models.TextField(
+        default="",
+        verbose_name="Photo URL",
+        validators=[URLValidator(schemes=("http", "https"))],
+        blank=True,
     )
 
     @property
