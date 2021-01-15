@@ -10,5 +10,6 @@ urlpatterns = [
     path("game", GameView.as_view()),
     path("game/<int:pk>", GameView.as_view()),
     path("question/<int:pk>", QuestionView.as_view()),
-    path("scoreboard", ScoreboardView.as_view()),
+    path("forever_scoreboard", ScoreboardView.as_view(type="forever")),
+    path("monthly_scoreboard", ScoreboardView.as_view(type="monthly")),
 ]
