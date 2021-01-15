@@ -2,7 +2,7 @@ from rest_framework.response import Response
 
 from game.models import AppUser
 
-url = "/api/scoreboard"
+url = "/api/forever_scoreboard"
 
 
 def get_response(api_client) -> Response:
@@ -44,26 +44,24 @@ def test_when_3_users(api_client):
         ),
     ]
     AppUser.objects.bulk_create(users)
-    user1 = AppUser.objects.get(vk_id=2)
-    api_client.force_authenticate(user1)
     response = get_response(api_client)
     expected = [
         {
-            "id": 38,
+            "id": AppUser.objects.get(vk_id=2).pk,
             "score": 20,
             "first_name": "Cat",
             "last_name": "Leo",
             "photo_url": "2.png",
         },
         {
-            "id": 40,
+            "id": AppUser.objects.get(vk_id=4).pk,
             "score": 12,
             "first_name": "Puppet",
             "last_name": "Bella",
             "photo_url": "4.png",
         },
         {
-            "id": 39,
+            "id": AppUser.objects.get(vk_id=3).pk,
             "score": 1,
             "first_name": "Dog",
             "last_name": "Cooper",
