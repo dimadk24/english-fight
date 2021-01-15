@@ -1,3 +1,5 @@
+from enum import Enum
+
 from django.db.models import Sum, Q
 from django.utils import timezone
 from rest_framework.exceptions import APIException
@@ -11,14 +13,19 @@ from game.serializers.scoreboard_user_serializer import (
 )
 
 
+class ScoreboardType(Enum):
+    monthly = "monthly"
+    forever = "forever"
+
+
 class ScoreboardView(ListAPIView):
     type = None
 
     def get_serializer_class(self):
         assert self.type, "type should be set in forever_scoreboard_url conf"
-        if self.type == "monthly":
+        if self.type == ScoreboardType.monthly:
             return MonthlyScoreboardUserSerializer
-        if self.type == "forever":
+        if self.type == ScoreboardType.forever:
             return ForeverScoreboardUserSerializer
         raise APIException(f"Invalid type: '{self.type}'")
 
@@ -29,7 +36,7 @@ class ScoreboardView(ListAPIView):
             is_staff=False, is_active=True, is_superuser=False, score__gt=0
         )
 
-        if self.type == "monthly":
+        if self.type == ScoreboardType.monthly:
             current_month = timezone.now().month
             monthly_score = Sum(
                 "game__points", filter=Q(game__created_at__month=current_month)
@@ -40,6 +47,6 @@ class ScoreboardView(ListAPIView):
                 .order_by("-monthly_score")
                 .defer("score")[:SCOREBOARD_LIMIT]
             )
-        if self.type == "forever":
+        if self.type == ScoreboardType.forever:
             return qs.order_by("-score")[:SCOREBOARD_LIMIT]
         raise APIException(f"Invalid type: '{self.type}'")
