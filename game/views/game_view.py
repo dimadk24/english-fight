@@ -5,10 +5,10 @@ from django.db import transaction
 from rest_framework.exceptions import APIException
 from rest_framework.generics import CreateAPIView, RetrieveAPIView
 
+from data.word_pairs import WORD_PAIRS
 from game.constants import QUESTIONS_PER_GAME, ANSWERS_PER_QUESTION
 from game.models import Question, Game
 from game.serializers.game_serializer import GameSerializer
-from language_pairs import LANGUAGE_PAIRS
 
 
 class GameView(CreateAPIView, RetrieveAPIView):
@@ -21,7 +21,7 @@ class GameView(CreateAPIView, RetrieveAPIView):
     def perform_create(self, serializer: GameSerializer):
         serializer.save()
         min_number_of_pairs = max(ANSWERS_PER_QUESTION, QUESTIONS_PER_GAME)
-        if len(LANGUAGE_PAIRS) < min_number_of_pairs:
+        if len(WORD_PAIRS) < min_number_of_pairs:
             raise APIException(
                 f"Must have at least {min_number_of_pairs} language pairs to "
                 "create a game"
@@ -33,8 +33,8 @@ class GameView(CreateAPIView, RetrieveAPIView):
         return randint(min_num, max_num)  # nosec
 
     def get_random_language_pair(self) -> dict:
-        index = GameView.get_random_int(0, len(LANGUAGE_PAIRS) - 1)
-        return LANGUAGE_PAIRS[index]
+        index = GameView.get_random_int(0, len(WORD_PAIRS) - 1)
+        return WORD_PAIRS[index]
 
     def create_questions(self, game: Game):
         questions = []

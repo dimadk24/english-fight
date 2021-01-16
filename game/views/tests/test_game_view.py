@@ -6,8 +6,8 @@ from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
 
+from data.word_pairs import get_pair_by_english_word
 from game.models import AppUser, Game, Question
-from language_pairs import get_pair_by_english_word
 
 
 def post(api_client) -> Response:

@@ -1,7 +1,7 @@
 from rest_framework.response import Response
 
+from data.word_pairs import get_pair_by_english_word
 from game.models import AppUser, Question, Game
-from language_pairs import get_pair_by_english_word
 
 
 def authenticate_with_user_2(api_client):

@@ -1,6 +1,6 @@
 from list_utils import find
 
-LANGUAGE_PAIRS_TUPLE = (
+WORD_PAIRS_TUPLE = (
     ("angle", "угол, поворачивать"),
     ("ant", "муравей"),
     ("apple", "яблоко"),
@@ -447,18 +447,18 @@ LANGUAGE_PAIRS_TUPLE = (
     ("wrong", "неправильный, несправедливость"),
 )
 
-LANGUAGE_PAIRS = [
+WORD_PAIRS = [
     {
         "english_word": item[0],
         "russian_word": item[1],
     }
-    for item in LANGUAGE_PAIRS_TUPLE
+    for item in WORD_PAIRS_TUPLE
 ]
 
 
 def get_pair_by_russian_word(word: str) -> dict:
-    return find(LANGUAGE_PAIRS, lambda pair: pair["russian_word"] == word)
+    return find(WORD_PAIRS, lambda pair: pair["russian_word"] == word)
 
 
 def get_pair_by_english_word(word: str) -> dict:
-    return find(LANGUAGE_PAIRS, lambda pair: pair["english_word"] == word)
+    return find(WORD_PAIRS, lambda pair: pair["english_word"] == word)
