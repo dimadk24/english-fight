@@ -142,7 +142,6 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
             /home/dima/.poetry/bin/poetry install --no-dev --remove-untracked
-            /home/dima/.poetry/bin/poetry run python manage.py ensurehasdb
             /home/dima/.poetry/bin/poetry run python manage.py migrate
             sudo supervisorctl restart enfight
             /home/dima/.poetry/bin/poetry run python manage.py collectstatic --no-input
