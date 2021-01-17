@@ -8,6 +8,8 @@ from game.admin_pre_filtered_list_filter import PreFilteredListFilter
 from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, AppGroup, Question, Game
 
+admin.site.disable_action("delete_selected")
+
 
 class GameInlineAdmin(admin.StackedInline):
     model = Game
