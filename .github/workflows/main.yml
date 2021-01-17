@@ -123,7 +123,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Stop gunicorn via supervisor
+      - name: Stop server via supervisor
         uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -142,7 +142,7 @@ jobs:
           remote_user: ${{secrets.DEPLOY_USER}}
           remote_key: ${{secrets.DEPLOY_KEY}}
 
-      - name: Install dependencies
+      - name: Install dependencies, migrate, run server, collectstatic
         uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
         with:
           host: ${{ secrets.DEPLOY_HOST }}
@@ -151,33 +151,7 @@ jobs:
           script: |
             cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
             /home/dima/.poetry/bin/poetry install --no-dev --remove-untracked
-
-      - name: Collect static files
-        uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
-            /home/dima/.poetry/bin/poetry run python manage.py collectstatic --no-input
-
-      - name: Run migrations
-        uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
-            cd ${{ secrets.DEPLOY_FOLDER }} || { echo "No app folder"; exit 1; }
             /home/dima/.poetry/bin/poetry run python manage.py ensurehasdb
             /home/dima/.poetry/bin/poetry run python manage.py migrate
-
-      - name: Start gunicorn via supervisor
-        uses: appleboy/ssh-action@61e292b601b405c4b211ea30a046bb1a97e45bdc
-        with:
-          host: ${{ secrets.DEPLOY_HOST }}
-          username: ${{ secrets.DEPLOY_USER }}
-          key: ${{ secrets.DEPLOY_KEY }}
-          script: |
             sudo supervisorctl start enfight
+            /home/dima/.poetry/bin/poetry run python manage.py collectstatic --no-input
