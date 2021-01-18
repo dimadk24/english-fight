@@ -1,3 +1,4 @@
+from django.db.models import Count, Q
 from rest_framework.generics import RetrieveAPIView
 
 from game.models import AppUser
@@ -9,13 +10,32 @@ class UsersView(RetrieveAPIView):
 
     def get_object(self):
         user = self.request.user
+        user_games_count = user.game_set.count()
+        annotated_users = AppUser.objects.annotate(Count("game"))
         rank = (
-            AppUser.objects.filter(
+            annotated_users.filter(
                 score__gt=user.score,
                 is_active=True,
                 is_staff=False,
                 is_superuser=False,
-            ).count()
+            )
+            .union(
+                annotated_users.filter(
+                    Q(score=user.score) & Q(game__count__lt=user_games_count),
+                    is_active=True,
+                    is_staff=False,
+                    is_superuser=False,
+                ),
+                annotated_users.filter(
+                    Q(score=user.score)
+                    & Q(game__count=user_games_count)
+                    & Q(vk_id__lt=user.vk_id),
+                    is_active=True,
+                    is_staff=False,
+                    is_superuser=False,
+                ),
+            )
+            .count()
             + 1
         )
         return {
