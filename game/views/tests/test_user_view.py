@@ -1,3 +1,5 @@
+from django.utils import timezone
+
 from game.models import AppUser, Game
 
 
@@ -17,9 +19,28 @@ def test_returns_current_user(api_client):
         last_name="cat",
         photo_url="example.com/test.png",
     )
-    Game.objects.create(player=AppUser.objects.get(vk_id=2))
-    Game.objects.create(player=AppUser.objects.get(vk_id=2))
-    Game.objects.create(player=AppUser.objects.get(vk_id=5))
+    Game.objects.create(
+        player=AppUser.objects.get(vk_id=6),
+        created_at=timezone.now(),
+        points=10,
+    )
+    Game.objects.create(player=user, created_at=timezone.now(), points=1)
+    Game.objects.create(player=user, created_at=timezone.now(), points=1)
+    Game.objects.create(
+        player=AppUser.objects.get(vk_id=5),
+        created_at=timezone.now(),
+        points=2,
+    )
+    Game.objects.create(
+        player=AppUser.objects.get(vk_id=4),
+        created_at=timezone.now(),
+        points=2,
+    )
+    Game.objects.create(
+        player=AppUser.objects.get(vk_id=3),
+        created_at=timezone.now(),
+        points=2,
+    )
     api_client.force_authenticate(user)
     response = api_client.get("/api/user")
     assert response.status_code == 200
@@ -27,7 +48,8 @@ def test_returns_current_user(api_client):
         "id": user.id,
         "vk_id": 2,
         "score": 2,
-        "rank": 4,
+        "forever_rank": 4,
+        "monthly_rank": 5,
         "first_name": "cute",
         "last_name": "cat",
         "photo_url": "example.com/test.png",

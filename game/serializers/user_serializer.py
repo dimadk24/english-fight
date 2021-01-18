@@ -4,7 +4,8 @@ from game.models import AppUser
 
 
 class UserSerializer(serializers.ModelSerializer):
-    rank = serializers.IntegerField()
+    forever_rank = serializers.IntegerField()
+    monthly_rank = serializers.IntegerField()
 
     class Meta:
         model = AppUser
@@ -15,5 +16,6 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "photo_url",
             "score",
-            "rank",
+            "forever_rank",
+            "monthly_rank",
         )
