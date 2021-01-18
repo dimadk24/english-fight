@@ -78,6 +78,14 @@ def test_when_3_users(api_client):
             last_name="Bella",
             photo_url="4.png",
         ),
+        AppUser(
+            username="5",
+            vk_id=5,
+            score=12,
+            first_name="Fox",
+            last_name="Cozy",
+            photo_url="5.png",
+        ),
     ]
     AppUser.objects.bulk_create(users)
     games = [
@@ -103,6 +111,16 @@ def test_when_3_users(api_client):
         ),
         Game(
             player=AppUser.objects.get(vk_id=4),
+            points=2,
+            created_at=timezone.now(),
+        ),
+        Game(
+            player=AppUser.objects.get(vk_id=5),
+            points=1,
+            created_at=timezone.now(),
+        ),
+        Game(
+            player=AppUser.objects.get(vk_id=5),
             points=1,
             created_at=timezone.now(),
         ),
@@ -130,7 +148,14 @@ def test_when_3_users(api_client):
             "id": AppUser.objects.get(vk_id=4).pk,
             "last_name": "Bella",
             "photo_url": "4.png",
-            "score": 1,
+            "score": 2,
+        },
+        {
+            "first_name": "Fox",
+            "id": AppUser.objects.get(vk_id=5).pk,
+            "last_name": "Cozy",
+            "photo_url": "5.png",
+            "score": 2,
         },
     ]
     assert response.json() == expected

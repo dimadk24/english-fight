@@ -1,6 +1,6 @@
 from enum import Enum
 
-from django.db.models import Sum, Q
+from django.db.models import Sum, Q, Count
 from django.utils import timezone
 from rest_framework.exceptions import APIException
 from rest_framework.generics import ListAPIView
@@ -34,7 +34,7 @@ class ScoreboardView(ListAPIView):
 
         qs = AppUser.objects.filter(
             is_staff=False, is_active=True, is_superuser=False, score__gt=0
-        )
+        ).annotate(Count("game"))
 
         if self.type == ScoreboardType.monthly:
             current_month = timezone.now().month
@@ -44,9 +44,11 @@ class ScoreboardView(ListAPIView):
             return (
                 qs.annotate(monthly_score=monthly_score)
                 .filter(monthly_score__gt=0)
-                .order_by("-monthly_score")
+                .order_by("-monthly_score", "game__count", "vk_id")
                 .defer("score")[:SCOREBOARD_LIMIT]
             )
         if self.type == ScoreboardType.forever:
-            return qs.order_by("-score")[:SCOREBOARD_LIMIT]
+            return qs.order_by("-score", "game__count", "vk_id")[
+                :SCOREBOARD_LIMIT
+            ]
         raise APIException(f"Invalid type: '{self.type}'")
