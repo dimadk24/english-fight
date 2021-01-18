@@ -8,7 +8,14 @@ def test_returns_current_user(api_client):
         AppUser(vk_id=5, username="5", score=1),
     ]
     AppUser.objects.bulk_create(users)
-    user = AppUser.objects.create(vk_id=2, username="2", score=2)
+    user = AppUser.objects.create(
+        vk_id=2,
+        username="2",
+        score=2,
+        first_name="cute",
+        last_name="cat",
+        photo_url="example.com/test.png",
+    )
     api_client.force_authenticate(user)
     response = api_client.get("/api/user")
     assert response.status_code == 200
@@ -17,4 +24,7 @@ def test_returns_current_user(api_client):
         "vk_id": 2,
         "score": 2,
         "rank": 3,
+        "first_name": "cute",
+        "last_name": "cat",
+        "photo_url": "example.com/test.png",
     }
