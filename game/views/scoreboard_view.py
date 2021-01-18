@@ -32,9 +32,7 @@ class ScoreboardView(ListAPIView):
     def get_queryset(self):
         assert self.type, "type should be set in forever_scoreboard_url conf"
 
-        qs = AppUser.objects.filter(
-            is_staff=False, is_active=True, is_superuser=False, score__gt=0
-        ).annotate(Count("game"))
+        qs = AppUser.users.filter(score__gt=0).annotate(Count("game"))
 
         if self.type == ScoreboardType.monthly:
             current_month = timezone.now().month

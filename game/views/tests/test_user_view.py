@@ -9,6 +9,9 @@ def test_returns_current_user(api_client):
         AppUser(vk_id=4, username="4", score=11),
         AppUser(vk_id=5, username="5", score=1),
         AppUser(vk_id=6, username="6", score=2),
+        AppUser(vk_id=7, username="7", score=20, is_staff=True),
+        AppUser(vk_id=8, username="8", score=21, is_superuser=True),
+        AppUser(vk_id=9, username="9", score=21, is_active=False),
     ]
     AppUser.objects.bulk_create(users)
     user = AppUser.objects.create(
@@ -40,6 +43,11 @@ def test_returns_current_user(api_client):
         player=AppUser.objects.get(vk_id=3),
         created_at=timezone.now(),
         points=2,
+    )
+    Game.objects.create(
+        player=AppUser.objects.get(vk_id=9),
+        created_at=timezone.now(),
+        points=20,
     )
     api_client.force_authenticate(user)
     response = api_client.get("/api/user")

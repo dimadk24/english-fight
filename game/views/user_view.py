@@ -12,28 +12,17 @@ class UsersView(RetrieveAPIView):
     def get_object(self):
         user = self.request.user
         user_games_count = user.game_set.count()
-        annotated_users = AppUser.objects.annotate(Count("game"))
+        annotated_users = AppUser.users.annotate(Count("game"))
         forever_rank = (
-            annotated_users.filter(
-                score__gt=user.score,
-                is_active=True,
-                is_staff=False,
-                is_superuser=False,
-            )
+            annotated_users.filter(score__gt=user.score)
             .union(
                 annotated_users.filter(
                     Q(score=user.score) & Q(game__count__lt=user_games_count),
-                    is_active=True,
-                    is_staff=False,
-                    is_superuser=False,
                 ),
                 annotated_users.filter(
                     Q(score=user.score)
                     & Q(game__count=user_games_count)
                     & Q(vk_id__lt=user.vk_id),
-                    is_active=True,
-                    is_staff=False,
-                    is_superuser=False,
                 ),
             )
             .count()
@@ -48,27 +37,16 @@ class UsersView(RetrieveAPIView):
             vk_id=user.vk_id
         ).monthly_score
         monthly_rank = (
-            annotated_users.filter(
-                monthly_score__gt=user_monthly_score,
-                is_active=True,
-                is_staff=False,
-                is_superuser=False,
-            )
+            annotated_users.filter(monthly_score__gt=user_monthly_score)
             .union(
                 annotated_users.filter(
                     Q(monthly_score=user.score)
                     & Q(game__count__lt=user_games_count),
-                    is_active=True,
-                    is_staff=False,
-                    is_superuser=False,
                 ),
                 annotated_users.filter(
                     Q(monthly_score=user.score)
                     & Q(game__count=user_games_count)
                     & Q(vk_id__lt=user.vk_id),
-                    is_active=True,
-                    is_staff=False,
-                    is_superuser=False,
                 ),
             )
             .count()

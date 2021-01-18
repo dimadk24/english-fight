@@ -16,7 +16,17 @@ def test_when_no_users(api_client):
     assert response.json() == []
 
 
-def test_when_3_users(api_client):
+def test_when_only_staff_superuser_and_deactivated(api_client):
+    AppUser.objects.all().delete()
+    AppUser.objects.create(username="1", vk_id=1, is_staff=True)
+    AppUser.objects.create(username="2", vk_id=2, is_superuser=True)
+    AppUser.objects.create(username="3", vk_id=3, is_active=False)
+    response = get_response(api_client)
+    assert response.status_code == 200
+    assert response.json() == []
+
+
+def test_when_have_users(api_client):
     users = [
         AppUser(
             username="2",

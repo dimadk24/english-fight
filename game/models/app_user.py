@@ -1,6 +1,18 @@
-from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import (
+    AbstractUser,
+    UserManager as DjangoUserManager,
+)
 from django.core.validators import URLValidator
 from django.db import models
+
+
+class AppUserManager(DjangoUserManager):
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(is_active=True, is_staff=False, is_superuser=False)
+        )
 
 
 class AppUser(AbstractUser):
@@ -19,6 +31,9 @@ class AppUser(AbstractUser):
         validators=[URLValidator(schemes=("http", "https"))],
         blank=True,
     )
+
+    objects = DjangoUserManager()
+    users = AppUserManager()
 
     @property
     def games_number(self):
