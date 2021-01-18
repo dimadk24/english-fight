@@ -23,4 +23,7 @@ class UsersView(RetrieveAPIView):
             "score": user.score,
             "vk_id": user.vk_id,
             "rank": rank,
+            "first_name": user.first_name,
+            "last_name": user.last_name,
+            "photo_url": user.photo_url,
         }
