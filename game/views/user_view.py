@@ -1,4 +1,5 @@
-from django.db.models import Count, Q
+from django.db.models import Count, Q, Sum
+from django.utils import timezone
 from rest_framework.generics import RetrieveAPIView
 
 from game.models import AppUser
@@ -12,7 +13,7 @@ class UsersView(RetrieveAPIView):
         user = self.request.user
         user_games_count = user.game_set.count()
         annotated_users = AppUser.objects.annotate(Count("game"))
-        rank = (
+        forever_rank = (
             annotated_users.filter(
                 score__gt=user.score,
                 is_active=True,
@@ -38,11 +39,47 @@ class UsersView(RetrieveAPIView):
             .count()
             + 1
         )
+        current_month = timezone.now().month
+        monthly_score = Sum(
+            "game__points", filter=Q(game__created_at__month=current_month)
+        )
+        annotated_users = annotated_users.annotate(monthly_score=monthly_score)
+        user_monthly_score = annotated_users.get(
+            vk_id=user.vk_id
+        ).monthly_score
+        monthly_rank = (
+            annotated_users.filter(
+                monthly_score__gt=user_monthly_score,
+                is_active=True,
+                is_staff=False,
+                is_superuser=False,
+            )
+            .union(
+                annotated_users.filter(
+                    Q(monthly_score=user.score)
+                    & Q(game__count__lt=user_games_count),
+                    is_active=True,
+                    is_staff=False,
+                    is_superuser=False,
+                ),
+                annotated_users.filter(
+                    Q(monthly_score=user.score)
+                    & Q(game__count=user_games_count)
+                    & Q(vk_id__lt=user.vk_id),
+                    is_active=True,
+                    is_staff=False,
+                    is_superuser=False,
+                ),
+            )
+            .count()
+            + 1
+        )
         return {
             "id": user.id,
             "score": user.score,
             "vk_id": user.vk_id,
-            "rank": rank,
+            "forever_rank": forever_rank,
+            "monthly_rank": monthly_rank,
             "first_name": user.first_name,
             "last_name": user.last_name,
             "photo_url": user.photo_url,
