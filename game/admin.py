@@ -9,6 +9,7 @@ from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, AppGroup, Question, Game
 
 admin.site.disable_action("delete_selected")
+admin.site.site_header = "Enfight admin"
 
 
 class GameInlineAdmin(admin.StackedInline):
