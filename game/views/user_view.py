@@ -33,9 +33,9 @@ class UsersView(RetrieveAPIView):
             "game__points", filter=Q(game__created_at__month=current_month)
         )
         annotated_users = annotated_users.annotate(monthly_score=monthly_score)
-        user_monthly_score = annotated_users.get(
-            vk_id=user.vk_id
-        ).monthly_score
+        user_monthly_score = (
+            annotated_users.get(vk_id=user.vk_id).monthly_score or 0
+        )
         monthly_rank = (
             annotated_users.filter(monthly_score__gt=user_monthly_score)
             .union(
