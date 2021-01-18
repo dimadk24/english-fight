@@ -1,6 +1,6 @@
 from rest_framework.response import Response
 
-from game.models import AppUser
+from game.models import AppUser, Game
 
 url = "/api/forever_scoreboard"
 
@@ -42,8 +42,21 @@ def test_when_3_users(api_client):
             last_name="Bella",
             photo_url="4.png",
         ),
+        AppUser(
+            username="5",
+            vk_id=5,
+            score=12,
+            first_name="Fox",
+            last_name="Cozy",
+            photo_url="5.png",
+        ),
     ]
     AppUser.objects.bulk_create(users)
+    fox = AppUser.objects.get(vk_id=5)
+    Game.objects.create(player=fox)
+    Game.objects.create(player=fox)
+    puppet = AppUser.objects.get(vk_id=4)
+    Game.objects.create(player=puppet)
     response = get_response(api_client)
     expected = [
         {
@@ -59,6 +72,13 @@ def test_when_3_users(api_client):
             "first_name": "Puppet",
             "last_name": "Bella",
             "photo_url": "4.png",
+        },
+        {
+            "id": AppUser.objects.get(vk_id=5).pk,
+            "score": 12,
+            "first_name": "Fox",
+            "last_name": "Cozy",
+            "photo_url": "5.png",
         },
         {
             "id": AppUser.objects.get(vk_id=3).pk,
