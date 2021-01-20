@@ -106,7 +106,7 @@ def test_raises_when_try_to_set_selected_question_of_another_user(api_client):
     assert response.data["detail"] == "Страница не найдена."
 
     question_instance = Question.objects.get(pk=question_1["id"])
-    assert question_instance.selected_answer is ""
+    assert question_instance.selected_answer == ""
 
     game = Game.objects.get()
     assert game.points == 0

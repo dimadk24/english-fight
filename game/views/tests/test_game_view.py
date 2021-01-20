@@ -50,7 +50,7 @@ def do_database_asserts():
         assert question.correct_answer in question.answer_words
         language_pair = get_pair_by_english_word(question.question_word)
         assert language_pair["russian_word"] == question.correct_answer
-        assert question.selected_answer is ""
+        assert question.selected_answer == ""
         assert not question.is_correct
 
     assert_not_included_in_questions("Ноль")
