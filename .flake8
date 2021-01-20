@@ -1,0 +1,5 @@
+[flake8]
+exclude = migrations
+ignore = E203, W503
+# E203 conflicts with black https://github.com/psf/black/issues/1859
+# W503 should be updated https://www.flake8rules.com/rules/W503.html
