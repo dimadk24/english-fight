@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import subprocess
+import subprocess  # nosec
 from pathlib import Path
 
 import click
@@ -22,9 +22,9 @@ def handler():
         print(f"Host: {host}")
         print(f"Folder: {folder}")
 
-    subprocess.check_output(
+    subprocess.check_output(  # nosec
         [
-            "rsync",
+            "/usr/bin/rsync",
             "-a",
             "--exclude-from=.deployignore",
             "--delete",
