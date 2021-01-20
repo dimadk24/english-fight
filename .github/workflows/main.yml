@@ -175,7 +175,7 @@ jobs:
     name: Deploy
     runs-on: ubuntu-18.04
     if: github.ref == 'refs/heads/master'
-    needs: [ lint, check-no-migrations, test ]
+    needs: [ check-style, lint, check-security, check-no-migrations, test ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
