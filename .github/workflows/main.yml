@@ -70,6 +70,34 @@ jobs:
       - name: Lint with flake8
         run: poetry run flake8 .
 
+  check-security:
+    name: Check security with bandit
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install poetry
+        env:
+          # To install specific version, not latest release
+          POETRY_VERSION: 1.1.4
+        run: |
+          # https://python-poetry.org/docs/#installation
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
+          # Add "poetry" executable to $PATH
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check with bandit
+        run: poetry run bandit -r -c .bandit.yaml .
+
   check-no-migrations:
     name: Check no migrations are required
     runs-on: ubuntu-18.04
