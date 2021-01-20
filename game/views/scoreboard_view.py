@@ -22,7 +22,6 @@ class ScoreboardView(ListAPIView):
     type = None
 
     def get_serializer_class(self):
-        assert self.type, "type should be set in forever_scoreboard_url conf"
         if self.type == ScoreboardType.monthly:
             return MonthlyScoreboardUserSerializer
         if self.type == ScoreboardType.forever:
@@ -30,8 +29,6 @@ class ScoreboardView(ListAPIView):
         raise APIException(f"Invalid type: '{self.type}'")
 
     def get_queryset(self):
-        assert self.type, "type should be set in forever_scoreboard_url conf"
-
         qs = AppUser.users.filter(score__gt=0).annotate(Count("game"))
 
         if self.type == ScoreboardType.monthly:
