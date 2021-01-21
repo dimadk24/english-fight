@@ -74,6 +74,7 @@ class AppUserAdmin(UserAdmin):
                     "score",
                     "games_number",
                     "completed_games_number",
+                    "notifications_status",
                 )
             },
         ),
@@ -102,7 +103,7 @@ class AppUserAdmin(UserAdmin):
     )
     inlines = (GameInlineAdmin,)
     ordering = ("-date_joined",)
-    list_filter = (StaffFilter, HasPlayedFilter)
+    list_filter = (StaffFilter, HasPlayedFilter, "notifications_status")
 
 
 # Move Group to the same app as User

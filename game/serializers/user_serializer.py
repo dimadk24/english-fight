@@ -18,4 +18,5 @@ class UserSerializer(serializers.ModelSerializer):
             "score",
             "forever_rank",
             "monthly_rank",
+            "notifications_status",
         )
