@@ -116,3 +116,56 @@ def test_returns_current_user_when_doesnt_have_games(api_client):
         "photo_url": "example.com/test.png",
         "notifications_status": AppUser.TO_BE_REQUESTED,
     }
+
+
+def test_allows_changes_to_notifications_status(api_client):
+    user = AppUser.objects.create(
+        vk_id=2,
+        username="2",
+        score=2,
+        first_name="cute",
+        last_name="cat",
+        photo_url="example.com/test.png",
+    )
+    api_client.force_authenticate(user)
+    response = api_client.patch("/api/user", {"notifications_status": "allow"})
+    assert response.status_code == 200
+    assert response.data == {
+        "id": user.id,
+        "vk_id": 2,
+        "score": 2,
+        "forever_rank": 1,
+        "monthly_rank": 1,
+        "first_name": "cute",
+        "last_name": "cat",
+        "photo_url": "example.com/test.png",
+        "notifications_status": AppUser.ALLOW,
+    }
+    assert AppUser.objects.get(vk_id=2).notifications_status == AppUser.ALLOW
+
+
+def test_rejects_changes_to_score(api_client):
+    user = AppUser.objects.create(
+        vk_id=2,
+        username="2",
+        score=2,
+        first_name="cute",
+        last_name="cat",
+        photo_url="example.com/test.png",
+    )
+    api_client.force_authenticate(user)
+    response = api_client.patch("/api/user", {"score": 200})
+    # DRF returns 200 OK even when rejects change
+    assert response.status_code == 200
+    assert response.data == {
+        "id": user.id,
+        "vk_id": 2,
+        "score": 2,
+        "forever_rank": 1,
+        "monthly_rank": 1,
+        "first_name": "cute",
+        "last_name": "cat",
+        "photo_url": "example.com/test.png",
+        "notifications_status": AppUser.TO_BE_REQUESTED,
+    }
+    assert AppUser.objects.get(vk_id=2).score == 2
