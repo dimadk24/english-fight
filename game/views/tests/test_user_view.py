@@ -21,6 +21,7 @@ def test_returns_current_user_when_have_games(api_client):
         first_name="cute",
         last_name="cat",
         photo_url="example.com/test.png",
+        notifications_status=AppUser.ALLOW,
     )
     Game.objects.create(
         player=AppUser.objects.get(vk_id=6),
@@ -61,6 +62,7 @@ def test_returns_current_user_when_have_games(api_client):
         "first_name": "cute",
         "last_name": "cat",
         "photo_url": "example.com/test.png",
+        "notifications_status": AppUser.ALLOW,
     }
 
 
@@ -112,4 +114,5 @@ def test_returns_current_user_when_doesnt_have_games(api_client):
         "first_name": "cute",
         "last_name": "cat",
         "photo_url": "example.com/test.png",
+        "notifications_status": AppUser.TO_BE_REQUESTED,
     }

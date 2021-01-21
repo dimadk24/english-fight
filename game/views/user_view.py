@@ -61,4 +61,5 @@ class UsersView(RetrieveAPIView):
             "first_name": user.first_name,
             "last_name": user.last_name,
             "photo_url": user.photo_url,
+            "notifications_status": user.notifications_status,
         }

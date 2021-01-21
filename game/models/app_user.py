@@ -31,6 +31,17 @@ class AppUser(AbstractUser):
         validators=[URLValidator(schemes=("http", "https"))],
         blank=True,
     )
+    ALLOW = "allow"
+    BLOCK = "block"
+    TO_BE_REQUESTED = "to be requested"
+    NOTIFICATIONS_STATUSES = [
+        (TO_BE_REQUESTED, TO_BE_REQUESTED),
+        (ALLOW, ALLOW),
+        (BLOCK, BLOCK),
+    ]
+    notifications_status = models.CharField(
+        max_length=50, choices=NOTIFICATIONS_STATUSES, default=TO_BE_REQUESTED
+    )
 
     objects = DjangoUserManager()
     users = AppUserManager()
