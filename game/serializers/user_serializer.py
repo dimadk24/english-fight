@@ -22,6 +22,16 @@ class UserSerializer(serializers.ModelSerializer):
             "monthly_rank",
             "notifications_status",
         )
+        read_only_fields = (
+            "id",
+            "vk_id",
+            "first_name",
+            "last_name",
+            "photo_url",
+            "score",
+            "forever_rank",
+            "monthly_rank",
+        )
 
     def get_forever_rank(self, user: AppUser):
         user_games_count = user.game_set.count()
