@@ -12,14 +12,6 @@ admin.site.disable_action("delete_selected")
 admin.site.site_header = "Enfight admin"
 
 
-class GameInlineAdmin(admin.StackedInline):
-    model = Game
-    fields = ("points", "created_at")
-    readonly_fields = ("created_at",)
-    extra = 0
-    show_change_link = True
-
-
 class StaffFilter(PreFilteredListFilter):
     default_value = 0
     title = "Статус персонала"
@@ -101,7 +93,6 @@ class AppUserAdmin(UserAdmin):
         "last_login",
         "date_joined",
     )
-    inlines = (GameInlineAdmin,)
     ordering = ("-date_joined",)
     list_filter = (StaffFilter, HasPlayedFilter, "notifications_status")
 
