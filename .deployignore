@@ -1,11 +1,5 @@
-# Python cache
 __pycache__
-
-# Sqlite database
 db.sqlite3
-
-# logs
 *.log
-
-# All files and directories starting with dot
 .*
+data/input/
