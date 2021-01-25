@@ -21,7 +21,7 @@ def get(api_client, game_id) -> Response:
 def assert_not_included_in_questions(word: str):
     assert (
         Question.objects.filter(
-            Q(question_word=word)
+            Q(question=word)
             | Q(correct_answer=word)
             | Q(answer_words__contains=word)
         ).count()
@@ -40,15 +40,13 @@ def do_database_asserts():
     now = timezone.now()
     assert now - game.created_at < timedelta(minutes=1)
 
-    question_words = [
-        question.question_word for question in game.questions.all()
-    ]
+    question_words = [question.question for question in game.questions.all()]
 
     assert len(question_words) == len(set(question_words))
 
     for question in game.questions.all():
         assert question.correct_answer in question.answer_words
-        language_pair = get_pair_by_english_word(question.question_word)
+        language_pair = get_pair_by_english_word(question.question)
         assert language_pair["russian_word"] == question.correct_answer
         assert question.selected_answer == ""
         assert not question.is_correct
