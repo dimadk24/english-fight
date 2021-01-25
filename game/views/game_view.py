@@ -48,14 +48,14 @@ class GameView(CreateAPIView, RetrieveAPIView):
         while True:
             question_pair = self.get_random_language_pair()
             existing_question_words = [
-                question.question_word for question in existing_questions
+                question.question for question in existing_questions
             ]
             new_question_word = question_pair["english_word"]
             if new_question_word not in existing_question_words:
                 answer_words = self.get_question_answers(question_pair)
                 return Question(
                     game=game,
-                    question_word=new_question_word,
+                    question=new_question_word,
                     correct_answer=question_pair["russian_word"],
                     answer_words=answer_words,
                 )

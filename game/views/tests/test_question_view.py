@@ -19,7 +19,7 @@ def call(api_client, question_id, data: dict):
 
 def set_correct_answer_to_question(api_client, question: dict):
     question_instance = Question.objects.get(pk=question["id"])
-    question_word = question_instance.question_word
+    question_word = question_instance.question
     language_pair = get_pair_by_english_word(question_word)
     correct_answer_word = language_pair["russian_word"]
     response = call(
@@ -34,7 +34,7 @@ def set_correct_answer_to_question(api_client, question: dict):
 
 def set_incorrect_answer_to_question(api_client, question: dict):
     question_instance = Question.objects.get(pk=question["id"])
-    question_word = question_instance.question_word
+    question_word = question_instance.question
     language_pair = get_pair_by_english_word(question_word)
     correct_answer_word = language_pair["russian_word"]
     answer_words = question["answer_words"]
@@ -95,7 +95,7 @@ def test_raises_when_try_to_set_selected_question_of_another_user(api_client):
 
     authenticate_with_user_2(api_client)
     question_instance = Question.objects.get(pk=question_1["id"])
-    question_word = question_instance.question_word
+    question_word = question_instance.question
     language_pair = get_pair_by_english_word(question_word)
     correct_answer_word = language_pair["russian_word"]
 

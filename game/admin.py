@@ -105,7 +105,7 @@ admin.site.register(AppGroup, GroupAdmin)
 @admin.register(Question)
 class QuestionAdmin(admin.ModelAdmin):
     fields = (
-        "question_word",
+        "question",
         "answer_words",
         "correct_answer",
         "selected_answer",
@@ -114,7 +114,7 @@ class QuestionAdmin(admin.ModelAdmin):
     readonly_fields = ("is_correct",)
     list_display = (
         "id",
-        "question_word",
+        "question",
         "correct_answer",
         "selected_answer",
         "is_correct",
@@ -125,7 +125,7 @@ class QuestionAdmin(admin.ModelAdmin):
 class QuestionInlineAdmin(admin.StackedInline):
     model = Question
     fields = (
-        "question_word",
+        "question",
         "answer_words",
         "correct_answer",
         "selected_answer",
