@@ -5,10 +5,7 @@ from game.models import Question
 
 
 class QuestionSerializer(FlexFieldsModelSerializer):
-    question = serializers.CharField()
-    answer_words = serializers.JSONField()
     correct_answer = serializers.SerializerMethodField()
-    selected_answer = serializers.CharField()
     is_correct = serializers.BooleanField(read_only=True)
 
     def get_correct_answer(self, obj):
