@@ -152,6 +152,9 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = env("STATIC_ROOT", default=None)
+STATICFILES_DIRS = [
+    ("picture-questions", BASE_DIR / "data" / "static_pictures")
+]
 
 AUTH_USER_MODEL = "game.AppUser"
 
