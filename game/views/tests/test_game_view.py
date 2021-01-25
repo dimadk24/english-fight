@@ -5,13 +5,17 @@ import pytest
 from django.db.models import Q
 from django.utils import timezone
 from rest_framework.response import Response
+from rest_framework.test import APIClient
 
 from data.word_pairs import get_pair_by_english_word
+from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, Game, Question
 
 
-def post(api_client) -> Response:
-    return api_client.post("/api/game")
+def post(api_client: APIClient, data=None) -> Response:
+    if data is None:
+        data = {}
+    return api_client.post("/api/game", data)
 
 
 def get(api_client, game_id) -> Response:
@@ -57,16 +61,17 @@ def do_database_asserts():
 
 # run it many times just to ensure it always passes
 @pytest.mark.parametrize("i", range(10))
-def test_creates_with_real_random(i: int, api_client):
-    response = post(api_client)
+@pytest.mark.parametrize("game_type", ["word", "picture"])
+def test_creates_with_real_random(i: int, game_type, api_client):
+    response = post(api_client, {"type": game_type})
 
     assert response.status_code == 201
-    offset = i * 5 + 1
-    assert response.data["questions"] == [_ + offset for _ in range(5)]
+    assert len(response.data["questions"]) == QUESTIONS_PER_GAME
+    assert response.data["type"] == game_type
     do_database_asserts()
 
 
-@mock.patch("game.views.game_view.GameView.get_random_int")
+@mock.patch("game.game_utils.GameUtils.get_random_int")
 def test_creates_with_fake_random(get_random_int, api_client):
     get_random_int.side_effect = [
         4,
