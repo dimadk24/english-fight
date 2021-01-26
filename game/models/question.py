@@ -11,7 +11,7 @@ class Question(LifecycleModel):
     game = models.ForeignKey(
         "Game", on_delete=models.CASCADE, related_name="questions"
     )
-    question = models.CharField(max_length=50, blank=False)
+    question = models.CharField(max_length=255, blank=False)
     answer_words = models.JSONField(
         default=list, blank=False, encoder=UnicodeJSONEncoder
     )
