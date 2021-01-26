@@ -1,15 +1,12 @@
-# IDEs
 .idea/
 .vscode/
 
-# Python cache
 __pycache__
-
-# Sqlite database
 db.sqlite3
 
 # Local config
 .env
 
-# logs
 *.log
+
+static/
