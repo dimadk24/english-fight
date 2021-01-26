@@ -1,3 +1,4 @@
+import re
 from datetime import timedelta
 from unittest import mock
 
@@ -7,7 +8,9 @@ from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
+from data.pictures import PICTURES, PicturesTopic
 from data.word_pairs import get_pair_by_english_word
+from enfight import settings
 from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, Game, Question
 
@@ -33,7 +36,7 @@ def assert_not_included_in_questions(word: str):
     )
 
 
-def do_database_asserts():
+def do_database_asserts(game_type: str):
     assert Game.objects.count() == 1
     assert Question.objects.count() == 5
 
@@ -50,8 +53,32 @@ def do_database_asserts():
 
     for question in game.questions.all():
         assert question.correct_answer in question.answer_words
-        language_pair = get_pair_by_english_word(question.question)
-        assert language_pair["russian_word"] == question.correct_answer
+        if game_type == Game.WORD:
+            language_pair = get_pair_by_english_word(question.question)
+            assert language_pair["russian_word"] == question.correct_answer
+        elif game_type == Game.PICTURE:
+            answer_path = question.question
+            regex = (
+                settings.STATIC_URL
+                + r"picture-questions/(\d+)-([a-z\-]+)/(\d+)\..*"
+            )
+            match = re.match(regex, answer_path)
+            assert match
+            topic_number = int(match.group(1))
+            topic_name = match.group(2).replace('-', ' ')
+            picture_number = int(match.group(3))
+            found_topic: PicturesTopic = PICTURES[topic_number - 1]
+            assert found_topic.name == topic_name
+            topic_picture_names = [item[0] for item in found_topic.items]
+            assert (
+                topic_picture_names[picture_number - 1]
+                == question.correct_answer
+            )
+            assert len(question.answer_words)
+            for answer in question.answer_words:
+                assert answer in topic_picture_names
+        else:
+            assert False
         assert question.selected_answer == ""
         assert not question.is_correct
 
@@ -60,19 +87,23 @@ def do_database_asserts():
 
 
 # run it many times just to ensure it always passes
-@pytest.mark.parametrize("i", range(10))
+@pytest.mark.parametrize("i", range(20))
 @pytest.mark.parametrize("game_type", ["word", "picture"])
 def test_creates_with_real_random(i: int, game_type, api_client):
     response = post(api_client, {"type": game_type})
 
     assert response.status_code == 201
-    assert len(response.data["questions"]) == QUESTIONS_PER_GAME
+    question_ids = response.data["questions"]
+    assert len(question_ids) == QUESTIONS_PER_GAME
+    for question_id in question_ids:
+        assert Question.objects.filter(pk=question_id).exists()
     assert response.data["type"] == game_type
-    do_database_asserts()
+    do_database_asserts(game_type)
 
 
 @mock.patch("game.game_utils.GameUtils.get_random_int")
-def test_creates_with_fake_random(get_random_int, api_client):
+@pytest.mark.parametrize("game_type", ["word", "picture"])
+def test_creates_with_fake_random(get_random_int, game_type, api_client):
     get_random_int.side_effect = [
         4,
         4,
@@ -124,9 +155,9 @@ def test_creates_with_fake_random(get_random_int, api_client):
         0,
         0,
     ]
-    response = post(api_client)
+    response = post(api_client, {"type": game_type})
     assert response.status_code == 201
-    do_database_asserts()
+    do_database_asserts(game_type)
 
 
 def test_returns_game_of_current_user(api_client):
