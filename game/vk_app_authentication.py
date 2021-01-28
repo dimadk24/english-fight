@@ -9,9 +9,9 @@ from django.contrib.auth.models import update_last_login
 from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
-from vk_api import VkApi
 
 from game.models import AppUser
+from vk_utils import get_vk_api
 
 
 class VKAppAuthentication(BaseAuthentication):
@@ -81,12 +81,7 @@ class VKAppAuthentication(BaseAuthentication):
     @staticmethod
     def get_vk_user_data(vk_id: AppUser):
         return (
-            VkApi(
-                token=settings.VK_SERVICE_TOKEN,
-                api_version=settings.VK_API_VERSION,
-            )
-            .get_api()
-            .users.get(
+            get_vk_api().users.get(
                 user_ids=vk_id,
                 fields="photo_200,first_name,last_name",
                 lang="ru",

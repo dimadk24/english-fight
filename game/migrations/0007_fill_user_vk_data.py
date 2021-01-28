@@ -2,9 +2,9 @@
 # Fills users first_name, last_name and photo_url from VK data
 from typing import List, Iterable
 
-from django.conf import settings
 from django.db import migrations
-from vk_api import VkApi
+
+from vk_utils import get_vk_api
 
 
 def set_user_data(users: Iterable):
@@ -20,17 +20,10 @@ def set_user_data(users: Iterable):
 
 def get_vk_user_data(vk_ids: List[int]) -> List[dict]:
     vk_ids = [str(vk_id) for vk_id in vk_ids]
-    return (
-        VkApi(
-            token=settings.VK_SERVICE_TOKEN,
-            api_version=settings.VK_API_VERSION,
-        )
-        .get_api()
-        .users.get(
-            user_ids=",".join(vk_ids),
-            fields="photo_200,first_name,last_name",
-            lang="ru",
-        )
+    return get_vk_api().users.get(
+        user_ids=",".join(vk_ids),
+        fields="photo_200,first_name,last_name",
+        lang="ru",
     )
 
 
