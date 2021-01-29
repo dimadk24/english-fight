@@ -26,6 +26,11 @@ def handler(message, fragment):
     response = NotificationsUtils.send_notification(
         user_ids, message, fragment
     )
+    if not len(response) == total_users:
+        raise Exception(
+            f"number of results ({len(response)}) "
+            f"does not match number of input ids ({total_users})"
+        )
     successful_number = sum(1 for item in response if item["status"])
     failed_number = total_users - successful_number
     if successful_number:
