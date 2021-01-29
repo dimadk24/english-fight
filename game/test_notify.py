@@ -134,3 +134,31 @@ def test_send_both_failed_and_successful_notifications():
     assert AppUser.users.filter(
         vk_id=2, notifications_status=AppUser.BLOCK
     ).exists()
+
+
+# Happens when send invalid value in user_ids to vk api
+def test_raises_when_number_of_results_does_not_match_number_of_input_ids():
+    AppUser.objects.create(
+        vk_id=2, username="2", notifications_status=AppUser.ALLOW
+    )
+    AppUser.objects.create(
+        vk_id=3, username="3", notifications_status=AppUser.ALLOW
+    )
+    NotificationsUtils.send_notification.return_value = [
+        {
+            "user_id": 2,
+            "status": False,
+            "error": {
+                "code": 1,
+            },
+        },
+    ]
+    runner = CliRunner()
+    result = runner.invoke(handler, ["test message"])
+    assert (
+        "number of results (1) does not match number of input ids (2)"
+        in str(result.exception)
+    )
+    assert "Successfully sent" not in result.output
+    assert "Failed to send" not in result.output
+    assert result.exit_code == 1
