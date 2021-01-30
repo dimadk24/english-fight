@@ -93,7 +93,10 @@ class AppUserAdmin(UserAdmin):
         "last_login",
         "date_joined",
     )
-    ordering = ("-date_joined",)
+    ordering = (
+        "-last_login__day",
+        "-date_joined",
+    )
     list_filter = (StaffFilter, HasPlayedFilter, "notifications_status")
 
 
