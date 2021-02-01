@@ -6,6 +6,7 @@ from game.models import AppUser
 
 
 class UserSerializer(serializers.ModelSerializer):
+    monthly_score = serializers.SerializerMethodField()
     forever_rank = serializers.SerializerMethodField()
     monthly_rank = serializers.SerializerMethodField()
 
@@ -18,6 +19,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "photo_url",
             "score",
+            "monthly_score",
             "forever_rank",
             "monthly_rank",
             "notifications_status",
@@ -29,6 +31,7 @@ class UserSerializer(serializers.ModelSerializer):
             "last_name",
             "photo_url",
             "score",
+            "monthly_score",
             "forever_rank",
             "monthly_rank",
         )
@@ -53,17 +56,19 @@ class UserSerializer(serializers.ModelSerializer):
         )
         return forever_rank
 
-    def get_monthly_rank(self, user: AppUser):
+    def annotate_users_with_monthly_score(self):
         current_month = timezone.now().month
-        monthly_score = Sum(
+        monthly_score_annotation = Sum(
             "game__points", filter=Q(game__created_at__month=current_month)
         )
-        annotated_users = AppUser.users.annotate(Count("game"))
-        annotated_users = annotated_users.annotate(monthly_score=monthly_score)
-        user_monthly_score = (
-            annotated_users.get(vk_id=user.vk_id).monthly_score or 0
+        return AppUser.users.annotate(Count("game")).annotate(
+            monthly_score=monthly_score_annotation
         )
+
+    def get_monthly_rank(self, user: AppUser):
+        annotated_users = self.annotate_users_with_monthly_score()
         user_games_count = user.game_set.count()
+        user_monthly_score = self.get_monthly_score(user)
         return (
             annotated_users.filter(monthly_score__gt=user_monthly_score)
             .union(
@@ -79,4 +84,12 @@ class UserSerializer(serializers.ModelSerializer):
             )
             .count()
             + 1
+        )
+
+    def get_monthly_score(self, user: AppUser):
+        return (
+            self.annotate_users_with_monthly_score()
+            .get(vk_id=user.vk_id)
+            .monthly_score
+            or 0
         )
