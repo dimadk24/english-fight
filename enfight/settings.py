@@ -59,7 +59,6 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",
     "corsheaders",
-    "debug_toolbar",
     "admin_honeypot",
     "game",
 ]
@@ -69,7 +68,6 @@ MIDDLEWARE = [
     "django.contrib.sessions.middleware.SessionMiddleware",
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
-    "debug_toolbar.middleware.DebugToolbarMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
@@ -233,12 +231,6 @@ if not VK_ALLOWED_USERS[0] == "*":
 # cProfile middleware
 
 DJANGO_CPROFILE_MIDDLEWARE_REQUIRE_STAFF = False
-
-# Debug toolbar
-
-INTERNAL_IPS = [
-    "127.0.0.1",
-]
 
 # Logging
 
