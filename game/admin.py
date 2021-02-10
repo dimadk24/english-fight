@@ -6,7 +6,7 @@ from django.utils.translation import gettext_lazy as _
 
 from game.admin_pre_filtered_list_filter import PreFilteredListFilter
 from game.constants import QUESTIONS_PER_GAME
-from game.models import AppUser, AppGroup, Question, Game
+from game.models import AppUser, AppGroup, Question, Game, GameDefinition
 
 admin.site.disable_action("delete_selected")
 admin.site.site_header = "Enfight admin"
@@ -175,6 +175,22 @@ class GameAdmin(admin.ModelAdmin):
         "type",
         ("player", admin.RelatedOnlyFieldListFilter),
         CompletedGamesFilter,
+        "created_at",
+    )
+    ordering = ("-created_at",)
+
+
+@admin.register(GameDefinition)
+class GameDefinitionAdmin(admin.ModelAdmin):
+    list_display = (
+        "id",
+        "type",
+        "creator",
+        "created_at",
+    )
+    list_filter = (
+        "type",
+        ("creator", admin.RelatedOnlyFieldListFilter),
         "created_at",
     )
     ordering = ("-created_at",)
