@@ -6,6 +6,9 @@ from game.models import AppUser
 
 
 class Game(LifecycleModel):
+    game_definition = models.ForeignKey(
+        "GameDefinition", on_delete=models.CASCADE, blank=False, null=True
+    )
     player = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     points = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(blank=False, editable=False)
