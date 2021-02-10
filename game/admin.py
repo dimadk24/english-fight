@@ -167,12 +167,10 @@ class GameAdmin(admin.ModelAdmin):
     inlines = (QuestionInlineAdmin,)
     list_display = (
         "id",
-        "type",
         "points",
         "created_at",
     )
     list_filter = (
-        "type",
         ("player", admin.RelatedOnlyFieldListFilter),
         CompletedGamesFilter,
         "created_at",

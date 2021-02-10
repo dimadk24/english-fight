@@ -6,13 +6,6 @@ from game.models import AppUser
 
 
 class Game(LifecycleModel):
-    WORD = "word"
-    PICTURE = "picture"
-    TYPES = [
-        (WORD, WORD),
-        (PICTURE, PICTURE),
-    ]
-    type = models.CharField(choices=TYPES, default=WORD, max_length=30)
     player = models.ForeignKey(AppUser, on_delete=models.CASCADE)
     points = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(blank=False, editable=False)
