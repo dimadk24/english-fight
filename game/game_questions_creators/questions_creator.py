@@ -4,12 +4,11 @@ from game.game_questions_creators.picture_questions_creator import (
 from game.game_questions_creators.word_questions_creator import (
     create_word_questions,
 )
-from game.models import Game
-
+from game.models import Game, GameDefinition
 
 game_type_to_creator = {
-    Game.WORD: create_word_questions,
-    Game.PICTURE: create_picture_questions,
+    GameDefinition.WORD: create_word_questions,
+    GameDefinition.PICTURE: create_picture_questions,
 }
 
 
