@@ -23,6 +23,7 @@ sentry-sdk = "^0.19.5"
 django-admin-honeypot = "^1.1.0"
 vk-api = "^11.9.1"
 typing-extensions = "^3.7.4"
+django-hashid-field = "^3.1.3"
 
 [tool.poetry.dev-dependencies]
 pytest = "^6.1.2"

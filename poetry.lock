@@ -188,6 +188,18 @@ optional = false
 python-versions = "*"
 
 [[package]]
+name = "django-hashid-field"
+version = "3.1.3"
+description = "A Hashids obfuscated Django Model Field"
+category = "main"
+optional = false
+python-versions = "*"
+
+[package.dependencies]
+Django = ">=1.11"
+hashids = ">=1.2.0"
+
+[[package]]
 name = "django-lifecycle"
 version = "0.8.0"
 description = "Declarative model lifecycle hooks."
@@ -267,6 +279,17 @@ eventlet = ["eventlet (>=0.9.7)"]
 gevent = ["gevent (>=0.13)"]
 setproctitle = ["setproctitle"]
 tornado = ["tornado (>=0.2)"]
+
+[[package]]
+name = "hashids"
+version = "1.3.1"
+description = "Implements the hashids algorithm in python. For more information, visit http://hashids.org/"
+category = "main"
+optional = false
+python-versions = ">=2.7"
+
+[package.extras]
+test = ["pytest (>=2.1.0)"]
 
 [[package]]
 name = "idna"
@@ -636,7 +659,7 @@ testing = ["pytest (>=3.5,!=3.7.3)", "pytest-checkdocs (>=1.2.3)", "pytest-flake
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.7"
-content-hash = "1eef184614e2e3e621d8283ba3dda7a68bd0d875218adf65015be1423dba9011"
+content-hash = "16e9b04ed56e5cf87f77b64a24d2d4450474940329d833ff5ff1607a33eea856"
 
 [metadata.files]
 appdirs = [
@@ -705,6 +728,10 @@ django-environ = [
     {file = "django-environ-0.4.5.tar.gz", hash = "sha256:6c9d87660142608f63ec7d5ce5564c49b603ea8ff25da595fd6098f6dc82afde"},
     {file = "django_environ-0.4.5-py2.py3-none-any.whl", hash = "sha256:c57b3c11ec1f319d9474e3e5a79134f40174b17c7cc024bbb2fad84646b120c4"},
 ]
+django-hashid-field = [
+    {file = "django-hashid-field-3.1.3.tar.gz", hash = "sha256:3e9316866f76caef4101a9a4f17a5891a32df423d99b47f331df7c3eae7ff0db"},
+    {file = "django_hashid_field-3.1.3-py3-none-any.whl", hash = "sha256:0bd680ffbc29d1a8bbb9ada0ca0c8d9eef8c66ad742468303ea5dcf98c889a35"},
+]
 django-lifecycle = [
     {file = "django-lifecycle-0.8.0.tar.gz", hash = "sha256:d0e2ee90398609ebb4439c5669ef5575db7b4b83a89d3ebe61685916a83b1088"},
 ]
@@ -729,6 +756,10 @@ gitpython = [
 gunicorn = [
     {file = "gunicorn-20.0.4-py2.py3-none-any.whl", hash = "sha256:cd4a810dd51bf497552cf3f863b575dabd73d6ad6a91075b65936b151cbf4f9c"},
     {file = "gunicorn-20.0.4.tar.gz", hash = "sha256:1904bb2b8a43658807108d59c3f3d56c2b6121a701161de0ddf9ad140073c626"},
+]
+hashids = [
+    {file = "hashids-1.3.1-py2.py3-none-any.whl", hash = "sha256:8bddd1acba501bfc9306e7e5a99a1667f4f2cacdc20cbd70bcc5ddfa5147c94c"},
+    {file = "hashids-1.3.1.tar.gz", hash = "sha256:6c3dc775e65efc2ce2c157a65acb776d634cb814598f406469abef00ae3f635c"},
 ]
 idna = [
     {file = "idna-2.10-py2.py3-none-any.whl", hash = "sha256:b97d804b1e9b523befed77c48dacec60e6dcb0b5391d57af6a65a312a90648c0"},

@@ -207,6 +207,10 @@ REST_FRAMEWORK = {
     ),
 }
 
+# Django hashid field
+
+HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
+
 # VK
 
 VK_SECRET = env("VK_SECRET")
