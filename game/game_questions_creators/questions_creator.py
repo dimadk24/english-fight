@@ -13,5 +13,5 @@ game_type_to_creator = {
 
 
 def create_questions(game: Game):
-    creator = game_type_to_creator[game.type]
+    creator = game_type_to_creator[game.game_definition.type]
     return creator(game)

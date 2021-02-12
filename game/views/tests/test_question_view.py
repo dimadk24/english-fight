@@ -3,7 +3,7 @@ from rest_framework.response import Response
 
 from conftest import get_correct_answer_data_for_picture_question
 from data.word_pairs import get_pair_by_english_word
-from game.models import AppUser, Question, Game
+from game.models import AppUser, Question, Game, GameDefinition
 
 
 def authenticate_with_user_2(api_client):
@@ -12,26 +12,29 @@ def authenticate_with_user_2(api_client):
 
 
 def create_game(api_client, game_type: str) -> Response:
+    game_def = api_client.post(
+        "/api/game_definition", {"type": game_type}
+    ).data
     return api_client.post(
-        "/api/game?expand=questions", {"type": game_type}
+        "/api/game?expand=questions", {"game_definition": game_def["id"]}
     ).data
 
 
-def call(api_client, question_id, data: dict):
+def update_question(api_client, question_id, data: dict):
     return api_client.patch(f"/api/question/{question_id}", data)
 
 
 def set_correct_answer_to_question(api_client, question: dict, game_type: str):
     question_instance = Question.objects.get(pk=question["id"])
     question_word = question_instance.question
-    if game_type == Game.WORD:
+    if game_type == GameDefinition.WORD:
         language_pair = get_pair_by_english_word(question_word)
         correct_answer_word = language_pair["russian_word"]
     else:
         db_question = Question.objects.get(pk=question["id"])
         _, item = get_correct_answer_data_for_picture_question(db_question)
         correct_answer_word = item[0]
-    response = call(
+    response = update_question(
         api_client,
         question["id"],
         {
@@ -46,7 +49,7 @@ def set_incorrect_answer_to_question(
 ):
     question_instance = Question.objects.get(pk=question["id"])
     question_word = question_instance.question
-    if game_type == Game.WORD:
+    if game_type == GameDefinition.WORD:
         language_pair = get_pair_by_english_word(question_word)
         correct_answer_word = language_pair["russian_word"]
     else:
@@ -59,7 +62,7 @@ def set_incorrect_answer_to_question(
     else:
         incorrect_answer_word = answer_words[1]
 
-    response = call(
+    response = update_question(
         api_client,
         question["id"],
         {
@@ -119,7 +122,7 @@ def test_raises_when_try_to_set_selected_question_of_another_user(
     authenticate_with_user_2(api_client)
     question_instance = Question.objects.get(pk=question_1["id"])
     question_word = question_instance.question
-    if game_type == Game.WORD:
+    if game_type == GameDefinition.WORD:
         language_pair = get_pair_by_english_word(question_word)
         correct_answer_word = language_pair["russian_word"]
     else:
@@ -128,7 +131,7 @@ def test_raises_when_try_to_set_selected_question_of_another_user(
         )
         correct_answer_word = item[0]
 
-    response = call(
+    response = update_question(
         api_client, question_1["id"], {"selected_answer": correct_answer_word}
     )
     assert response.status_code == 404
