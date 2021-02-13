@@ -55,4 +55,4 @@ class AppUser(AbstractUser):
         return self.game_set.filter(points__gt=0).count()
 
     def __str__(self):
-        return self.username
+        return str(self.username)
