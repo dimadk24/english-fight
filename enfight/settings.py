@@ -187,11 +187,19 @@ CORS_URLS_REGEX = r"^/api/.*$"
 # Django rest framework
 
 DEFAULT_RENDERER_CLASSES = ("rest_framework.renderers.JSONRenderer",)
+DEFAULT_AUTHENTICATION_CLASSES = (
+    "rest_framework.authentication.SessionAuthentication",  # for admin
+    "game.authentication_backends.vk_app_authentication.VKAppAuthentication",
+)
 
 if DEBUG:
     # Allow browsable api in dev mode
     DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + (
         "rest_framework.renderers.BrowsableAPIRenderer",
+    )
+    DEFAULT_AUTHENTICATION_CLASSES = DEFAULT_AUTHENTICATION_CLASSES + (
+        "game.authentication_backends."
+        "fake_vk_id_authentication.FakeVKIDAuthentication",
     )
 
 REST_FRAMEWORK = {
@@ -201,10 +209,7 @@ REST_FRAMEWORK = {
         "rest_framework.permissions.IsAuthenticated",
     ),
     "TEST_REQUEST_DEFAULT_FORMAT": "json",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",  # for admin
-        "game.vk_app_authentication.VKAppAuthentication",
-    ),
+    "DEFAULT_AUTHENTICATION_CLASSES": DEFAULT_AUTHENTICATION_CLASSES,
 }
 
 # Django hashid field

@@ -6,23 +6,22 @@ from urllib.parse import parse_qsl, urlencode
 
 from django.conf import settings
 from django.contrib.auth.models import update_last_login
-from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
+from game.authentication_backends.authentication_utils import (
+    get_auth_header,
+    get_auth_value,
+    set_user_data,
+)
 from game.models import AppUser
-from vk_utils import get_vk_api
 
 
 class VKAppAuthentication(BaseAuthentication):
-    def authenticate(self, request: HttpRequest):
-        authorization_header: str = request.headers.get("Authorization", "")
-        if not authorization_header:
-            return None
-        if not authorization_header.startswith("QueryString "):
-            return None
-        auth_query_params = authorization_header.split(" ")[1]
-
+    @get_auth_header
+    @get_auth_value("QueryString")
+    def authenticate(self, *args, **kwargs):
+        auth_query_params = kwargs["auth_value"]
         query_params_dict = dict(
             parse_qsl(auth_query_params, keep_blank_values=True)
         )
@@ -39,7 +38,7 @@ class VKAppAuthentication(BaseAuthentication):
             vk_id=vk_user_id, defaults={"username": vk_user_id}
         )
         update_last_login(None, user)
-        self.set_user_data(user)
+        set_user_data(user)
         return user, query_params_dict
 
     @staticmethod
@@ -66,24 +65,3 @@ class VKAppAuthentication(BaseAuthentication):
     def is_user_allowed(self, user_vk_id: int):
         allow_all_users = settings.VK_ALLOWED_USERS[0] == "*"
         return allow_all_users or user_vk_id in settings.VK_ALLOWED_USERS
-
-    def set_user_data(self, user: AppUser):
-        if user.photo_url:
-            # if photo_url is set, all user vk data is set
-            # no need to update it
-            return
-        user_data = VKAppAuthentication.get_vk_user_data(user.vk_id)
-        user.first_name = user_data["first_name"]
-        user.last_name = user_data["last_name"]
-        user.photo_url = user_data["photo_200"]
-        user.save()
-
-    @staticmethod
-    def get_vk_user_data(vk_id: AppUser):
-        return (
-            get_vk_api().users.get(
-                user_ids=vk_id,
-                fields="photo_200,first_name,last_name",
-                lang="ru",
-            )
-        )[0]
