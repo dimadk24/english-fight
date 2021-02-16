@@ -7,8 +7,13 @@ from django.test import override_settings
 from django.utils import timezone
 from rest_framework.exceptions import AuthenticationFailed
 
+from game.authentication_backends.authentication_adapter import (
+    AuthenticationAdapter,
+)
+from game.authentication_backends.vk_app_authentication import (
+    VKAppAuthentication,
+)
 from game.models import AppUser
-from game.vk_app_authentication import VKAppAuthentication
 
 photo_url = "https://test.com/image.png"
 
@@ -16,7 +21,8 @@ photo_url = "https://test.com/image.png"
 @pytest.fixture(autouse=True)
 def mock_valid_query():
     mock_is_valid_query = mock.patch(
-        "game.vk_app_authentication.VKAppAuthentication.is_valid_vk_query"
+        "game.authentication_backends.vk_app_authentication."
+        "VKAppAuthentication.is_valid_vk_query"
     )
     mock_is_valid_query.start()
     VKAppAuthentication.is_valid_vk_query.return_value = False
@@ -27,10 +33,11 @@ def mock_valid_query():
 @pytest.fixture(autouse=True)
 def mock_get_vk_user_data():
     mock_get_vk_data = mock.patch(
-        "game.vk_app_authentication.VKAppAuthentication.get_vk_user_data"
+        "game.authentication_backends.authentication_adapter."
+        "AuthenticationAdapter.get_vk_user_data"
     )
     mock_get_vk_data.start()
-    VKAppAuthentication.get_vk_user_data.return_value = {
+    AuthenticationAdapter.get_vk_user_data.return_value = {
         "first_name": "Cat",
         "last_name": "Leo",
         "photo_200": photo_url,
@@ -87,7 +94,7 @@ def run_test_with_existing_user():
     user1 = AppUser.objects.get(vk_id=1)
     assert not user1.last_login
     user, query_params = VKAppAuthentication().authenticate(request)
-    VKAppAuthentication.get_vk_user_data.assert_called_once()
+    AuthenticationAdapter.get_vk_user_data.assert_called_once()
     user1 = AppUser.objects.get(vk_id=1)
     assert user == user1
     assert user1.first_name == "Cat"
@@ -120,7 +127,7 @@ def run_test_with_new_user():
         "vk_app_id": "2",
     }
     user, _ = VKAppAuthentication().authenticate(request)
-    VKAppAuthentication.get_vk_user_data.assert_called_once()
+    AuthenticationAdapter.get_vk_user_data.assert_called_once()
     updated_user = AppUser.objects.get(vk_id=3)
     now = timezone.now()
     assert now - user.last_login < timedelta(minutes=1)
