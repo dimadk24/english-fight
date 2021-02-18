@@ -46,7 +46,7 @@ def do_database_asserts(game_type: str):
     assert GameDefinition.objects.count() == 1
     game_definition: GameDefinition = GameDefinition.objects.get()
     assert game_definition.creator == current_user
-    assert list(game_definition.players.all()) == [current_user]
+    assert list(game_definition.players.all()) == []
     assert game_definition.type == game_type
     now = timezone.now()
     assert now - game_definition.created_at < timedelta(minutes=1)
@@ -237,5 +237,5 @@ def test_does_not_allow_to_set_players(api_client):
     assert game_def_response.status_code == 201
 
     game_def = GameDefinition.objects.get(id=game_def_response.data["id"])
-    assert list(game_def.players.all()) == [first_user]
-    assert game_def_response.data["players"] == [first_user.id]
+    assert list(game_def.players.all()) == []
+    assert game_def_response.data["players"] == []
