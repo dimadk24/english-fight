@@ -19,7 +19,6 @@ class GameDefinitionSerializer(FlexFieldsModelSerializer):
     def save(self, **kwargs):
         creator = self.context["request"].user
         kwargs["creator"] = creator
-        kwargs["players"] = [creator]
         return super().save(**kwargs)
 
     class Meta:
