@@ -1,13 +1,9 @@
 from datetime import timedelta
-from unittest import mock
 
 import pytest
 from django.http import HttpRequest
 from django.utils import timezone
 
-from game.authentication.authentication_adapter import (
-    AuthenticationAdapter,
-)
 from game.authentication.fake_vk_id_authentication import (
     FakeVKIDAuthentication,
 )
@@ -17,19 +13,8 @@ photo_url = "https://test.com/image.png"
 
 
 @pytest.fixture(autouse=True)
-def mock_get_vk_user_data():
-    mock_get_vk_data = mock.patch(
-        "game.authentication.authentication_adapter."
-        "AuthenticationAdapter.get_vk_user_data"
-    )
-    mock_get_vk_data.start()
-    AuthenticationAdapter.get_vk_user_data.return_value = {
-        "first_name": "Cat",
-        "last_name": "Leo",
-        "photo_200": photo_url,
-    }
-    yield mock_get_vk_data
-    mock_get_vk_data.stop()
+def use_mock_get_vk_user_data(mock_get_vk_user_data):
+    pass
 
 
 def test_returns_none_when_no_auth_header():
