@@ -8,7 +8,7 @@ class MultiplayerGameConsumer(JsonWebsocketConsumer):
         self.room_group_name = None
 
     def connect(self):
-        self.room_group_name = "test"
+        self.room_group_name = 'test'
 
         async_to_sync(self.channel_layer.group_add)(
             self.room_group_name, self.channel_name
@@ -31,4 +31,4 @@ class MultiplayerGameConsumer(JsonWebsocketConsumer):
         pass
 
     def chat_message(self, event):
-        self.send_json({"event": "joined-game", "data": {}})
+        self.send_json({'event': 'joined-game', 'data': {}})

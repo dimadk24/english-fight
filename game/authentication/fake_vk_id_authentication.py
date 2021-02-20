@@ -1,7 +1,7 @@
 from django.contrib.auth.models import update_last_login
 from rest_framework.authentication import BaseAuthentication
 
-from game.authentication_backends.authentication_utils import (
+from game.authentication.authentication_utils import (
     get_auth_header,
     get_auth_value,
     set_user_data,
