@@ -1,5 +1,4 @@
 from datetime import timedelta
-from unittest import mock
 
 import pytest
 from django.http import HttpRequest
@@ -7,6 +6,7 @@ from django.test import override_settings
 from django.utils import timezone
 from rest_framework.exceptions import AuthenticationFailed
 
+from conftest import test_photo_url
 from game.authentication.authentication_adapter import (
     AuthenticationAdapter,
 )
@@ -15,35 +15,15 @@ from game.authentication.vk_app_authentication import (
 )
 from game.models import AppUser
 
-photo_url = "https://test.com/image.png"
+
+@pytest.fixture(autouse=True)
+def use_mock_valid_query(mock_valid_query):
+    pass
 
 
 @pytest.fixture(autouse=True)
-def mock_valid_query():
-    mock_is_valid_query = mock.patch(
-        "game.authentication.vk_app_authentication."
-        "VKAppAuthentication.is_valid_vk_query"
-    )
-    mock_is_valid_query.start()
-    VKAppAuthentication.is_valid_vk_query.return_value = False
-    yield mock_is_valid_query
-    mock_is_valid_query.stop()
-
-
-@pytest.fixture(autouse=True)
-def mock_get_vk_user_data():
-    mock_get_vk_data = mock.patch(
-        "game.authentication.authentication_adapter."
-        "AuthenticationAdapter.get_vk_user_data"
-    )
-    mock_get_vk_data.start()
-    AuthenticationAdapter.get_vk_user_data.return_value = {
-        "first_name": "Cat",
-        "last_name": "Leo",
-        "photo_200": photo_url,
-    }
-    yield mock_get_vk_data
-    mock_get_vk_data.stop()
+def use_mock_get_vk_user_data(mock_get_vk_user_data):
+    pass
 
 
 def test_returns_none_when_no_auth_header():
@@ -99,7 +79,7 @@ def run_test_with_existing_user():
     assert user == user1
     assert user1.first_name == "Cat"
     assert user1.last_name == "Leo"
-    assert user1.photo_url == photo_url
+    assert user1.photo_url == test_photo_url
     now = timezone.now()
     assert now - user.last_login < timedelta(minutes=1)
     assert query_params == {
