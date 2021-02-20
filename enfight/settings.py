@@ -61,6 +61,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "admin_honeypot",
     "game",
+    "channels",
 ]
 
 MIDDLEWARE = [
@@ -213,6 +214,18 @@ REST_FRAMEWORK = {
 # Django hashid field
 
 HASHID_FIELD_SALT = env("HASHID_FIELD_SALT")
+
+# Channels
+
+ASGI_APPLICATION = "enfight.asgi.application"
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [env.url("REDIS_URL").path.split(":")],
+        },
+    },
+}
 
 # VK
 
