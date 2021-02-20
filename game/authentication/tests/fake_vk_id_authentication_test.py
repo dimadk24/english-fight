@@ -5,10 +5,10 @@ import pytest
 from django.http import HttpRequest
 from django.utils import timezone
 
-from game.authentication_backends.authentication_adapter import (
+from game.authentication.authentication_adapter import (
     AuthenticationAdapter,
 )
-from game.authentication_backends.fake_vk_id_authentication import (
+from game.authentication.fake_vk_id_authentication import (
     FakeVKIDAuthentication,
 )
 from game.models import AppUser
@@ -19,7 +19,7 @@ photo_url = "https://test.com/image.png"
 @pytest.fixture(autouse=True)
 def mock_get_vk_user_data():
     mock_get_vk_data = mock.patch(
-        "game.authentication_backends.authentication_adapter."
+        "game.authentication.authentication_adapter."
         "AuthenticationAdapter.get_vk_user_data"
     )
     mock_get_vk_data.start()

@@ -1,6 +1,6 @@
 from functools import wraps
 
-from game.authentication_backends.authentication_adapter import (
+from game.authentication.authentication_adapter import (
     AuthenticationAdapter,
 )
 from game.models import AppUser

@@ -7,10 +7,10 @@ from django.test import override_settings
 from django.utils import timezone
 from rest_framework.exceptions import AuthenticationFailed
 
-from game.authentication_backends.authentication_adapter import (
+from game.authentication.authentication_adapter import (
     AuthenticationAdapter,
 )
-from game.authentication_backends.vk_app_authentication import (
+from game.authentication.vk_app_authentication import (
     VKAppAuthentication,
 )
 from game.models import AppUser
@@ -21,7 +21,7 @@ photo_url = "https://test.com/image.png"
 @pytest.fixture(autouse=True)
 def mock_valid_query():
     mock_is_valid_query = mock.patch(
-        "game.authentication_backends.vk_app_authentication."
+        "game.authentication.vk_app_authentication."
         "VKAppAuthentication.is_valid_vk_query"
     )
     mock_is_valid_query.start()
@@ -33,7 +33,7 @@ def mock_valid_query():
 @pytest.fixture(autouse=True)
 def mock_get_vk_user_data():
     mock_get_vk_data = mock.patch(
-        "game.authentication_backends.authentication_adapter."
+        "game.authentication.authentication_adapter."
         "AuthenticationAdapter.get_vk_user_data"
     )
     mock_get_vk_data.start()

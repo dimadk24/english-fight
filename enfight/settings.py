@@ -188,7 +188,7 @@ CORS_URLS_REGEX = r"^/api/.*$"
 DEFAULT_RENDERER_CLASSES = ("rest_framework.renderers.JSONRenderer",)
 DEFAULT_AUTHENTICATION_CLASSES = (
     "rest_framework.authentication.SessionAuthentication",  # for admin
-    "game.authentication_backends.vk_app_authentication.VKAppAuthentication",
+    "game.authentication.vk_app_authentication.VKAppAuthentication",
 )
 
 if DEBUG:
@@ -197,7 +197,7 @@ if DEBUG:
         "rest_framework.renderers.BrowsableAPIRenderer",
     )
     DEFAULT_AUTHENTICATION_CLASSES = DEFAULT_AUTHENTICATION_CLASSES + (
-        "game.authentication_backends."
+        "game.authentication."
         "fake_vk_id_authentication.FakeVKIDAuthentication",
     )
 
