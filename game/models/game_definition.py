@@ -20,6 +20,7 @@ class GameDefinition(LifecycleModel):
     ]
     type = models.CharField(choices=TYPES, default=WORD, max_length=30)
     created_at = models.DateTimeField(blank=False, editable=False)
+    started = models.BooleanField(default=False)
 
     @hook(BEFORE_SAVE, when="created_at", is_now=None)
     def set_created_at(self):

@@ -54,3 +54,16 @@ def test_game_def_not_found_by_int_id(api_client):
     )
     assert get_game_def_response.status_code == 404
     assert get_game_def_response.data == {"detail": "Страница не найдена."}
+
+
+def test_game_def_permission_denied_if_started(api_client):
+    post_game_def_response = create_game_definition(api_client)
+
+    game_def_id = post_game_def_response.data["id"]
+    GameDefinition.objects.filter(id=game_def_id).update(started=True)
+
+    get_game_def_response = get_game_definition(api_client, game_def_id)
+    assert get_game_def_response.status_code == 403
+    assert get_game_def_response.data == {
+        'detail': 'К игре уже нельзя подключиться'
+    }
