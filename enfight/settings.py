@@ -227,6 +227,18 @@ CHANNEL_LAYERS = {
     },
 }
 
+# Websockets
+
+WEBSOCKET_AUTHENTICATION_CLASSES = (
+    "game.authentication.vk_app_authentication.VKAppAuthentication",
+)
+
+if DEBUG:
+    WEBSOCKET_AUTHENTICATION_CLASSES = WEBSOCKET_AUTHENTICATION_CLASSES + (
+        "game.authentication.fake_vk_id_authentication.FakeVKIDAuthentication",
+    )
+
+
 # VK
 
 VK_SECRET = env("VK_SECRET")

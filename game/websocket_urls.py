@@ -1,10 +1,10 @@
 from django.urls import re_path
 
-from . import consumers
+from game.multiplayer_game_consumer import MultiplayerGameConsumer
 
 websocket_urlpatterns = [
     re_path(
-        'ws/multiplayer-game$',
-        consumers.MultiplayerGameConsumer.as_asgi(),
+        r'ws/multiplayer-game/(?P<game_def_id>\w+)$',
+        MultiplayerGameConsumer.as_asgi(),
     ),
 ]
