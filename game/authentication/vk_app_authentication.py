@@ -2,10 +2,12 @@ from base64 import b64encode
 from collections import OrderedDict
 from hashlib import sha256
 from hmac import HMAC
+from typing import Dict, Tuple
 from urllib.parse import parse_qsl, urlencode
 
 from django.conf import settings
 from django.contrib.auth.models import update_last_login
+from django.http import HttpRequest
 from rest_framework.authentication import BaseAuthentication
 from rest_framework.exceptions import AuthenticationFailed
 
@@ -14,17 +16,25 @@ from game.authentication.authentication_utils import (
     get_auth_value,
     set_user_data,
 )
+from game.authentication.base_websocket_authentication import (
+    AbstractWebsocketAuthentication,
+)
 from game.models import AppUser
 
 
-class VKAppAuthentication(BaseAuthentication):
+class VKAppAuthentication(BaseAuthentication, AbstractWebsocketAuthentication):
     @get_auth_header
+    def authenticate(self, request: HttpRequest, auth_header: str):
+        return self.authenticate_auth_header(auth_header=auth_header)
+
     @get_auth_value("QueryString")
-    def authenticate(self, *args, **kwargs):
-        auth_query_params = kwargs["auth_value"]
-        query_params_dict = dict(
-            parse_qsl(auth_query_params, keep_blank_values=True)
-        )
+    def authenticate_auth_header(
+        self,
+        *,
+        auth_header: str,
+        auth_value: str,
+    ) -> Tuple[AppUser, Dict[str, str]]:
+        query_params_dict = dict(parse_qsl(auth_value, keep_blank_values=True))
         is_valid = VKAppAuthentication.is_valid_vk_query(
             query_params_dict, settings.VK_SECRET
         )

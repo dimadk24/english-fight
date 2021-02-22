@@ -1,5 +1,7 @@
 from functools import wraps
 
+from django.http import HttpRequest
+
 from game.authentication.authentication_adapter import (
     AuthenticationAdapter,
 )
@@ -8,25 +10,26 @@ from game.models import AppUser
 
 def get_auth_header(fn):
     @wraps(fn)
-    def wrapper(*args, **kwargs):
-        authorization_header: str = args[1].headers.get("Authorization", "")
+    def get_auth_header_wrapper(self, request: HttpRequest, **kwargs):
+        authorization_header: str = request.headers.get("Authorization", "")
         if not authorization_header:
             return None
-        result = fn(*args, **kwargs, auth_header=authorization_header)
+        result = fn(self, request, **kwargs, auth_header=authorization_header)
         return result
 
-    return wrapper
+    return get_auth_header_wrapper
 
 
 def get_auth_value(prefix):
     def handler(fn):
         @wraps(fn)
-        def wrapper(*args, **kwargs):
+        def get_auth_value_wrapper(*args, **kwargs):
             auth_header = kwargs.get("auth_header")
             if not auth_header:
                 raise Exception(
                     "get_auth_value needs auth_header kwarg. "
-                    "Add get_auth_header decorator above get_auth_value"
+                    "Add get_auth_header decorator above get_auth_value "
+                    "or just pass auth_header as kwarg"
                 )
             if not auth_header.startswith(f"{prefix} "):
                 return None
@@ -34,7 +37,7 @@ def get_auth_value(prefix):
             result = fn(*args, **kwargs, auth_value=auth_value)
             return result
 
-        return wrapper
+        return get_auth_value_wrapper
 
     return handler
 
