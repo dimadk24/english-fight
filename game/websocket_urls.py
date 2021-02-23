@@ -1,6 +1,6 @@
 from django.urls import re_path
 
-from game.multiplayer_game_consumer import MultiplayerGameConsumer
+from game.consumers.multiplayer_game_consumer import MultiplayerGameConsumer
 
 websocket_urlpatterns = [
     re_path(
