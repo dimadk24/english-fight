@@ -5,7 +5,6 @@ from game.consumers import BaseGameConsumer
 from game.consumers.base_game_consumer import Scope
 from game.game_questions_creators import create_questions
 from game.models import GameDefinition, Game
-from game.serializers.game_serializer import GameSerializer
 
 
 def create_games(game_def: GameDefinition):
@@ -42,11 +41,4 @@ class StartGameConsumerMixin:
             game_definition_id=self.scope['game_def_id'],
             player=self.scope['user'],
         )
-        game_data = GameSerializer(user_game).data
-        self.send_json(
-            {
-                'type': 'started-game',
-                'model': 'game',
-                'instance': game_data,
-            }
-        )
+        self.send_data('started-game', user_game)
