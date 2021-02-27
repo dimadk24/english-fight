@@ -7,10 +7,6 @@ from game.consumers.base_game_consumer import (
     BaseGameConsumer,
     Scope,
 )
-from game.models import GameDefinition
-from game.serializers.game_definition_serializer import (
-    GameDefinitionSerializer,
-)
 
 
 class InputData(TypedDict):
@@ -31,19 +27,11 @@ class AuthenticateGameConsumerMixin:
         self.on_authenticate()
 
     def on_authenticate(self: BaseGameConsumer):
-        game_def = GameDefinition.objects.get(id=self.scope['game_def_id'])
-        game_def.players.add(self.scope['user'])
-        serialized_instance = GameDefinitionSerializer(game_def).data
+        self.scope['game_def'].players.add(self.scope['user'])
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_name,
-            {'type': 'send_joined_game', 'object': serialized_instance},
+            {'type': 'send_joined_game'},
         )
 
     def send_joined_game(self: BaseGameConsumer, data: dict):
-        self.send_json(
-            {
-                'type': 'joined-game',
-                'model': 'game_definition',
-                'instance': data['object'],
-            }
-        )
+        self.send_data('joined-game', self.scope['game_def'])
