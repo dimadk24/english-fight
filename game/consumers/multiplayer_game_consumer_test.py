@@ -196,12 +196,32 @@ class TestMultiplayerGameConsumerTest:
         await communicator1.send_json_to({'type': 'start-game'})
 
         @database_sync_to_async
-        def get_games():
-            return (
-                game_def.game_set.count(),
-                game_def.game_set.filter(player=user1).exists(),
-                game_def.game_set.filter(player=user2).exists(),
+        def do_database_asserts():
+            games_count = game_def.game_set.count()
+            user1_game = game_def.game_set.get(player=user1)
+            user2_game = game_def.game_set.get(player=user2)
+
+            assert games_count == 2
+            assert len(user1_game.questions.all()) == len(
+                user2_game.questions.all()
             )
+            assert len(user1_game.questions.all()) == QUESTIONS_PER_GAME
+            for user1_question, user2_question in zip(
+                user1_game.questions.all(), user2_game.questions.all()
+            ):
+                assert user1_question.id != user2_question.id
+                assert user1_question.question == user2_question.question
+                assert (
+                    user1_question.answer_words == user2_question.answer_words
+                )
+                assert (
+                    user1_question.correct_answer
+                    == user2_question.correct_answer
+                )
+                assert (
+                    user1_question.selected_answer
+                    == user2_question.selected_answer
+                )
 
         def assert_event(event_data: dict):
             assert event_data['type'] == 'started-game'
@@ -216,10 +236,18 @@ class TestMultiplayerGameConsumerTest:
         c2_started_game = await communicator2.receive_json_from()
         assert_event(c2_started_game)
 
-        games_count, user1_game_exists, user2_game_exists = await get_games()
-        assert games_count == 2
-        assert user1_game_exists
-        assert user2_game_exists
+        c1_questions = c1_started_game['instance']['questions']
+        c1_question_ids = [question['id'] for question in c1_questions]
+        c1_question_words = [question['question'] for question in c1_questions]
+
+        c2_questions = c2_started_game['instance']['questions']
+        c2_question_ids = [question['id'] for question in c2_questions]
+        c2_question_words = [question['question'] for question in c2_questions]
+
+        assert c1_question_ids != c2_question_ids
+        assert c1_question_words == c2_question_words
+
+        await do_database_asserts()
 
         await communicator1.disconnect()
         await communicator2.disconnect()

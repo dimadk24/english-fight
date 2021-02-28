@@ -15,4 +15,4 @@ class GameView(CreateAPIView, RetrieveAPIView):
     @transaction.atomic
     def perform_create(self, serializer: GameSerializer):
         serializer.save()
-        create_questions(serializer.instance)
+        create_questions([serializer.instance])

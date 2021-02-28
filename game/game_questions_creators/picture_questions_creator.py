@@ -8,14 +8,14 @@ from game.constants import QUESTIONS_PER_GAME, ANSWERS_PER_QUESTION
 from game.models import Game, Question
 
 
-def create_picture_questions(game: Game):
+def create_picture_questions(game: Game) -> List[Question]:
     pictures_topic = choice(PICTURES)  # nosec
     questions = []
     for _ in range(QUESTIONS_PER_GAME):
         questions.append(
             get_question_to_create(game, pictures_topic, questions)
         )
-    Question.objects.bulk_create(questions)
+    return questions
 
 
 def get_question_to_create(
