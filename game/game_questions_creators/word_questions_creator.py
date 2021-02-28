@@ -9,12 +9,12 @@ from game.game_utils import GameUtils
 from game.models import Question, Game
 
 
-def create_word_questions(game: Game):
+def create_word_questions(game: Game) -> List[Question]:
     check_language_pairs_number()
     questions = []
     for _ in range(QUESTIONS_PER_GAME):
         questions.append(get_question_to_create(game, questions))
-    Question.objects.bulk_create(questions)
+    return questions
 
 
 def check_language_pairs_number():

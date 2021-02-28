@@ -18,8 +18,7 @@ def create_games(game_def: GameDefinition):
     ]
     Game.objects.bulk_create(games)
     games = Game.objects.filter(game_definition=game_def)
-    for game in games:
-        create_questions(game)
+    create_questions(games)
 
 
 class StartGameConsumerMixin:
