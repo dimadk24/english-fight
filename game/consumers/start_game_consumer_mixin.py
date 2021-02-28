@@ -41,4 +41,8 @@ class StartGameConsumerMixin:
             game_definition_id=self.scope['game_def_id'],
             player=self.scope['user'],
         )
-        self.send_data('started-game', user_game)
+        self.send_data(
+            'started-game',
+            user_game,
+            serializer_kwargs={'expand': ['questions']},
+        )
