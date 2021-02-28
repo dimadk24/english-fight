@@ -81,6 +81,7 @@ class BaseGameConsumer(JsonWebsocketConsumer):
         instance: Optional[Model] = None,
         data: Optional[dict] = None,
         serializer: Optional[Type[Serializer]] = None,
+        serializer_kwargs: Optional[dict] = None,
     ):
         data_to_send = {'type': event_type}
 
@@ -89,7 +90,11 @@ class BaseGameConsumer(JsonWebsocketConsumer):
             if serializer is None:
                 serializer = get_serializer_by_model_name(model_name)
             data_to_send['model'] = model_name
-            data_to_send['instance'] = serializer(instance).data
+            if serializer_kwargs is None:
+                serializer_kwargs = {}
+            data_to_send['instance'] = serializer(
+                instance, **serializer_kwargs
+            ).data
 
         if data:
             data_to_send['data'] = data
