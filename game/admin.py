@@ -86,7 +86,8 @@ class AppUserAdmin(UserAdmin):
     )
     readonly_fields = ("games_number", "completed_games_number")
     list_display = (
-        "__str__",
+        "vk_id",
+        "id",
         "score",
         "games_number",
         "completed_games_number",
@@ -98,6 +99,14 @@ class AppUserAdmin(UserAdmin):
         "-date_joined",
     )
     list_filter = (StaffFilter, HasPlayedFilter, "notifications_status")
+    search_fields = (
+        "id",
+        "vk_id",
+        "username",
+        "first_name",
+        "last_name",
+        "email",
+    )
 
 
 # Move Group to the same app as User
