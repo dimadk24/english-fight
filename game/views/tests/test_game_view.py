@@ -7,10 +7,12 @@ from django.utils import timezone
 from rest_framework.response import Response
 from rest_framework.test import APIClient
 
-from conftest import get_correct_answer_data_for_picture_question
 from data.word_pairs import get_pair_by_english_word
 from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, Game, Question, GameDefinition
+from game.test_question_utils import (
+    get_correct_answer_data_for_picture_question,
+)
 
 
 def post_game_definition(api_client: APIClient, data=None) -> Response:
