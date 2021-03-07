@@ -7,6 +7,10 @@ from enfight.asgi import application
 from game.authentication.vk_app_authentication import VKAppAuthentication
 from game.constants import QUESTIONS_PER_GAME
 from game.models import GameDefinition, AppUser
+from game.test_question_utils import (
+    set_correct_answer_to_question,
+    set_incorrect_answer_to_question,
+)
 
 
 @pytest.fixture(autouse=True)
@@ -76,8 +80,20 @@ def user_exists(**kwargs):
 
 @database_sync_to_async
 def create_2_users_and_game_def():
-    u1 = AppUser.objects.create(vk_id=1, username=1)
-    u2 = AppUser.objects.create(vk_id=2, username=2)
+    u1 = AppUser.objects.create(
+        vk_id=2,
+        username=2,
+        first_name='first user',
+        last_name='first user last name',
+        photo_url='https://vk.com/image1.png',
+    )
+    u2 = AppUser.objects.create(
+        vk_id=3,
+        username=3,
+        first_name='second user',
+        last_name='second user last name',
+        photo_url='https://vk.com/image2.png',
+    )
     return u1, u2, GameDefinition.objects.create(creator=u1)
 
 
@@ -149,7 +165,7 @@ class TestMultiplayerGameConsumerTest:
     async def test_sends_joined_game_to_all_communicators(self):
         user1, user2, game_def = await create_2_users_and_game_def()
 
-        communicator1 = await get_authenticated_communicator(1, game_def)
+        communicator1 = await get_authenticated_communicator(2, game_def)
         user1_joined_event = await communicator1.receive_json_from()
         assert user1_joined_event == {
             'type': 'joined-game',
@@ -162,7 +178,7 @@ class TestMultiplayerGameConsumerTest:
             },
         }
 
-        communicator2 = await get_authenticated_communicator(2, game_def)
+        communicator2 = await get_authenticated_communicator(3, game_def)
 
         user2_joined_event_on_c1 = await communicator1.receive_json_from()
         user2_joined_event_on_c2 = await communicator2.receive_json_from()
@@ -185,10 +201,10 @@ class TestMultiplayerGameConsumerTest:
     async def test_sends_start_event_to_all_consumers(self):
         user1, user2, game_def = await create_2_users_and_game_def()
 
-        communicator1 = await get_authenticated_communicator(1, game_def)
+        communicator1 = await get_authenticated_communicator(2, game_def)
         await communicator1.receive_json_from()  # user1 joined-game
 
-        communicator2 = await get_authenticated_communicator(2, game_def)
+        communicator2 = await get_authenticated_communicator(3, game_def)
 
         await communicator1.receive_json_from()  # user2 joined-game
         await communicator2.receive_json_from()  # user2 joined-game
@@ -248,6 +264,77 @@ class TestMultiplayerGameConsumerTest:
         assert c1_question_words == c2_question_words
 
         await do_database_asserts()
+
+        await communicator1.disconnect()
+        await communicator2.disconnect()
+
+    async def test_sends_finished_game_event(self, api_client):
+        user1, user2, game_def = await create_2_users_and_game_def()
+
+        communicator1 = await get_authenticated_communicator(2, game_def)
+        await communicator1.receive_json_from()  # user1 joined-game
+
+        communicator2 = await get_authenticated_communicator(3, game_def)
+
+        await communicator1.receive_json_from()  # user2 joined-game
+        await communicator2.receive_json_from()  # user2 joined-game
+
+        await communicator1.send_json_to({'type': 'start-game'})
+
+        c1_started_game = (
+            await communicator1.receive_json_from()
+        )  # user1 started-game
+        c2_started_game = (
+            await communicator2.receive_json_from()
+        )  # user2 started-game
+
+        async def answer_questions(started_game_event: dict, user: AppUser):
+            questions = started_game_event['instance']['questions']
+            api_client.force_authenticate(user)
+            for question in questions[:-1]:
+                await database_sync_to_async(set_correct_answer_to_question)(
+                    api_client, question, 'word'
+                )
+            assert await communicator1.receive_nothing() is True
+            assert await communicator2.receive_nothing() is True
+
+            await database_sync_to_async(set_incorrect_answer_to_question)(
+                api_client, questions[-1], 'word'
+            )
+
+        def assert_finished_event(event: dict, user: AppUser):
+            assert event['type'] == 'finished-game'
+            assert event['model'] == 'scoreboard_user'
+            assert event['instance']['id'] == user.pk
+            assert event['instance']['first_name'] == user.first_name
+            assert event['instance']['last_name'] == user.last_name
+            assert event['data'] == {
+                'points': 7,
+                'correct_answers_number': 4,
+                'total_questions': QUESTIONS_PER_GAME,
+            }
+
+        await answer_questions(c1_started_game, user1)
+
+        c1_u1_finished_game = (
+            await communicator1.receive_json_from()
+        )  # user1 finished-game
+        c2_u1_finished_game = (
+            await communicator2.receive_json_from()
+        )  # user1 finished-game
+        assert_finished_event(c1_u1_finished_game, user1)
+        assert_finished_event(c2_u1_finished_game, user1)
+
+        await answer_questions(c2_started_game, user2)
+
+        c1_u2_finished_game = (
+            await communicator1.receive_json_from()
+        )  # user2 finished-game
+        c2_u2_finished_game = (
+            await communicator2.receive_json_from()
+        )  # user2 finished-game
+        assert_finished_event(c1_u2_finished_game, user2)
+        assert_finished_event(c2_u2_finished_game, user2)
 
         await communicator1.disconnect()
         await communicator2.disconnect()

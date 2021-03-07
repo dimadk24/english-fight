@@ -82,11 +82,12 @@ class BaseGameConsumer(JsonWebsocketConsumer):
         data: Optional[dict] = None,
         serializer: Optional[Type[Serializer]] = None,
         serializer_kwargs: Optional[dict] = None,
+        model_name: Optional[str] = '',
     ):
         data_to_send = {'type': event_type}
 
         if instance:
-            model_name = snake_case(type(instance).__name__)
+            model_name = model_name or snake_case(type(instance).__name__)
             if serializer is None:
                 serializer = get_serializer_by_model_name(model_name)
             data_to_send['model'] = model_name
