@@ -5,7 +5,7 @@ import django_lifecycle.mixins
 from django.conf import settings
 from django.db import migrations, models
 
-import json_encoder
+from common import json_encoder
 
 
 class Migration(migrations.Migration):

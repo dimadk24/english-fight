@@ -6,12 +6,12 @@ from django.db.models import Model
 from rest_framework.serializers import Serializer
 from typing_extensions import TypedDict
 
+from common.string_utils import snake_case
 from game.consumers.websocket_errors import (
     AUTH_FAILED_ERROR,
 )
 from game.models import AppUser, GameDefinition
 from game.serializers.serializer_utils import get_serializer_by_model_name
-from string_utils import snake_case
 
 
 class InputContent(TypedDict):

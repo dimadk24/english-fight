@@ -1,5 +1,5 @@
+from common.vk_utils import get_vk_api
 from game.models import AppUser
-from vk_utils import get_vk_api
 
 
 class AuthenticationAdapter:

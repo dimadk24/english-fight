@@ -1,4 +1,4 @@
-from list_utils import find
+from common.list_utils import find
 
 WORD_PAIRS_TUPLE = (
     ("angle", "угол, поворачивать"),

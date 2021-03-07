@@ -2,12 +2,12 @@ from asgiref.sync import async_to_sync
 from channels.layers import get_channel_layer
 from rest_framework.generics import UpdateAPIView
 
+from common.list_utils import count_times
 from game.models import Question, AppUser
 from game.permissions import OwnQuestionPermission
 from game.serializers.question_with_answer_serializer import (
     QuestionWithAnswerSerializer,
 )
-from list_utils import count_times
 
 
 class QuestionView(UpdateAPIView):

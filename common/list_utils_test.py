@@ -1,4 +1,4 @@
-from list_utils import count_times
+from common.list_utils import count_times
 
 
 class TestCountTimes:

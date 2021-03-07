@@ -2,9 +2,9 @@ from django.db import models
 from django.db.models import F
 from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
+from common.json_encoder import UnicodeJSONEncoder
 from game.constants import QUESTIONS_PER_GAME
 from game.game_utils import GameUtils
-from json_encoder import UnicodeJSONEncoder
 
 
 class Question(LifecycleModel):
