@@ -4,7 +4,7 @@ from typing import List, Iterable
 
 from django.db import migrations
 
-from vk_utils import get_vk_api
+from common.vk_utils import get_vk_api
 
 
 def set_user_data(users: Iterable):
