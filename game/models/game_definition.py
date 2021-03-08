@@ -5,9 +5,12 @@ from hashid_field import HashidAutoField
 
 from game.models import AppUser
 
+# filters out capital chars and similar looking chars and numbers
+ID_ALPHABET = 'abcdefghjkmnpqrstuvwxyz123456789'
+
 
 class GameDefinition(LifecycleModel):
-    id = HashidAutoField(primary_key=True)
+    id = HashidAutoField(primary_key=True, alphabet=ID_ALPHABET)
     creator = models.ForeignKey(
         AppUser, on_delete=models.CASCADE, related_name="created_games"
     )
