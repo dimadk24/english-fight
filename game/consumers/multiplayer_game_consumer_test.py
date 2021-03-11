@@ -314,7 +314,16 @@ class TestMultiplayerGameConsumerTest:
                 'total_questions': QUESTIONS_PER_GAME,
             }
 
+        @database_sync_to_async
+        def do_database_asserts(user: AppUser):
+            user.refresh_from_db()
+            game = user.game_set.get()
+            assert game.points == 9
+            assert user.score == 9
+
         await answer_questions(c1_started_game, user1)
+
+        await do_database_asserts(user1)
 
         c1_u1_finished_game = (
             await communicator1.receive_json_from()
@@ -326,6 +335,8 @@ class TestMultiplayerGameConsumerTest:
         assert_finished_event(c2_u1_finished_game, user1)
 
         await answer_questions(c2_started_game, user2)
+
+        await do_database_asserts(user2)
 
         c1_u2_finished_game = (
             await communicator1.receive_json_from()
