@@ -309,8 +309,8 @@ class TestMultiplayerGameConsumerTest:
             assert event['instance']['first_name'] == user.first_name
             assert event['instance']['last_name'] == user.last_name
             assert event['data'] == {
-                'points': 7,
-                'correct_answers_number': 4,
+                'points': 9,
+                'correct_answers_number': 9,
                 'total_questions': QUESTIONS_PER_GAME,
             }
 

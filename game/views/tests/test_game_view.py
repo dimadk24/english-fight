@@ -54,11 +54,11 @@ def do_database_asserts(game_type: str):
     assert now - game_definition.created_at < timedelta(minutes=1)
 
     assert Game.objects.count() == 1
-    assert Question.objects.count() == 5
+    assert Question.objects.count() == QUESTIONS_PER_GAME
 
     game = Game.objects.get()
     assert game.game_definition == game_definition
-    assert game.questions.count() == 5
+    assert game.questions.count() == QUESTIONS_PER_GAME
     assert game.player == current_user
     assert game.points == 0
     now = timezone.now()
@@ -165,6 +165,43 @@ def test_creates_with_fake_random(get_random_int, game_type, api_client):
         1,
         0,
         0,
+        1,
+        10,
+        2,
+        3,
+        4,
+        5,
+        7,
+        1,
+        3,
+        0,
+        1,
+        4,
+        7,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        11,
+        3,
+        36,
+        2,
+        59,
+        98,
     ]
     game_definition_response = post_game_definition(
         api_client, {"type": game_type}
@@ -195,7 +232,7 @@ def test_returns_game_of_current_user(api_client):
     assert response.status_code == 200
     data = response.data
     assert data["id"]
-    assert len(data["questions"]) == 5
+    assert len(data["questions"]) == QUESTIONS_PER_GAME
     assert data["points"] == 0
 
 
