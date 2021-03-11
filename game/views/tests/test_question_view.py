@@ -1,6 +1,7 @@
 import pytest
 
 from data.word_pairs import get_pair_by_english_word
+from game.constants import QUESTIONS_PER_GAME
 from game.models import AppUser, Question, Game, GameDefinition
 from game.test_question_utils import (
     create_single_player_game,
@@ -94,7 +95,7 @@ def test_updates_points_of_game_when_no_correct_questions(
 ):
     game = create_single_player_game(api_client, game_type)
     questions = game["questions"]
-    assert len(questions) == 5
+    assert len(questions) == QUESTIONS_PER_GAME
 
     game = Game.objects.get()
     assert game.points == 0
@@ -104,8 +105,8 @@ def test_updates_points_of_game_when_no_correct_questions(
         set_incorrect_answer_to_question(api_client, question, game_type)
 
     game = Game.objects.get()
-    assert game.points == 1
-    assert game.player.score == 1
+    assert game.points == 0
+    assert game.player.score == 0
 
 
 @pytest.mark.parametrize("game_type", ["word", "picture"])
@@ -124,10 +125,15 @@ def test_updates_points_of_game_when_has_correct_questions(
     set_incorrect_answer_to_question(api_client, questions[2], game_type)
     set_correct_answer_to_question(api_client, questions[3], game_type)
     set_correct_answer_to_question(api_client, questions[4], game_type)
+    set_correct_answer_to_question(api_client, questions[5], game_type)
+    set_incorrect_answer_to_question(api_client, questions[6], game_type)
+    set_correct_answer_to_question(api_client, questions[7], game_type)
+    set_incorrect_answer_to_question(api_client, questions[8], game_type)
+    set_correct_answer_to_question(api_client, questions[9], game_type)
 
     game = Game.objects.get()
-    assert game.points == 4
-    assert game.player.score == 4
+    assert game.points == 6
+    assert game.player.score == 6
 
 
 @pytest.mark.parametrize("game_type", ["word", "picture"])
@@ -136,7 +142,7 @@ def test_updates_points_of_game_when_all_correct_questions(
 ):
     game = create_single_player_game(api_client, game_type)
     questions = game["questions"]
-    assert len(questions) == 5
+    assert len(questions) == QUESTIONS_PER_GAME
 
     game = Game.objects.get()
     assert game.points == 0
@@ -158,8 +164,9 @@ def test_set_correct_score_to_user_after_2_games(api_client, game_type):
     game1 = Game.objects.get()
     assert game1.player.score == 0
 
-    for question in questions:
+    for question in questions[0:-1]:
         set_incorrect_answer_to_question(api_client, question, game_type)
+    set_correct_answer_to_question(api_client, questions[-1], game_type)
 
     game1 = Game.objects.get()
     assert game1.player.score == 1

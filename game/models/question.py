@@ -3,7 +3,6 @@ from django.db.models import F
 from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
 
 from common.json_encoder import UnicodeJSONEncoder
-from game.constants import QUESTIONS_PER_GAME
 from game.game_utils import GameUtils
 
 
@@ -37,10 +36,7 @@ class Question(LifecycleModel):
             correct_questions_number = self.game.questions.filter(
                 selected_answer=F("correct_answer")
             ).count()
-            incorrect_questions_number = (
-                QUESTIONS_PER_GAME - correct_questions_number
-            )
             self.game.points = GameUtils.get_score_for_game(
-                correct_questions_number, incorrect_questions_number
+                correct_questions_number
             )
             self.game.save()

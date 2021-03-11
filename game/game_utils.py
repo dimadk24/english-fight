@@ -1,16 +1,17 @@
 from random import randint
 
+from game.constants import QUESTIONS_PER_GAME
+
 
 class GameUtils:
     @staticmethod
-    def get_score_for_game(
-        correct_questions_count, incorrect_questions_count
-    ) -> int:
-        points = correct_questions_count * 2 - incorrect_questions_count
+    def get_score_for_game(correct_questions_count: int) -> int:
+        points = correct_questions_count
+        incorrect_questions_count = (
+            QUESTIONS_PER_GAME - correct_questions_count
+        )
         if not incorrect_questions_count:
             points += 5
-        if points <= 0:
-            points = 1
         return points
 
     @staticmethod
