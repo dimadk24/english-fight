@@ -23,7 +23,7 @@ class QuestionView(UpdateAPIView):
         result = super().perform_update(serializer)
         game = serializer.instance.game
 
-        if game.points > 0:
+        if game.finished:
             games_in_game_def = game.game_definition.game_set.count()
             is_multiplayer_game = games_in_game_def > 1
             if is_multiplayer_game:
