@@ -212,3 +212,4 @@ jobs:
             /home/dima/.poetry/bin/poetry run python manage.py migrate
             sudo /usr/bin/supervisorctl restart enfight
             /home/dima/.poetry/bin/poetry run python manage.py collectstatic --no-input
+          script_stop: true
