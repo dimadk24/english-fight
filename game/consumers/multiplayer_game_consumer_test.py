@@ -268,7 +268,12 @@ class TestMultiplayerGameConsumerTest:
         await communicator1.disconnect()
         await communicator2.disconnect()
 
-    async def test_sends_finished_game_event(self, api_client):
+    @pytest.mark.parametrize(
+        "correct_answers, points", ((0, 0), (1, 1), (5, 5), (9, 9), (10, 15))
+    )
+    async def test_sends_finished_game_event(
+        self, api_client, correct_answers, points
+    ):
         user1, user2, game_def = await create_2_users_and_game_def()
 
         communicator1 = await get_authenticated_communicator(2, game_def)
@@ -291,16 +296,18 @@ class TestMultiplayerGameConsumerTest:
         async def answer_questions(started_game_event: dict, user: AppUser):
             questions = started_game_event['instance']['questions']
             api_client.force_authenticate(user)
-            for question in questions[:-1]:
+            for question in questions[:correct_answers]:
                 await database_sync_to_async(set_correct_answer_to_question)(
                     api_client, question, 'word'
                 )
-            assert await communicator1.receive_nothing() is True
-            assert await communicator2.receive_nothing() is True
+            if correct_answers != QUESTIONS_PER_GAME:
+                assert await communicator1.receive_nothing() is True
+                assert await communicator2.receive_nothing() is True
 
-            await database_sync_to_async(set_incorrect_answer_to_question)(
-                api_client, questions[-1], 'word'
-            )
+            for question in questions[correct_answers:]:
+                await database_sync_to_async(set_incorrect_answer_to_question)(
+                    api_client, question, 'word'
+                )
 
         def assert_finished_event(event: dict, user: AppUser):
             assert event['type'] == 'finished-game'
@@ -309,8 +316,8 @@ class TestMultiplayerGameConsumerTest:
             assert event['instance']['first_name'] == user.first_name
             assert event['instance']['last_name'] == user.last_name
             assert event['data'] == {
-                'points': 9,
-                'correct_answers_number': 9,
+                'points': points,
+                'correct_answers_number': correct_answers,
                 'total_questions': QUESTIONS_PER_GAME,
             }
 
@@ -318,8 +325,8 @@ class TestMultiplayerGameConsumerTest:
         def do_database_asserts(user: AppUser):
             user.refresh_from_db()
             game = user.game_set.get()
-            assert game.points == 9
-            assert user.score == 9
+            assert game.points == points
+            assert user.score == points
 
         await answer_questions(c1_started_game, user1)
 

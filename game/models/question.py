@@ -29,10 +29,7 @@ class Question(LifecycleModel):
 
     @hook(AFTER_UPDATE, when="selected_answer", was="", is_not="")
     def update_game_score(self):
-        number_of_not_completed_questions_in_game = self.game.questions.filter(
-            selected_answer="",
-        ).count()
-        if number_of_not_completed_questions_in_game == 0:
+        if self.game.finished:
             correct_questions_number = self.game.questions.filter(
                 selected_answer=F("correct_answer")
             ).count()

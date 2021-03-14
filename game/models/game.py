@@ -13,6 +13,12 @@ class Game(LifecycleModel):
     points = models.PositiveIntegerField(default=0)
     created_at = models.DateTimeField(blank=False, editable=False)
 
+    @property
+    def finished(self):
+        return not self.questions.filter(
+            selected_answer="",
+        ).exists()
+
     def save(self, *args, **kwargs):
         """ On save, update timestamps """
         if not self.pk:
