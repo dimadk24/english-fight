@@ -1,6 +1,8 @@
 name: Main workflow
 on: push
 env:
+#  Of course these env variables are used only on Github Actions
+#  prod env variables are stored in another place
   SECRET_KEY: "398jy60_15v)f-b=rdg@hryajjfxo6hl*c0ll1+bg7ay-gjr)l"
   DATABASE_URL: "mysql://root:root@127.0.0.1:8888/enfight?charset=utf8mb4"
   REDIS_URL: "127.0.0.1:6379"
