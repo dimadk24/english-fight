@@ -185,6 +185,7 @@ class GameAdmin(admin.ModelAdmin):
         "created_at",
     )
     ordering = ("-created_at",)
+    autocomplete_fields = ("player", "game_definition")
 
 
 @admin.register(GameDefinition)
@@ -201,3 +202,5 @@ class GameDefinitionAdmin(admin.ModelAdmin):
         "created_at",
     )
     ordering = ("-created_at",)
+    search_fields = ("id",)
+    autocomplete_fields = ("creator", "players")
