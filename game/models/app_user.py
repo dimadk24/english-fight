@@ -43,7 +43,7 @@ class AppUser(AbstractUser):
         max_length=50, choices=NOTIFICATIONS_STATUSES, default=TO_BE_REQUESTED
     )
 
-    objects = DjangoUserManager()
+    objects = DjangoUserManager()  # type: ignore
     users = AppUserManager()
 
     @property

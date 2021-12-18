@@ -44,10 +44,10 @@ class VKAppAuthentication(BaseAuthentication, AbstractWebsocketAuthentication):
 
         if not self.is_user_allowed(vk_user_id):
             raise AuthenticationFailed("У вас нет доступа к приложению")
-        user, _ = AppUser.objects.get_or_create(
+        user, _ = AppUser.objects.get_or_create(  # type: ignore
             vk_id=vk_user_id, defaults={"username": vk_user_id}
         )
-        update_last_login(None, user)
+        update_last_login(None, user)  # type: ignore
         set_user_data(user)
         return user, query_params_dict
 

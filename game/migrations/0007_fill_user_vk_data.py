@@ -19,9 +19,9 @@ def set_user_data(users: Iterable):
 
 
 def get_vk_user_data(vk_ids: List[int]) -> List[dict]:
-    vk_ids = [str(vk_id) for vk_id in vk_ids]
+    str_vk_ids = [str(vk_id) for vk_id in vk_ids]
     return get_vk_api().users.get(
-        user_ids=",".join(vk_ids),
+        user_ids=",".join(str_vk_ids),
         fields="photo_200,first_name,last_name",
         lang="ru",
     )
