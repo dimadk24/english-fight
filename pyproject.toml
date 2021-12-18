@@ -40,8 +40,8 @@ djangorestframework-stubs = "^1.4.0"
 
 [tool.black]
 line-length = 79
-exclude="migrations"
-skip-string-normalization=true
+exclude = "migrations"
+skip-string-normalization = true
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
