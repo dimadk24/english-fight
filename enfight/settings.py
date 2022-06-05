@@ -175,6 +175,7 @@ if not DEBUG:
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     # Prod is deployed at subdomain, thus cannot use preload
     SECURE_HSTS_PRELOAD = False
+    SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
 # Django CORS headers
 
