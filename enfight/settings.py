@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/3.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.1/ref/settings/
 """
-import os
 from pathlib import Path
 
 import sentry_sdk
@@ -244,7 +243,6 @@ if DEBUG:
         "game.authentication.fake_vk_id_authentication.FakeVKIDAuthentication",
     )
 
-
 # VK
 
 VK_SECRET = env("VK_SECRET")
@@ -280,26 +278,5 @@ if DEBUG and DEBUG_SQL_QUERIES:
         },
         "root": {
             "handlers": ["console"],
-        },
-    }
-
-if not DEBUG:
-    LOG_DIR = env("DJANGO_LOG_DIR", default=".")
-    LOGGING = {
-        "version": 1,
-        "disable_existing_loggers": False,
-        "handlers": {
-            "file": {
-                "level": "DEBUG",
-                "class": "logging.FileHandler",
-                "filename": os.path.join(LOG_DIR, "logging.log"),
-            },
-        },
-        "loggers": {
-            "django": {
-                "handlers": ["file"],
-                "level": env("DJANGO_LOG_LEVEL", default="INFO"),
-                "propagate": True,
-            },
         },
     }
