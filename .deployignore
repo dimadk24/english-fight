@@ -1,6 +1,0 @@
-__pycache__
-db.sqlite3
-*.log
-.*
-data/input/
-static/
