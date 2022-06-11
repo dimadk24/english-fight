@@ -20,7 +20,7 @@ env:
 jobs:
   check-style:
     name: Check style with black
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -48,7 +48,7 @@ jobs:
 
   lint:
     name: Lint with flake8
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -76,7 +76,7 @@ jobs:
 
   check-security:
     name: Check security with bandit
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -104,7 +104,7 @@ jobs:
 
   check-no-migrations:
     name: Check no migrations are required
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     services:
       mysql:
         image: mysql:8.0
@@ -146,7 +146,7 @@ jobs:
 
   test:
     name: Test with pytest
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     services:
       mysql:
         image: mysql:8.0
@@ -185,7 +185,7 @@ jobs:
 
   update-requirements:
     name: Update requirements.txt file
-    runs-on: ubuntu-18.04
+    runs-on: ubuntu-20.04
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
