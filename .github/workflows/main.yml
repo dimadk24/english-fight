@@ -182,3 +182,38 @@ jobs:
 
       - name: Test with pytest
         run: poetry run pytest
+
+  update-requirements:
+    name: Update requirements.txt file
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: 3.7
+
+      - name: Install poetry
+        env:
+          # To install specific version, not latest release
+          POETRY_VERSION: 1.1.4
+        run: |
+          # https://python-poetry.org/docs/#installation
+          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
+          # Add "poetry" executable to $PATH
+          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Update requirements.txt
+        run: |
+          bash scripts/export_requirements.sh
+          if [[ `git status --porcelain` ]]; then
+            git config user.name github-actions[bot]
+            git config user.email 41898282+github-actions[bot]@users.noreply.github.com
+            git commit -am "Update requirements.txt"
+            git push
+          fi
