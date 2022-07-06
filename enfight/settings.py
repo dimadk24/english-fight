@@ -170,6 +170,7 @@ LOGOUT_REDIRECT_URL = "/"
 if not DEBUG:
     # SSL related settings not suitable for local environment
     SECURE_SSL_REDIRECT = True
+    SECURE_REDIRECT_EXEMPT = ["^_health$"]  # railway checks don't use https
     SESSION_COOKIE_SECURE = True
     CSRF_COOKIE_SECURE = True
     SECURE_HSTS_SECONDS = 3600

@@ -17,10 +17,12 @@ from django.contrib import admin
 from django.urls import path, include
 
 from game.views.app_index_view import AppIndexView
+from game.views.health_view import health_check_view
 
 urlpatterns = [
     path("", AppIndexView.as_view()),
     path("admin/", include("admin_honeypot.urls", namespace="admin_honeypot")),
     path("root/", admin.site.urls),
     path("api/", include("game.urls")),
+    path("_health", health_check_view),
 ]
