@@ -283,3 +283,28 @@ if DEBUG and DEBUG_SQL_QUERIES:
             "handlers": ["console"],
         },
     }
+
+if not DEBUG:
+    LOGLEVEL = env('LOGLEVEL', default='info').upper()
+
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'formatters': {
+            'console': {
+                'format': '%(name)-12s %(levelname)-8s %(message)s',
+            },
+        },
+        'handlers': {
+            'console': {
+                'class': 'logging.StreamHandler',
+                'formatter': 'console',
+            },
+        },
+        'loggers': {
+            '': {
+                'level': LOGLEVEL,
+                'handlers': ['console'],
+            },
+        },
+    }
