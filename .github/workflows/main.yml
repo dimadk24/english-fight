@@ -30,15 +30,9 @@ jobs:
         with:
           cache: 'poetry'
 
-      - name: Install poetry
-        env:
-          # To install specific version, not latest release
-          POETRY_VERSION: 1.2.1
-        run: |
-          # https://python-poetry.org/docs/#installation
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
-          # Add "poetry" executable to $PATH
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -58,15 +52,9 @@ jobs:
         with:
           cache: 'poetry'
 
-      - name: Install poetry
-        env:
-          # To install specific version, not latest release
-          POETRY_VERSION: 1.2.1
-        run: |
-          # https://python-poetry.org/docs/#installation
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
-          # Add "poetry" executable to $PATH
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -86,15 +74,9 @@ jobs:
         with:
           cache: 'poetry'
 
-      - name: Install poetry
-        env:
-          # To install specific version, not latest release
-          POETRY_VERSION: 1.2.1
-        run: |
-          # https://python-poetry.org/docs/#installation
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
-          # Add "poetry" executable to $PATH
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -126,15 +108,9 @@ jobs:
         with:
           cache: 'poetry'
 
-      - name: Install poetry
-        env:
-          # To install specific version, not latest release
-          POETRY_VERSION: 1.2.1
-        run: |
-          # https://python-poetry.org/docs/#installation
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
-          # Add "poetry" executable to $PATH
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -167,15 +143,9 @@ jobs:
         with:
           cache: 'poetry'
 
-      - name: Install poetry
-        env:
-          # To install specific version, not latest release
-          POETRY_VERSION: 1.2.1
-        run: |
-          # https://python-poetry.org/docs/#installation
-          curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/1.1.4/get-poetry.py | python -
-          # Add "poetry" executable to $PATH
-          echo "$HOME/.poetry/bin" >> $GITHUB_PATH
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
