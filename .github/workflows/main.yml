@@ -25,15 +25,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version-file: '.python-version'
           cache: 'poetry'
-
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -48,15 +48,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version-file: '.python-version'
           cache: 'poetry'
-
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -71,15 +71,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version-file: '.python-version'
           cache: 'poetry'
-
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -106,15 +106,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version-file: '.python-version'
           cache: 'poetry'
-
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
@@ -142,15 +142,15 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
       - name: Setup python
         uses: actions/setup-python@v4
         with:
           python-version-file: '.python-version'
           cache: 'poetry'
-
-      - uses: Gr1N/setup-poetry@v7
-        with:
-          poetry-version: 1.2.1
 
       - name: Install dependencies
         run: poetry install
