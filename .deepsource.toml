@@ -2,8 +2,8 @@ version = 1
 
 test_patterns = [
   "**/tests/**",
-  "**_test.py",
-  "test_**.py"
+  "**/**_test.py",
+  "**/test_**.py"
 ]
 
 exclude_patterns = ["**/migrations/**"]
