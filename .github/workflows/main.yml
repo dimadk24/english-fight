@@ -1,0 +1,110 @@
+name: Main workflow
+on: [push, workflow_dispatch]
+jobs:
+  lint:
+    name: Lint with eslint
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Lint with eslint
+        run: yarn lint
+
+  types:
+    name: Check types
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Check types with tsc
+        run: yarn check-types
+
+  test:
+    name: Test with jest
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Test with jest
+        run: yarn test
+
+  build:
+    name: Build
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build production
+        run: yarn build
+
+  deploy:
+    name: Deploy prod
+    runs-on: ubuntu-18.04
+    if: github.ref == 'refs/heads/master'
+    needs: [lint, types, test, build]
+    env:
+      REACT_APP_API_HOST: ${{secrets.API_HOST}}
+      REACT_APP_VK_APP_URL: https://vk.com/app7717529
+      REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
+      REACT_APP_MIXPANEL_ID: ${{secrets.MIXPANEL_ID}}
+      REACT_APP_MIXPANEL_PROXY_HOST: ${{secrets.MIXPANEL_PROXY_HOST}}
+      REACT_APP_SPLIT_KEY: ${{secrets.SPLIT_KEY}}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup node
+        uses: actions/setup-node@v2
+        with:
+          node-version: '14'
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Build production
+        run: yarn build
+
+      - name: Deploy production
+        uses: JamesIves/github-pages-deploy-action@3.7.1
+        with:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          BRANCH: gh-pages
+          FOLDER: build
+          CLEAN: true

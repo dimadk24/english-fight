@@ -1,0 +1,31 @@
+.answer-button {
+  margin-top: 10px;
+}
+
+.answer-button.correct {
+  background: var(--success-color);
+}
+
+.answer-button.failure {
+  background: var(--failure-color);
+}
+
+.picture-wrapper {
+  background: white;
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.picture-wrapper > img {
+  margin: 16px 0;
+  max-width: 200px;
+  max-height: 200px;
+  align-self: center;
+}
+
+.word-question {
+  font-size: 20px;
+  padding: 16px 0;
+  text-align: center;
+}

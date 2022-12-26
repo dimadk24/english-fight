@@ -1,0 +1,45 @@
+.action-buttons-wrapper {
+  display: flex;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.action-buttons-wrapper > *:first-child {
+  margin-right: 32px;
+}
+
+.notification-request-content {
+  display: grid;
+  grid-template-columns: auto 35px;
+  grid-gap: 15px;
+}
+
+.notification-buttons-wrapper {
+  display: flex;
+  flex-direction: column;
+  grid-column: 1/2;
+}
+
+.notification-buttons-wrapper > :first-child {
+  margin-bottom: 15px;
+}
+
+.notification-button {
+  max-width: 200px;
+}
+
+.notification-request-close {
+  grid-row: 1/2;
+  grid-column: 2/3;
+}
+
+.notification-request-subtext {
+  margin-bottom: 5px;
+  font-size: 14px;
+  grid-row: 3/4;
+}
+
+.subscribe-later {
+  margin-top: 15px;
+  font-size: 14px;
+}
