@@ -1,5 +1,9 @@
-name: Main workflow
-on: push
+name: Backend workflow
+on:
+  push:
+    paths:
+      - 'backend/**'
+  workflow_dispatch:
 env:
 #  Of course these env variables are used only on Github Actions
 #  prod env variables are stored in another place

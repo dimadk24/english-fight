@@ -1,5 +1,9 @@
-name: Main workflow
-on: [push, workflow_dispatch]
+name: Frontend workflow
+on:
+  push:
+    paths:
+      - 'frontend/**'
+  workflow_dispatch:
 jobs:
   lint:
     name: Lint with eslint
