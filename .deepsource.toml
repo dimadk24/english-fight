@@ -3,7 +3,8 @@ version = 1
 test_patterns = [
   "**/tests/**",
   "**/**_test.py",
-  "**/test_**.py"
+  "**/test_**.py",
+  "**/*.test.ts"
 ]
 
 exclude_patterns = ["**/migrations/**"]
@@ -18,3 +19,10 @@ enabled = true
 
   [analyzers.meta]
   runtime_version = "3.x.x"
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+  [analyzers.meta]
+  plugins = ["react"]
