@@ -21,6 +21,9 @@ env:
   VK_ALLOWED_USERS: "*"
   SENTRY_DSN: ""
   UI_HOST: "https://test.com"
+defaults:
+  run:
+    working-directory: ./backend
 jobs:
   check-style:
     name: Check style with black
