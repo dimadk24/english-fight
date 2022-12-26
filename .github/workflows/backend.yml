@@ -3,6 +3,7 @@ on:
   push:
     paths:
       - 'backend/**'
+      - '.github/workflows/backend.yml'
   workflow_dispatch:
 env:
 #  Of course these env variables are used only on Github Actions
