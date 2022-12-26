@@ -1,0 +1,159 @@
+name: Main workflow
+on: push
+env:
+#  Of course these env variables are used only on Github Actions
+#  prod env variables are stored in another place
+  SECRET_KEY: "398jy60_15v)f-b=rdg@hryajjfxo6hl*c0ll1+bg7ay-gjr)l"
+  DATABASE_URL: "mysql://root:root@127.0.0.1:8888/enfight?charset=utf8mb4"
+  REDIS_URL: "redis://127.0.0.1:6379"
+  DEBUG: "1"
+  DEBUG_SQL_QUERIES: "0"
+  DJANGO_ADMIN_NAME: "user"
+  DJANGO_ADMIN_EMAIL: "user@example.com"
+  DJANGO_ADMIN_PASSWORD: "root"
+  HASHID_FIELD_SALT: "hgol39-16&7@&+^+is+x+4)j86myuvd=6^xajcq^j=(^43+f0y"
+  VK_SECRET: ""
+  VK_SERVICE_TOKEN: ""
+  VK_ALLOWED_USERS: "*"
+  SENTRY_DSN: ""
+  UI_HOST: "https://test.com"
+jobs:
+  check-style:
+    name: Check style with black
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint with black
+        run: poetry run black --check .
+
+  lint:
+    name: Lint with flake8
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Lint with flake8
+        run: poetry run flake8 .
+
+  check-security:
+    name: Check security with bandit
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check with bandit
+        run: poetry run bandit -r -c .bandit.yaml .
+
+  check-no-migrations:
+    name: Check no migrations are required
+    runs-on: ubuntu-22.04
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+          MYSQL_DATABASE: enfight
+        ports:
+          - '8888:3306'
+      redis:
+        image: redis:6.0.10
+        ports:
+          - '6379:6379'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Check no new migrations are required
+        run: |
+          poetry run python manage.py ensurehasdb
+          poetry run python manage.py makemigrations --check --dry-run
+
+  test:
+    name: Test with pytest
+    runs-on: ubuntu-22.04
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - '8888:3306'
+      redis:
+        image: redis:6.0.10
+        ports:
+          - '6379:6379'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - uses: Gr1N/setup-poetry@v7
+        with:
+          poetry-version: 1.2.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: '.python-version'
+          cache: 'poetry'
+
+      - name: Install dependencies
+        run: poetry install
+
+      - name: Test with pytest
+        run: poetry run pytest
