@@ -11,6 +11,8 @@ concurrency:
 defaults:
   run:
     working-directory: ./frontend
+permissions:
+  contents: write
 jobs:
   lint:
     name: Lint with eslint
@@ -125,9 +127,8 @@ jobs:
           path: frontend/build
 
       - name: Deploy production
-        uses: JamesIves/github-pages-deploy-action@3.7.1
+        uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          BRANCH: gh-pages
-          FOLDER: frontend/build
-          CLEAN: true
+          branch: gh-pages
+          folder: frontend/build
+          clean: true
