@@ -282,14 +282,6 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
-name = "django-admin-honeypot"
-version = "1.1.0"
-description = "A fake Django admin login screen to notify admins of attempted unauthorized access."
-category = "main"
-optional = false
-python-versions = "*"
-
-[[package]]
 name = "django-click"
 version = "2.3.0"
 description = "Build Django management commands using the click CLI package."
@@ -1054,7 +1046,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "0da5c62af1295840124314a46d3540bd504ae8f6795f9e97495361c254a6bc1e"
+content-hash = "ce55ac3016db9aa3a18270017f4a0bcc7a35f43e6f90c2aee65b6b27348afd4e"
 
 [metadata.files]
 aioredis = [
@@ -1206,10 +1198,6 @@ daphne = [
 django = [
     {file = "Django-3.2.15-py3-none-any.whl", hash = "sha256:115baf5049d5cf4163e43492cdc7139c306ed6d451e7d3571fe9612903903713"},
     {file = "Django-3.2.15.tar.gz", hash = "sha256:f71934b1a822f14a86c9ac9634053689279cd04ae69cb6ade4a59471b886582b"},
-]
-django-admin-honeypot = [
-    {file = "django-admin-honeypot-1.1.0.tar.gz", hash = "sha256:e18a52832b82740917737873c6f34117d15631565e9e4b7dbb9df48a29250796"},
-    {file = "django_admin_honeypot-1.1.0-py2.py3-none-any.whl", hash = "sha256:88e72753f5cbda88d909292d9f3fe7741fb74a8afad083f96e86114238f9b364"},
 ]
 django-click = [
     {file = "django-click-2.3.0.tar.gz", hash = "sha256:bffb0d10c3f3dfe3f5b116ce902c7a7a9aa4e9c046de95259dc044462eb746b4"},
