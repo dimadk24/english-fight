@@ -77,6 +77,14 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-22.04
+    env:
+      REACT_APP_API_HOST: ${{secrets.API_HOST}}
+      REACT_APP_VK_APP_URL: https://vk.com/app7717529
+      REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
+      REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
+      REACT_APP_MIXPANEL_ID: ${{secrets.MIXPANEL_ID}}
+      REACT_APP_MIXPANEL_PROXY_HOST: ${{secrets.MIXPANEL_PROXY_HOST}}
+      REACT_APP_SPLIT_KEY: ${{secrets.SPLIT_KEY}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -108,14 +116,6 @@ jobs:
     runs-on: ubuntu-22.04
     if: github.ref == 'refs/heads/main'
     needs: [lint, types, test, build]
-    env:
-      REACT_APP_API_HOST: ${{secrets.API_HOST}}
-      REACT_APP_VK_APP_URL: https://vk.com/app7717529
-      REACT_APP_SENTRY_DSN: ${{secrets.SENTRY_DSN}}
-      REACT_APP_VK_PIXEL_ID: ${{secrets.VK_PIXEL_ID}}
-      REACT_APP_MIXPANEL_ID: ${{secrets.MIXPANEL_ID}}
-      REACT_APP_MIXPANEL_PROXY_HOST: ${{secrets.MIXPANEL_PROXY_HOST}}
-      REACT_APP_SPLIT_KEY: ${{secrets.SPLIT_KEY}}
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
