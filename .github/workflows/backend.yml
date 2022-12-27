@@ -5,6 +5,9 @@ on:
       - 'backend/**'
       - '.github/workflows/backend.yml'
   workflow_dispatch:
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 env:
 #  Of course these env variables are used only on Github Actions
 #  prod env variables are stored in another place
@@ -40,7 +43,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: '.python-version'
+          python-version-file: 'backend/.python-version'
           cache: 'poetry'
 
       - name: Install dependencies
@@ -63,7 +66,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: '.python-version'
+          python-version-file: 'backend/.python-version'
           cache: 'poetry'
 
       - name: Install dependencies
@@ -86,7 +89,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: '.python-version'
+          python-version-file: 'backend/.python-version'
           cache: 'poetry'
 
       - name: Install dependencies
@@ -121,7 +124,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: '.python-version'
+          python-version-file: 'backend/.python-version'
           cache: 'poetry'
 
       - name: Install dependencies
@@ -157,7 +160,7 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: '.python-version'
+          python-version-file: 'backend/.python-version'
           cache: 'poetry'
 
       - name: Install dependencies
