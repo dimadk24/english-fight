@@ -24,7 +24,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version-file: 'frontend/.nvmrc'
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
 
@@ -44,7 +44,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version-file: 'frontend/.nvmrc'
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
 
@@ -64,7 +64,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version-file: 'frontend/.nvmrc'
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
 
@@ -92,7 +92,7 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version: '14'
+          node-version-file: 'frontend/.nvmrc'
           cache: 'yarn'
           cache-dependency-path: frontend/yarn.lock
 
