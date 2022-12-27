@@ -6,7 +6,7 @@ authors = ["Dima Krutolianov <DimaKrutDK@ya.ru>"]
 license = "MIT"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.10"
 Django = "^3.2.15"
 django-environ = "^0.4.5"
 mysqlclient = "^2.0.1"
