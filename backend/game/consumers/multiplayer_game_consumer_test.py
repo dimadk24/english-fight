@@ -46,7 +46,7 @@ async def get_communicator(game_def: GameDefinition = None):
     communicator = WebsocketCommunicator(
         application, f'/ws/multiplayer-game/{game_def.id}'
     )
-    await communicator.connect()
+    await communicator.connect(timeout=10)
     return communicator
 
 
@@ -111,7 +111,7 @@ class TestMultiplayerGameConsumerTest:
                 },
             }
         )
-        joined_game_event = await communicator.receive_json_from()
+        joined_game_event = await communicator.receive_json_from(timeout=10)
         assert joined_game_event['type'] == 'joined-game'
         assert joined_game_event['model'] == 'game_definition'
 
@@ -137,7 +137,7 @@ class TestMultiplayerGameConsumerTest:
             }
         )
 
-        joined_game_event = await communicator.receive_json_from()
+        joined_game_event = await communicator.receive_json_from(timeout=10)
         assert joined_game_event['type'] == 'joined-game'
         assert joined_game_event['model'] == 'game_definition'
 
@@ -159,14 +159,14 @@ class TestMultiplayerGameConsumerTest:
             }
         )
         with pytest.raises(AuthenticationFailed) as excinfo:
-            await communicator.wait()
+            await communicator.wait(timeout=10)
         assert "Неверная строка запроса VK" in str(excinfo.value)
 
     async def test_sends_joined_game_to_all_communicators(self):
         user1, user2, game_def = await create_2_users_and_game_def()
 
         communicator1 = await get_authenticated_communicator(2, game_def)
-        user1_joined_event = await communicator1.receive_json_from()
+        user1_joined_event = await communicator1.receive_json_from(timeout=10)
         assert user1_joined_event == {
             'type': 'joined-game',
             'model': 'game_definition',
@@ -180,8 +180,12 @@ class TestMultiplayerGameConsumerTest:
 
         communicator2 = await get_authenticated_communicator(3, game_def)
 
-        user2_joined_event_on_c1 = await communicator1.receive_json_from()
-        user2_joined_event_on_c2 = await communicator2.receive_json_from()
+        user2_joined_event_on_c1 = await communicator1.receive_json_from(
+            timeout=10
+        )
+        user2_joined_event_on_c2 = await communicator2.receive_json_from(
+            timeout=10
+        )
 
         assert user2_joined_event_on_c1 == user2_joined_event_on_c2
         assert user2_joined_event_on_c1 == {
@@ -202,12 +206,12 @@ class TestMultiplayerGameConsumerTest:
         user1, user2, game_def = await create_2_users_and_game_def()
 
         communicator1 = await get_authenticated_communicator(2, game_def)
-        await communicator1.receive_json_from()  # user1 joined-game
+        await communicator1.receive_json_from(timeout=10)  # user1 joined-game
 
         communicator2 = await get_authenticated_communicator(3, game_def)
 
-        await communicator1.receive_json_from()  # user2 joined-game
-        await communicator2.receive_json_from()  # user2 joined-game
+        await communicator1.receive_json_from(timeout=10)  # user2 joined-game
+        await communicator2.receive_json_from(timeout=10)  # user2 joined-game
 
         await communicator1.send_json_to({'type': 'start-game'})
 
@@ -246,10 +250,10 @@ class TestMultiplayerGameConsumerTest:
                 len(event_data['instance']['questions']) == QUESTIONS_PER_GAME
             )
 
-        c1_started_game = await communicator1.receive_json_from()
+        c1_started_game = await communicator1.receive_json_from(timeout=10)
         assert_event(c1_started_game)
 
-        c2_started_game = await communicator2.receive_json_from()
+        c2_started_game = await communicator2.receive_json_from(timeout=10)
         assert_event(c2_started_game)
 
         c1_questions = c1_started_game['instance']['questions']
@@ -277,20 +281,20 @@ class TestMultiplayerGameConsumerTest:
         user1, user2, game_def = await create_2_users_and_game_def()
 
         communicator1 = await get_authenticated_communicator(2, game_def)
-        await communicator1.receive_json_from()  # user1 joined-game
+        await communicator1.receive_json_from(timeout=10)  # user1 joined-game
 
         communicator2 = await get_authenticated_communicator(3, game_def)
 
-        await communicator1.receive_json_from()  # user2 joined-game
-        await communicator2.receive_json_from()  # user2 joined-game
+        await communicator1.receive_json_from(timeout=10)  # user2 joined-game
+        await communicator2.receive_json_from(timeout=10)  # user2 joined-game
 
         await communicator1.send_json_to({'type': 'start-game'})
 
-        c1_started_game = (
-            await communicator1.receive_json_from()
+        c1_started_game = await communicator1.receive_json_from(
+            timeout=10
         )  # user1 started-game
-        c2_started_game = (
-            await communicator2.receive_json_from()
+        c2_started_game = await communicator2.receive_json_from(
+            timeout=10
         )  # user2 started-game
 
         async def answer_questions(started_game_event: dict, user: AppUser):
@@ -301,8 +305,8 @@ class TestMultiplayerGameConsumerTest:
                     api_client, question, 'word'
                 )
             if correct_answers != QUESTIONS_PER_GAME:
-                assert await communicator1.receive_nothing() is True
-                assert await communicator2.receive_nothing() is True
+                assert await communicator1.receive_nothing(timeout=10) is True
+                assert await communicator2.receive_nothing(timeout=10) is True
 
             for question in questions[correct_answers:]:
                 await database_sync_to_async(set_incorrect_answer_to_question)(
@@ -332,11 +336,11 @@ class TestMultiplayerGameConsumerTest:
 
         await do_database_asserts(user1)
 
-        c1_u1_finished_game = (
-            await communicator1.receive_json_from()
+        c1_u1_finished_game = await communicator1.receive_json_from(
+            timeout=10
         )  # user1 finished-game
-        c2_u1_finished_game = (
-            await communicator2.receive_json_from()
+        c2_u1_finished_game = await communicator2.receive_json_from(
+            timeout=10
         )  # user1 finished-game
         assert_finished_event(c1_u1_finished_game, user1)
         assert_finished_event(c2_u1_finished_game, user1)
@@ -345,11 +349,11 @@ class TestMultiplayerGameConsumerTest:
 
         await do_database_asserts(user2)
 
-        c1_u2_finished_game = (
-            await communicator1.receive_json_from()
+        c1_u2_finished_game = await communicator1.receive_json_from(
+            timeout=10
         )  # user2 finished-game
-        c2_u2_finished_game = (
-            await communicator2.receive_json_from()
+        c2_u2_finished_game = await communicator2.receive_json_from(
+            timeout=10
         )  # user2 finished-game
         assert_finished_event(c1_u2_finished_game, user2)
         assert_finished_event(c2_u2_finished_game, user2)
