@@ -36,7 +36,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: Gr1N/setup-poetry@v7
+      - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.2.1
 
@@ -59,7 +59,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: Gr1N/setup-poetry@v7
+      - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.2.1
 
@@ -82,7 +82,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: Gr1N/setup-poetry@v7
+      - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.2.1
 
@@ -117,7 +117,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: Gr1N/setup-poetry@v7
+      - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.2.1
 
@@ -153,7 +153,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
-      - uses: Gr1N/setup-poetry@v7
+      - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.2.1
 
