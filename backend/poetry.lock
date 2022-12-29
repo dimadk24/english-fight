@@ -141,6 +141,7 @@ python-versions = ">=3.7"
 
 [package.dependencies]
 asgiref = ">=3.5.0,<4"
+daphne = {version = ">=4.0.0", optional = true, markers = "extra == \"daphne\""}
 Django = ">=3.2"
 
 [package.extras]
@@ -1046,7 +1047,7 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.10"
-content-hash = "0e571f0ec604d5946248d0fb50fe7e48ceb69ab572cfcb7c2d7f0d1a8c37ad26"
+content-hash = "13771153e6ed4a68f6b97a328ce6227f56e6fec0a514328e4ce44a15d08b5042"
 
 [metadata.files]
 asgiref = [
