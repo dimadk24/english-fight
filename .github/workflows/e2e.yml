@@ -1,0 +1,74 @@
+name: E2E workflow
+on: [push, workflow_dispatch]
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  test:
+    name: Run E2E tests
+    runs-on: ubuntu-22.04
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: root
+        ports:
+          - '8888:3306'
+      redis:
+        image: redis:7.0.7
+        ports:
+          - '6379:6379'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - uses: Gr1N/setup-poetry@v8
+        with:
+          poetry-version: 1.3.1
+
+      - name: Setup python
+        uses: actions/setup-python@v4
+        with:
+          python-version-file: 'backend/.python-version'
+          cache: 'poetry'
+
+      - name: Install backend dependencies
+        run: poetry install
+        working-directory: ./backend
+
+      - name: Install playwright browsers
+        run: poetry run playwright install chromium --with-deps
+        working-directory: ./backend
+
+      - name: Setup node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: 'frontend/.nvmrc'
+          cache: 'yarn'
+          cache-dependency-path: frontend/yarn.lock
+
+      - name: Install frontend dependencies
+        run: yarn install --frozen-lockfile
+        working-directory: ./frontend
+
+      - name: Run E2E tests
+        env:
+          # Of course these env variables are used only on Github Actions
+          # prod env variables are stored in another place
+          SECRET_KEY: "398jy60_15v)f-b=rdg@hryajjfxo6hl*c0ll1+bg7ay-gjr)l"
+          DATABASE_URL: "mysql://root:root@127.0.0.1:8888/enfight?charset=utf8mb4"
+          REDIS_URL: "redis://127.0.0.1:6379"
+          DEBUG: "1"
+          DEBUG_SQL_QUERIES: "0"
+          DJANGO_ADMIN_NAME: "user"
+          DJANGO_ADMIN_EMAIL: "user@example.com"
+          DJANGO_ADMIN_PASSWORD: "root"
+          HASHID_FIELD_SALT: "hgol39-16&7@&+^+is+x+4)j86myuvd=6^xajcq^j=(^43+f0y"
+          VK_SECRET: ""
+          VK_SERVICE_TOKEN: ${{secrets.VK_SERVICE_TOKEN}}
+          VK_ALLOWED_USERS: "*"
+          SENTRY_DSN: ""
+          UI_HOST: "https://test.com"
+        run: |
+          yarn --cwd=frontend start:e2e &
+          cd backend && sleep 45 && poetry run pytest tests/e2e
