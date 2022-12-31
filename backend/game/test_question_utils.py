@@ -18,10 +18,9 @@ def create_single_player_game(api_client, game_type: str) -> Response:
     ).data
 
 
-def get_correct_answer_data_for_picture_question(
-    question: Question,
+def get_correct_answer_data_for_picture_question_path(
+    answer_path: str,
 ) -> Tuple[PicturesTopic, Tuple[str, str]]:
-    answer_path = question.question
     regex = (
         settings.STATIC_URL + r"picture-questions/(\d+)-([a-z\-]+)/(\d+)\..*"
     )
@@ -36,28 +35,37 @@ def get_correct_answer_data_for_picture_question(
     return found_topic, found_item
 
 
+def get_correct_answer_data_for_picture_question(
+    question: Question,
+) -> Tuple[PicturesTopic, Tuple[str, str]]:
+    answer_path = question.question
+    return get_correct_answer_data_for_picture_question_path(answer_path)
+
+
 def update_question(api_client, question_id, data: dict):
     return api_client.patch(f"/api/question/{question_id}", data)
+
+
+def get_correct_answer_to_question(question_word: str, game_type: str) -> str:
+    if game_type == GameDefinition.WORD:
+        language_pair = get_pair_by_english_word(question_word)
+        return language_pair["russian_word"]
+    _, item = get_correct_answer_data_for_picture_question_path(question_word)
+    return item[0]
 
 
 def set_correct_answer_to_question(api_client, question: dict, game_type: str):
     question_instance = Question.objects.get(pk=question["id"])
     question_word = question_instance.question
-    if game_type == GameDefinition.WORD:
-        language_pair = get_pair_by_english_word(question_word)
-        correct_answer_word = language_pair["russian_word"]
-    else:
-        db_question = Question.objects.get(pk=question["id"])
-        _, item = get_correct_answer_data_for_picture_question(db_question)
-        correct_answer_word = item[0]
+    answer = get_correct_answer_to_question(question_word, game_type)
     response = update_question(
         api_client,
         question["id"],
         {
-            "selected_answer": correct_answer_word,
+            "selected_answer": answer,
         },
     )
-    return response, correct_answer_word
+    return response, answer
 
 
 def set_incorrect_answer_to_question(
@@ -65,13 +73,9 @@ def set_incorrect_answer_to_question(
 ):
     question_instance = Question.objects.get(pk=question["id"])
     question_word = question_instance.question
-    if game_type == GameDefinition.WORD:
-        language_pair = get_pair_by_english_word(question_word)
-        correct_answer_word = language_pair["russian_word"]
-    else:
-        db_question = Question.objects.get(pk=question["id"])
-        _, item = get_correct_answer_data_for_picture_question(db_question)
-        correct_answer_word = item[0]
+    correct_answer_word = get_correct_answer_to_question(
+        question_word, game_type
+    )
     answer_words = question["answer_words"]
     if not answer_words[0] == correct_answer_word:
         incorrect_answer_word = answer_words[0]

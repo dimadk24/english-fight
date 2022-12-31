@@ -1,6 +1,7 @@
 from unittest import mock
 
 import pytest
+from playwright.async_api import async_playwright
 from rest_framework.test import APIClient
 
 from game.authentication.authentication_adapter import AuthenticationAdapter
@@ -54,3 +55,12 @@ def mock_get_vk_user_data():
     }
     yield mock_get_vk_data
     mock_get_vk_data.stop()
+
+
+@pytest.fixture()
+async def async_page():
+    async with async_playwright() as p:
+        browser = await p.chromium.launch()
+        page = await browser.new_page()
+        yield page
+        await browser.close()
