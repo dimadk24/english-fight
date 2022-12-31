@@ -61,6 +61,7 @@ const Home = ({
               </div>
             }
             multiline
+            data-testid="user-info"
           >
             {`${user.firstName} ${user.lastName}`}
           </Cell>
