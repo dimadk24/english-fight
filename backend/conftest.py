@@ -62,5 +62,11 @@ async def async_page():
     async with async_playwright() as p:
         browser = await p.chromium.launch()
         page = await browser.new_page()
+        await page.set_viewport_size(
+            {
+                'width': 390,
+                'height': 844,
+            }
+        )  # iPhone 12
         yield page
         await browser.close()
