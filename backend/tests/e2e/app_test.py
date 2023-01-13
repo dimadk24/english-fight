@@ -6,7 +6,7 @@ from game.test_question_utils import get_correct_answer_to_question
 
 async def test_word_game(live_server, async_page: Page):
     page = async_page
-    await page.goto("http://localhost:3000/english-fight?fake_vk_id=1")
+    await page.goto("http://localhost:3000/english-fight?fake_vk_id=374637778")
     await page.get_by_role("button", name="Начать одиночную игру").nth(
         1
     ).click()
@@ -43,5 +43,5 @@ async def test_word_game(live_server, async_page: Page):
 
     await page.get_by_role("button", name="Домой").click()
     await expect(page.get_by_test_id("user-info")).to_have_text(
-        "Павел ДуровКоличество очков - 15 Место в рейтинге: 1"
+        "Дмитрий БеляевКоличество очков - 15 Место в рейтинге: 1"
     )
