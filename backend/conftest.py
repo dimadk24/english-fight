@@ -58,9 +58,10 @@ def mock_get_vk_user_data():
 
 
 @pytest.fixture()
-async def async_page():
+async def async_page(browser_name, browser_type_launch_args):
     async with async_playwright() as p:
-        browser = await p.chromium.launch()
+        browser_type = getattr(p, browser_name)
+        browser = await browser_type.launch(**browser_type_launch_args)
         page = await browser.new_page()
         await page.set_viewport_size(
             {
