@@ -3,6 +3,8 @@ on: [push, workflow_dispatch]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
+permissions:
+  contents: write
 jobs:
   test:
     name: Run E2E tests
@@ -72,3 +74,8 @@ jobs:
         run: |
           yarn --cwd=frontend start:e2e &
           cd backend && sleep 45 && poetry run pytest tests/e2e
+
+      - name: Update screenshots
+        uses: stefanzweifel/git-auto-commit-action@v4.16.0
+        with:
+          commit_message: 'chore: update screenshots'
