@@ -87,5 +87,6 @@ jobs:
 
       - name: Update screenshots
         uses: stefanzweifel/git-auto-commit-action@v4.16.0
+        if: github.ref != 'refs/heads/main'
         with:
           commit_message: 'chore: update screenshots'
