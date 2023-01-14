@@ -1,5 +1,5 @@
 name: E2E workflow
-on: [push, workflow_dispatch]
+on: [ push, workflow_dispatch ]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -23,7 +23,7 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
-      
+
       - uses: Gr1N/setup-poetry@v8
         with:
           poetry-version: 1.3.1
@@ -71,9 +71,7 @@ jobs:
           VK_ALLOWED_USERS: "*"
           SENTRY_DSN: ""
           UI_HOST: "https://test.com"
-        run: |
-          yarn --cwd=frontend start:e2e &
-          cd backend && sleep 45 && poetry run pytest tests/e2e
+        run: scripts/run_e2e_tests.sh
 
       - name: Update screenshots
         uses: stefanzweifel/git-auto-commit-action@v4.16.0

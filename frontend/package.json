@@ -40,7 +40,8 @@
     "eslint-plugin-jsx-a11y": "^6.2.3",
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react-hooks": "^4.2.0",
-    "prettier": "1.18.2"
+    "prettier": "1.18.2",
+    "wait-on": "^7.0.1"
   },
   "dependencies": {
     "@sentry/react": "^5.29.0",
