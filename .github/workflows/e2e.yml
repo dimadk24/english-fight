@@ -73,6 +73,18 @@ jobs:
           UI_HOST: "https://test.com"
         run: scripts/run_e2e_tests.sh
 
+      - name: Check that screenshots are not changed on main branch
+        if: github.ref == 'refs/heads/main'
+        run: |
+          if [ -n "$(git status --porcelain)" ]; then
+            echo "⚠ Screenshots are changed! Changes:"
+            git status --short
+            exit 1
+          else
+            echo "Screenshots are not changed"
+            exit 0
+          fi
+
       - name: Update screenshots
         uses: stefanzweifel/git-auto-commit-action@v4.16.0
         with:
