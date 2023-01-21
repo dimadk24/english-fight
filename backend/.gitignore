@@ -11,3 +11,5 @@ db.sqlite3
 
 static/**
 !static/.gitkeep
+
+e2e-tests-results/
