@@ -1,4 +1,7 @@
-from playwright.async_api import Page, expect
+import os
+
+import pytest
+from playwright.sync_api import Page, expect
 
 from enfight.settings import BASE_DIR
 from game.models import GameDefinition
@@ -8,40 +11,49 @@ from test_utils import print_random_state
 screenshot_base_path = BASE_DIR / "tests" / "e2e" / "screenshots"
 
 
-async def test_word_game(live_server, async_page: Page):
+@pytest.fixture(scope="session", autouse=True)
+def allow_using_sync_playwright_api():
+    """
+    The sync page fixture from playwright uses some api
+    which Django doesn't allow in async mode without this env variable
+    """
+    previous_value = os.environ.get("DJANGO_ALLOW_ASYNC_UNSAFE", "")
+    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
+    yield None
+    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = previous_value
+
+
+def test_word_game(live_server, page: Page):
     print_random_state()
-    page = async_page
 
-    async def screenshot(name):
-        await page.screenshot(path=screenshot_base_path / f"{name}.png")
+    def screenshot(name):
+        page.screenshot(path=screenshot_base_path / f"{name}.png")
 
-    await page.goto(
+    page.goto(
         "http://localhost:3000/english-fight?fake_vk_id=374637778",
         wait_until="networkidle",
     )
-    await screenshot("home_before_game")
+    screenshot("home_before_game")
     start_single_game_button = page.get_by_role(
         "button", name="Начать одиночную игру"
     ).nth(1)
-    await start_single_game_button.click()
-    await start_single_game_button.wait_for(state="hidden")  # for screenshot
+    start_single_game_button.click()
+    start_single_game_button.wait_for(state="hidden")  # for screenshot
 
-    await screenshot("choose_game_type")
+    screenshot("choose_game_type")
 
-    await page.get_by_role("button", name="Перевод").click()
+    page.get_by_role("button", name="Перевод").click()
 
     for _ in range(0, 10):
         question_obj = page.get_by_role("heading")
-        question = await question_obj.inner_text()
+        question = question_obj.inner_text()
 
         correct_answer = get_correct_answer_to_question(
             question, GameDefinition.WORD
         )
 
-        await page.get_by_role(
-            "button", name=correct_answer, exact=True
-        ).click()
-        await page.wait_for_function(
+        page.get_by_role("button", name=correct_answer, exact=True).click()
+        page.wait_for_function(
             """
         function() {
           let found = false
@@ -57,17 +69,17 @@ async def test_word_game(live_server, async_page: Page):
         )
 
     not_now_button = page.get_by_role("button", name="Не сейчас")
-    await not_now_button.click()
+    not_now_button.click()
     # do not subscribe to notifications
-    await not_now_button.wait_for(state="hidden")  # for screenshot
+    not_now_button.wait_for(state="hidden")  # for screenshot
 
-    await screenshot("results")
+    screenshot("results")
 
     home_button = page.get_by_role("button", name="Домой")
-    await home_button.click()
-    await home_button.wait_for(state="hidden")  # for screenshot
+    home_button.click()
+    home_button.wait_for(state="hidden")  # for screenshot
 
-    await expect(page.get_by_test_id("user-info")).to_have_text(
+    expect(page.get_by_test_id("user-info")).to_have_text(
         "Дмитрий БеляевКоличество очков - 15 Место в рейтинге: 1"
     )
-    await screenshot("home_after_game")
+    screenshot("home_after_game")
