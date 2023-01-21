@@ -1,7 +1,6 @@
 from unittest import mock
 
 import pytest
-from playwright.async_api import async_playwright
 from rest_framework.test import APIClient
 
 from game.authentication.authentication_adapter import AuthenticationAdapter
@@ -55,19 +54,3 @@ def mock_get_vk_user_data():
     }
     yield mock_get_vk_data
     mock_get_vk_data.stop()
-
-
-@pytest.fixture()
-async def async_page(browser_name, browser_type_launch_args):
-    async with async_playwright() as p:
-        browser_type = getattr(p, browser_name)
-        browser = await browser_type.launch(**browser_type_launch_args)
-        page = await browser.new_page()
-        await page.set_viewport_size(
-            {
-                'width': 390,
-                'height': 844,
-            }
-        )  # iPhone 12
-        yield page
-        await browser.close()

@@ -1,6 +1,3 @@
-import os
-
-import pytest
 from playwright.sync_api import Page, expect
 
 from enfight.settings import BASE_DIR
@@ -9,18 +6,6 @@ from game.test_question_utils import get_correct_answer_to_question
 from test_utils import print_random_state
 
 screenshot_base_path = BASE_DIR / "tests" / "e2e" / "screenshots"
-
-
-@pytest.fixture(scope="session", autouse=True)
-def allow_using_sync_playwright_api():
-    """
-    The sync page fixture from playwright uses some api
-    which Django doesn't allow in async mode without this env variable
-    """
-    previous_value = os.environ.get("DJANGO_ALLOW_ASYNC_UNSAFE", "")
-    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = "true"
-    yield None
-    os.environ["DJANGO_ALLOW_ASYNC_UNSAFE"] = previous_value
 
 
 def test_word_game(live_server, page: Page):
