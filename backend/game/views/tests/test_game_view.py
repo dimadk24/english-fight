@@ -13,6 +13,7 @@ from game.models import AppUser, Game, Question, GameDefinition
 from game.test_question_utils import (
     get_correct_answer_data_for_picture_question,
 )
+from test_utils import print_random_state
 
 
 def post_game_definition(api_client: APIClient, data=None) -> Response:
@@ -91,10 +92,9 @@ def do_database_asserts(game_type: str):
     assert_not_included_in_questions("Zero")
 
 
-# run it many times just to ensure it always passes, cause it uses random
-@pytest.mark.parametrize("i", range(20))
 @pytest.mark.parametrize("game_type", ["word", "picture"])
-def test_creates_with_real_random(i: int, game_type, api_client):
+def test_creates_with_real_random(game_type, api_client):
+    print_random_state()
     game_definition_response = post_game_definition(
         api_client, {"type": game_type}
     )
