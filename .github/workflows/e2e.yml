@@ -73,6 +73,13 @@ jobs:
           UI_HOST: "https://test.com"
         run: scripts/run_e2e_tests.sh
 
+      - name: Upload trace logs
+        uses: actions/upload-artifact@v3
+        if: failure()
+        with:
+          name: playwright-trace
+          path: backend/e2e-tests-results/
+
       - name: Check that screenshots are not changed on main branch
         if: github.ref == 'refs/heads/main'
         run: |
