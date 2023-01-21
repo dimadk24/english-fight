@@ -16,8 +16,9 @@ def test_word_game(live_server, page: Page):
 
     page.goto(
         "http://localhost:3000/english-fight?fake_vk_id=374637778",
-        wait_until="networkidle",
     )
+    page.get_by_test_id("user-info").wait_for()
+    page.wait_for_load_state("networkidle")  # wait for user image to load
     screenshot("home_before_game")
     start_single_game_button = page.get_by_role(
         "button", name="Начать одиночную игру"
