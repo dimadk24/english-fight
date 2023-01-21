@@ -3,11 +3,13 @@ from playwright.async_api import Page, expect
 from enfight.settings import BASE_DIR
 from game.models import GameDefinition
 from game.test_question_utils import get_correct_answer_to_question
+from test_utils import print_random_state
 
 screenshot_base_path = BASE_DIR / "tests" / "e2e" / "screenshots"
 
 
 async def test_word_game(live_server, async_page: Page):
+    print_random_state()
     page = async_page
 
     async def screenshot(name):
