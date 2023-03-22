@@ -49,6 +49,10 @@ if not DEBUG:
         dsn=env("SENTRY_DSN"),
         integrations=[DjangoIntegration()],
         traces_sample_rate=0.5,
+        _experiments={
+            "profiles_sample_rate": 1.0,
+            # profiles_sample_rate is relative to the traces_sample_rate
+        },
     )
 
 # Application definition
