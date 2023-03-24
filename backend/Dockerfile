@@ -30,13 +30,8 @@ COPY . /app
 
 ENV PORT="8080"
 
-# dummy values to run collectstatic
-RUN STATIC_ROOT="static"\
-    SECRET_KEY="secret" \
-    DATABASE_URL="sqlite:///db.sqlite3" \
-    poetry run python manage.py collectstatic --noinput
-
 EXPOSE $PORT
 
-CMD poetry run python manage.py migrate --noinput && \
+CMD poetry run python manage.py collectstatic --noinput && \
+    poetry run python manage.py migrate --noinput && \
     poetry run daphne -b 0.0.0.0 -p $PORT enfight.asgi:application
