@@ -2,3 +2,6 @@
 .env.example
 .editorconfig
 .gitignore
+
+**/*.pyc
+**/__pycache__/
