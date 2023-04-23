@@ -1,4 +1,4 @@
-import { ApiService } from '../core/ApiService'
+import { ApiService } from '../../core/ApiService'
 
 export class QuestionService {
   static createFullPictureUrl(relativeUrl: string): string {

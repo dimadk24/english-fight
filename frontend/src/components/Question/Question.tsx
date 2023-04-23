@@ -3,11 +3,11 @@ import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
 import './Question.css'
 import clsx from 'clsx'
-import { QuestionInstance } from '../models/question-model'
-import { GAME_TYPES, Themes } from '../constants'
+import { QuestionInstance } from '../../models/question-model'
+import { GAME_TYPES, Themes } from '../../constants'
 import { QuestionService } from './QuestionService'
 import { Group, Headline } from '@vkontakte/vkui'
-import { ThemeContext } from '../context/theme'
+import { ThemeContext } from '../../context/theme'
 
 interface Props {
   question: QuestionInstance
