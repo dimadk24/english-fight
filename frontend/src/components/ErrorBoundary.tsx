@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes, { InferProps } from 'prop-types'
 import * as Sentry from '@sentry/react'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
-import { Utils } from '../Utils'
+import { Utils } from '../utils/Utils'
 
 /**
  * Component catches only errors in rendering phase and lifecycle

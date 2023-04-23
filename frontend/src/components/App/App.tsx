@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import '@vkontakte/vkui/dist/vkui.css'
 import './constant-styles.css'
-import { Utils } from '../../Utils'
+import { Utils } from '../../utils/Utils'
 import { trackers } from '../../core/trackers/trackers'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
 import { GameInstance } from '../../models/game-model'
@@ -26,7 +26,7 @@ import {
   frontendWebsocketCloseCodes,
   JsonWebSocket,
 } from '../../core/ApiService'
-import { URLUtils } from '../../URLUtils'
+import { URLUtils } from '../../utils/URLUtils'
 import ChooseMultiplayerGameAction from '../panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
 import JoinMultiplayerGame from '../panels/JoinMultiplayerGame/JoinMultiplayerGame'
 import MultiplayerResults, {

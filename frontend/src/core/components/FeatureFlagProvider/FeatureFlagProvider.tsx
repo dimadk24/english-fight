@@ -2,7 +2,7 @@ import React from 'react'
 import { SplitClient, SplitFactory } from '@splitsoftware/splitio-react'
 import { UserInstance } from '../../user-model'
 import SplitIO from '@splitsoftware/splitio/types/splitio'
-import { Utils } from '../../../Utils'
+import { Utils } from '../../../utils/Utils'
 import { FeatureFlagService } from '../../FeatureFlagService'
 
 type Props = {
