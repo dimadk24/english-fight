@@ -1,4 +1,4 @@
-import { Utils } from '../../Utils'
+import { Utils } from '../../utils/Utils'
 
 export const VkPixelTracker = {
   AUTOMATIC_OPERATIONS: ['init'],

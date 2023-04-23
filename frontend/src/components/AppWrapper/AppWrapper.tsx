@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import WithUser from '../../core/components/WithUser/WithUser'
 import App from '../App/App'
-import { Utils } from '../../Utils'
+import { Utils } from '../../utils/Utils'
 import * as Sentry from '@sentry/react'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
 import styles from './AppWrapper.module.css'

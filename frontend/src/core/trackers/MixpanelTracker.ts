@@ -1,6 +1,6 @@
 import mixpanel from 'mixpanel-browser'
 import { createTracker, TrackerInterface } from './tracker-utils'
-import { URLUtils } from '../../URLUtils'
+import { URLUtils } from '../../utils/URLUtils'
 
 const MIXPANEL_ID = process.env.REACT_APP_MIXPANEL_ID
 const MIXPANEL_PROXY_HOST = process.env.REACT_APP_MIXPANEL_PROXY_HOST

@@ -1,4 +1,4 @@
-import { Utils } from '../../Utils'
+import { Utils } from '../../utils/Utils'
 import { LocalTracker } from './LocalTracker'
 import { VkPixelTracker } from './VkPixelTracker'
 import { MixpanelTracker } from './MixpanelTracker'
