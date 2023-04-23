@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react'
 import PanelHeader from '../helpers/PanelHeader'
 import { BattleService } from './BattleService'
-import Question from '../Question'
+import Question from '../Question/Question'
 import { Utils } from '../../Utils'
 import { battleActions, battleReducer, initialState } from './battle-reducer'
 import Loader from '../helpers/Loader'
