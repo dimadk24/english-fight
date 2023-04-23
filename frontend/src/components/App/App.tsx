@@ -35,22 +35,16 @@ import MultiplayerResults, {
 import { ScoreboardUserInstance } from '../../models/scoreboard-user-model'
 import { FinishedGameData } from '../../websocket-data-types'
 import useStateRef from '../../core/hooks/use-state-ref'
+import { invalidateUser } from '../../core/components/WithUser/user-query'
 
 type Props = {
   user: UserInstance | null
   loadingUser: boolean
   setUser(user: UserInstance): void
-  refreshUser(): void
   popout: JSX.Element | null
 }
 
-const App = ({
-  user,
-  loadingUser,
-  setUser,
-  refreshUser,
-  popout,
-}: Props): JSX.Element => {
+const App = ({ user, loadingUser, setUser, popout }: Props): JSX.Element => {
   const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
     false
   )
@@ -183,7 +177,7 @@ const App = ({
     setActivePanel('results')
     trackers.reachGoal('finish-game')
     VkPixelTracker.reachGoal('conversion')
-    refreshUser()
+    invalidateUser()
   }
 
   const goToHomePanel = () => setActivePanel('home')

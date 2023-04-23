@@ -77,7 +77,7 @@ function AppWrapper(): JSX.Element {
   return (
     <QueryClientProvider client={queryClient}>
       <WithUser>
-        {({ loadingUser, user, setUser, refreshUser }) => {
+        {({ loadingUser, user, setUser }) => {
           return (
             <FeatureFlagProvider user={user}>
               <ThemeContext.Provider value={theme}>
@@ -85,7 +85,6 @@ function AppWrapper(): JSX.Element {
                   user={user}
                   loadingUser={loadingUser}
                   setUser={setUser}
-                  refreshUser={refreshUser}
                   popout={popout}
                 />
               </ThemeContext.Provider>

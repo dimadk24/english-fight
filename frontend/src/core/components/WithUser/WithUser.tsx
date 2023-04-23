@@ -3,19 +3,17 @@ import { AppService } from '../../../AppService'
 import { NOTIFICATIONS_STATUSES } from '../../../constants'
 import { trackers } from '../../trackers/trackers'
 import { UserInstance } from '../../user-model'
-import { invalidateUser, setUserData, useUserQuery } from './user-query'
+import { setUserData, useUserQuery } from './user-query'
 
 type Props = {
   children({
     user,
     loadingUser,
     setUser,
-    refreshUser,
   }: {
     user: UserInstance | null
     loadingUser: boolean
     setUser(user: UserInstance): void
-    refreshUser(): void
   }): JSX.Element
 }
 
@@ -49,7 +47,6 @@ function WithUser({ children }: Props): JSX.Element {
     user,
     loadingUser: isLoading,
     setUser: setUserData,
-    refreshUser: invalidateUser,
   })
 }
 
