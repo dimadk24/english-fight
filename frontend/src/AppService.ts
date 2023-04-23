@@ -1,9 +1,9 @@
-import { ApiService } from '../core/ApiService'
-import { User, UserInstance } from '../core/user-model'
-import { NOTIFICATIONS_STATUSES } from '../constants'
+import { ApiService } from './core/ApiService'
+import { User, UserInstance } from './core/user-model'
+import { NOTIFICATIONS_STATUSES } from './constants'
 import bridge from '@vkontakte/vk-bridge'
-import { trackers } from '../core/trackers/trackers'
-import { URLUtils } from '../URLUtils'
+import { trackers } from './core/trackers/trackers'
+import { URLUtils } from './URLUtils'
 
 export class AppService {
   static areNotificationsEnabledOnVkSide = Boolean(
