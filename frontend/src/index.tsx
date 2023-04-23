@@ -4,7 +4,7 @@ import React from 'react'
 import { render as renderReact } from 'react-dom'
 import { Utils } from './Utils'
 import { ErrorBoundary } from './components/ErrorBoundary'
-import AppWrapper from './components/AppWrapper'
+import AppWrapper from './components/AppWrapper/AppWrapper'
 
 function render() {
   renderReact(
@@ -20,7 +20,7 @@ render()
 
 if (!Utils.isProductionMode) {
   if (module.hot) {
-    module.hot.accept('./components/App', render)
+    module.hot.accept('./components/App/App', render)
   }
 
   import('./eruda')

@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from 'react'
-import WithUser from '../core/components/WithUser/WithUser'
-import App from './App'
-import { Utils } from '../Utils'
+import WithUser from '../../core/components/WithUser/WithUser'
+import App from '../App/App'
+import { Utils } from '../../Utils'
 import * as Sentry from '@sentry/react'
 import Alert from '@vkontakte/vkui/dist/components/Alert/Alert'
-import styles from './App.module.css'
-import { trackers } from '../core/trackers/trackers'
-import FeatureFlagProvider from '../core/components/FeatureFlagProvider/FeatureFlagProvider'
+import styles from './AppWrapper.module.css'
+import { trackers } from '../../core/trackers/trackers'
+import FeatureFlagProvider from '../../core/components/FeatureFlagProvider/FeatureFlagProvider'
 import bridge from '@vkontakte/vk-bridge'
-import { Themes } from '../constants'
-import { ThemeContext } from '../context/theme'
+import { Themes } from '../../constants'
+import { ThemeContext } from '../../context/theme'
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)

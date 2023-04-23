@@ -2,39 +2,39 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import ScreenSpinner from '@vkontakte/vkui/dist/components/ScreenSpinner/ScreenSpinner'
 import '@vkontakte/vkui/dist/vkui.css'
 import './constant-styles.css'
-import { Utils } from '../Utils'
-import { trackers } from '../core/trackers/trackers'
+import { Utils } from '../../Utils'
+import { trackers } from '../../core/trackers/trackers'
 import { Epic, Panel, Tabbar, TabbarItem, View } from '@vkontakte/vkui'
-import { GameInstance } from '../models/game-model'
-import { BattleService } from './panels/BattleService'
-import Home from './panels/Home'
-import Battle from './panels/Battle'
-import SingleplayerResults from './panels/SingleplayerResults'
+import { GameInstance } from '../../models/game-model'
+import { BattleService } from '../panels/BattleService'
+import Home from '../panels/Home'
+import Battle from '../panels/Battle'
+import SingleplayerResults from '../panels/SingleplayerResults'
 import { Icon28HomeOutline, Icon28ListOutline } from '@vkontakte/icons'
-import ScoreboardHome from './panels/ScoreboardHome'
-import { DELAY_BEFORE_LOADER, GameModes, GameType } from '../constants'
-import { UserInstance } from '../core/user-model'
-import ChooseGameType from './panels/ChooseGameType'
-import { VkPixelTracker } from '../core/trackers/VkPixelTracker'
-import Lobby from './panels/Lobby/Lobby'
+import ScoreboardHome from '../panels/ScoreboardHome'
+import { DELAY_BEFORE_LOADER, GameModes, GameType } from '../../constants'
+import { UserInstance } from '../../core/user-model'
+import ChooseGameType from '../panels/ChooseGameType'
+import { VkPixelTracker } from '../../core/trackers/VkPixelTracker'
+import Lobby from '../panels/Lobby/Lobby'
 import {
   GameDefinition,
   GameDefinitionInstance,
-} from '../models/game-definition-model'
+} from '../../models/game-definition-model'
 import {
   ApiService,
   frontendWebsocketCloseCodes,
   JsonWebSocket,
-} from '../core/ApiService'
-import { URLUtils } from '../URLUtils'
-import ChooseMultiplayerGameAction from './panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
-import JoinMultiplayerGame from './panels/JoinMultiplayerGame/JoinMultiplayerGame'
+} from '../../core/ApiService'
+import { URLUtils } from '../../URLUtils'
+import ChooseMultiplayerGameAction from '../panels/ChooseMultiplayerGameAction/ChooseMultiplayerGameAction'
+import JoinMultiplayerGame from '../panels/JoinMultiplayerGame/JoinMultiplayerGame'
 import MultiplayerResults, {
   MultiplayerResultItem,
-} from './panels/MultiplayerResults/MultiplayerResults'
-import { ScoreboardUserInstance } from '../models/scoreboard-user-model'
-import { FinishedGameData } from '../websocket-data-types'
-import useStateRef from '../core/hooks/use-state-ref'
+} from '../panels/MultiplayerResults/MultiplayerResults'
+import { ScoreboardUserInstance } from '../../models/scoreboard-user-model'
+import { FinishedGameData } from '../../websocket-data-types'
+import useStateRef from '../../core/hooks/use-state-ref'
 
 type Props = {
   user: UserInstance | null

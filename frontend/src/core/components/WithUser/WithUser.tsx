@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { UserInstance } from '../../user-model'
-import { AppService } from '../../../components/AppService'
+import { AppService } from '../../../AppService'
 import { NOTIFICATIONS_STATUSES } from '../../../constants'
 import { trackers } from '../../trackers/trackers'
 
