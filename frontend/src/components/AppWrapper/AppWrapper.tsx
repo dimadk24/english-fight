@@ -9,7 +9,7 @@ import { trackers } from '../../core/trackers/trackers'
 import FeatureFlagProvider from '../../core/components/FeatureFlagProvider/FeatureFlagProvider'
 import bridge from '@vkontakte/vk-bridge'
 import { Themes } from '../../constants'
-import { ThemeContext } from '../../context/theme'
+import { ThemeContext } from '../../react-contexts/theme'
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)
