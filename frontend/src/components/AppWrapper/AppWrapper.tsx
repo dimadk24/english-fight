@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import WithUser from '../../core/components/WithUser/WithUser'
+import { WithUser } from '../../core/components/WithUser/WithUser'
 import App from '../App/App'
 import { Utils } from '../../utils/Utils'
 import * as Sentry from '@sentry/react'
@@ -10,10 +10,9 @@ import FeatureFlagProvider from '../../core/components/FeatureFlagProvider/Featu
 import bridge from '@vkontakte/vk-bridge'
 import { Themes } from '../../constants'
 import { ThemeContext } from '../../react-contexts/theme'
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
-
-const queryClient = new QueryClient()
+import { queryClient } from '../../react-query-client'
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)

@@ -1,8 +1,9 @@
-import { useEffect, useState } from 'react'
-import { UserInstance } from '../../user-model'
+import { useEffect } from 'react'
 import { AppService } from '../../../AppService'
 import { NOTIFICATIONS_STATUSES } from '../../../constants'
 import { trackers } from '../../trackers/trackers'
+import { UserInstance } from '../../user-model'
+import { invalidateUser, setUserData, useUserQuery } from './user-query'
 
 type Props = {
   children({
@@ -19,38 +20,37 @@ type Props = {
 }
 
 function WithUser({ children }: Props): JSX.Element {
-  const [user, setUser] = useState<UserInstance | null>(null)
-  const [loadingUser, setLoadingUser] = useState(false)
+  const { isLoading, isSuccess, data: user } = useUserQuery()
 
-  async function fetchUser(isInitialRequest = false) {
-    setLoadingUser(true)
-    try {
-      const fetchedUser = await AppService.fetchUserData()
-      setUser(fetchedUser)
-      if (isInitialRequest) {
-        if (
-          fetchedUser.notificationsStatus === NOTIFICATIONS_STATUSES.ALLOW &&
-          !AppService.areNotificationsEnabledOnVkSide
-        ) {
-          setUser(await AppService.blockNotifications())
-        }
-        trackers.identify(fetchedUser.id, fetchedUser.vkId)
-      }
-    } finally {
-      setLoadingUser(false)
-    }
-  }
+  const userId = isSuccess && user.id
+  const userVkId = isSuccess && user.vkId
+  const userNotificationStatus = isSuccess && user.notificationsStatus
 
   useEffect(() => {
-    fetchUser(true)
-  }, [])
+    const markNotificationsBlockedIfUserBlockedOnVkSide = async () => {
+      if (
+        userNotificationStatus === NOTIFICATIONS_STATUSES.ALLOW &&
+        !AppService.areNotificationsEnabledOnVkSide
+      ) {
+        setUserData(await AppService.blockNotifications())
+      }
+    }
+
+    if (isSuccess) {
+      markNotificationsBlockedIfUserBlockedOnVkSide()
+    }
+  }, [isSuccess, userNotificationStatus])
+
+  useEffect(() => {
+    if (isSuccess) trackers.identify(userId, userVkId)
+  }, [isSuccess, userId, userVkId])
 
   return children({
     user,
-    loadingUser,
-    setUser,
-    refreshUser: () => fetchUser(false),
+    loadingUser: isLoading,
+    setUser: setUserData,
+    refreshUser: invalidateUser,
   })
 }
 
-export default WithUser
+export { WithUser }
