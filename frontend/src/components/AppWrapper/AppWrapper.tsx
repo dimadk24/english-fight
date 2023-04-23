@@ -10,6 +10,10 @@ import FeatureFlagProvider from '../../core/components/FeatureFlagProvider/Featu
 import bridge from '@vkontakte/vk-bridge'
 import { Themes } from '../../constants'
 import { ThemeContext } from '../../react-contexts/theme'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
+
+const queryClient = new QueryClient()
 
 function AppWrapper(): JSX.Element {
   const [popout, setPopout] = useState<JSX.Element | null>(null)
@@ -72,23 +76,26 @@ function AppWrapper(): JSX.Element {
   }, [])
 
   return (
-    <WithUser>
-      {({ loadingUser, user, setUser, refreshUser }) => {
-        return (
-          <FeatureFlagProvider user={user}>
-            <ThemeContext.Provider value={theme}>
-              <App
-                user={user}
-                loadingUser={loadingUser}
-                setUser={setUser}
-                refreshUser={refreshUser}
-                popout={popout}
-              />
-            </ThemeContext.Provider>
-          </FeatureFlagProvider>
-        )
-      }}
-    </WithUser>
+    <QueryClientProvider client={queryClient}>
+      <WithUser>
+        {({ loadingUser, user, setUser, refreshUser }) => {
+          return (
+            <FeatureFlagProvider user={user}>
+              <ThemeContext.Provider value={theme}>
+                <App
+                  user={user}
+                  loadingUser={loadingUser}
+                  setUser={setUser}
+                  refreshUser={refreshUser}
+                  popout={popout}
+                />
+              </ThemeContext.Provider>
+            </FeatureFlagProvider>
+          )
+        }}
+      </WithUser>
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
   )
 }
 
