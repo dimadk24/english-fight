@@ -40,11 +40,10 @@ import { invalidateUser } from '../../core/components/WithUser/user-query'
 type Props = {
   user: UserInstance | null
   loadingUser: boolean
-  setUser(user: UserInstance): void
   popout: JSX.Element | null
 }
 
-const App = ({ user, loadingUser, setUser, popout }: Props): JSX.Element => {
+const App = ({ user, loadingUser, popout }: Props): JSX.Element => {
   const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
     false
   )
@@ -302,7 +301,6 @@ const App = ({ user, loadingUser, setUser, popout }: Props): JSX.Element => {
               setGameMode(GameModes.multi)
               setActivePanel('choose-multiplayer-game-action')
             }}
-            onUpdateUser={(updatedUser) => setUser(updatedUser)}
           />
         </Panel>
         <Panel id="choose-multiplayer-game-action">
@@ -369,7 +367,6 @@ const App = ({ user, loadingUser, setUser, popout }: Props): JSX.Element => {
               onRetry={() => onStartGame(gameType)}
               onGoBack={goToHomePanel}
               battle={battle}
-              onUpdateUser={(updatedUser) => setUser(updatedUser)}
             />
           )}
           {gameMode === GameModes.multi && (

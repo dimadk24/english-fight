@@ -15,13 +15,13 @@ import { Icon24Cancel } from '@vkontakte/icons'
 import { UserInstance } from '../../../core/user-model'
 import { GameInstance } from '../../../models/game-model'
 import HomeButton from '../../helpers/HomeButton'
+import { setUserData } from '../../../core/components/WithUser/user-query'
 
 type Props = {
   user: UserInstance
   onGoBack(): void
   onRetry(): void
   battle: GameInstance
-  onUpdateUser(user: UserInstance): void
 }
 
 function SingleplayerResults({
@@ -29,7 +29,6 @@ function SingleplayerResults({
   onGoBack,
   battle = null,
   onRetry,
-  onUpdateUser,
 }: Props): JSX.Element {
   const { questions, points } = battle
   const correctAnswersNumber = questions.filter(({ isCorrect }) => isCorrect)
@@ -55,7 +54,7 @@ function SingleplayerResults({
     setLoading(true)
     try {
       const updatedUser = await AppService.requestNotifications()
-      onUpdateUser(updatedUser)
+      setUserData(updatedUser)
       if (updatedUser.notificationsStatus === NOTIFICATIONS_STATUSES.BLOCK) {
         // if user clicked subscribe, but rejected in VK popup
         setRejectedNotifications(true)
@@ -69,7 +68,7 @@ function SingleplayerResults({
     if (loading) return
     setLoading(true)
     try {
-      onUpdateUser(await AppService.blockNotifications())
+      setUserData(await AppService.blockNotifications())
       setRejectedNotifications(true)
     } finally {
       setLoading(false)

@@ -11,12 +11,12 @@ import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { Icon28UserOutline, Icon28UsersOutline } from '@vkontakte/icons'
+import { setUserData } from '../../core/components/WithUser/user-query'
 
 type Props = {
   onStartSingleGame(): void
   onStartMultiplayerGame(): void
   user: UserInstance
-  onUpdateUser(user: UserInstance): void
 }
 
 const connectDevLink = 'https://vk.me/english_clash'
@@ -25,7 +25,6 @@ const Home = ({
   onStartSingleGame,
   onStartMultiplayerGame,
   user = null,
-  onUpdateUser,
 }: Props): JSX.Element => {
   const [loading, setLoading] = useState(false)
 
@@ -41,7 +40,7 @@ const Home = ({
         // need to disable
         updatedUser = await AppService.blockNotifications()
       }
-      onUpdateUser(updatedUser)
+      setUserData(updatedUser)
     } finally {
       setLoading(false)
     }

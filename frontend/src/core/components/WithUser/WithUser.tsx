@@ -9,11 +9,9 @@ type Props = {
   children({
     user,
     loadingUser,
-    setUser,
   }: {
     user: UserInstance | null
     loadingUser: boolean
-    setUser(user: UserInstance): void
   }): JSX.Element
 }
 
@@ -46,7 +44,6 @@ function WithUser({ children }: Props): JSX.Element {
   return children({
     user,
     loadingUser: isLoading,
-    setUser: setUserData,
   })
 }
 
