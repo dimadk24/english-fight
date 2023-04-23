@@ -7,7 +7,7 @@ import { QuestionInstance } from '../../models/question-model'
 import { GAME_TYPES, Themes } from '../../constants'
 import { QuestionService } from './QuestionService'
 import { Group, Headline } from '@vkontakte/vkui'
-import { ThemeContext } from '../../context/theme'
+import { ThemeContext } from '../../react-contexts/theme'
 
 interface Props {
   question: QuestionInstance
