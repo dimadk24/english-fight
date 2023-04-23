@@ -21,6 +21,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@tanstack/eslint-plugin-query": "4.29.4",
     "@types/jest": "^26.0.19",
     "@types/lodash.camelcase": "^4.3.6",
     "@types/lodash.pickby": "^4.6.6",

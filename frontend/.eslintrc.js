@@ -15,6 +15,7 @@ module.exports = {
     'plugin:prettier/recommended',
     'plugin:jest/recommended',
     'plugin:jest-formatting/recommended',
+    'plugin:@tanstack/eslint-plugin-query/recommended',
   ],
   globals: {
     Atomics: 'readonly',
@@ -37,6 +38,7 @@ module.exports = {
     'jest',
     'jest-formatting',
     'jsx-a11y',
+    '@tanstack/query',
   ],
   rules: {
     'max-len': [
