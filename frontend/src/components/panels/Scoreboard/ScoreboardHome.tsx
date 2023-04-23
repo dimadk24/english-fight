@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
-import PanelHeader from '../helpers/PanelHeader'
-import { ApiService } from '../../core/ApiService'
+import PanelHeader from '../../helpers/PanelHeader'
+import { ApiService } from '../../../core/ApiService'
 import { Div, FixedLayout, Group, List, Tabs, TabsItem } from '@vkontakte/vkui'
-import { ScoreboardUser } from '../../models/scoreboard-user-model'
+import { ScoreboardUser } from '../../../models/scoreboard-user-model'
 import './ScoreboardHome.css'
 import ScoreboardItem from './ScoreboardItem'
-import Loader from '../helpers/Loader'
-import { UserInstance } from '../../core/user-model'
+import Loader from '../../helpers/Loader'
+import { UserInstance } from '../../../core/user-model'
 
 const SCOREBOARD_TYPES = {
   forever: 'forever',
@@ -102,4 +102,4 @@ function ScoreboardHome({ user = null }: Props): JSX.Element {
   )
 }
 
-export default ScoreboardHome
+export { ScoreboardHome }
