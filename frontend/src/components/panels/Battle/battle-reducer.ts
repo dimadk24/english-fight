@@ -1,5 +1,5 @@
-import { GameInstance } from '../../models/game-model'
-import { QuestionInstance } from '../../models/question-model'
+import { GameInstance } from '../../../models/game-model'
+import { QuestionInstance } from '../../../models/question-model'
 
 export const battleActions = {
   setBattle: 'setBattle',

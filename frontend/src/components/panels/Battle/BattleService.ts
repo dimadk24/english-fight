@@ -1,8 +1,8 @@
-import { ApiService } from '../../core/ApiService'
-import { Game, GameInstance } from '../../models/game-model'
-import { Question, QuestionInstance } from '../../models/question-model'
-import { GameDefinitionInstance } from '../../models/game-definition-model'
-import { GameType } from '../../constants'
+import { ApiService } from '../../../core/ApiService'
+import { Game, GameInstance } from '../../../models/game-model'
+import { Question, QuestionInstance } from '../../../models/question-model'
+import { GameDefinitionInstance } from '../../../models/game-definition-model'
+import { GameType } from '../../../constants'
 
 export class BattleService {
   static async startSinglePlayerGame(
