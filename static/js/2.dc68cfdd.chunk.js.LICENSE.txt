@@ -39,6 +39,16 @@ PERFORMANCE OF THIS SOFTWARE.
  */
 
 /**
+ * @license React
+ * use-sync-external-store-shim.production.min.js
+ *
+ * Copyright (c) Facebook, Inc. and its affiliates.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+/**
  * @license utfx (c) 2014 Daniel Wirtz <dcode@dcode.io>
  * Released under the Apache License, Version 2.0
  * see: https://github.com/dcodeIO/utfx for details
