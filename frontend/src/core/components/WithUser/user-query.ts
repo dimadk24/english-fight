@@ -10,6 +10,7 @@ export const useUserQuery = () => {
   return useQuery({
     queryKey: userQueryKey,
     queryFn: AppService.fetchUserData,
+    staleTime: Infinity,
   })
 }
 
