@@ -23,13 +23,16 @@ def test_game(live_server, page: Page, game_type):
         random.seed(2)
 
         def screenshot(name):
+            screenshot.counter += 1
             path = (
                 screenshot_base_path
                 / f"{game_type}-game"
                 / f"game-{game_index}"
-                / f"{name}.png"
+                / f"{screenshot.counter}-{name}.png"
             )
             page.screenshot(path=path)
+
+        screenshot.counter = 0
 
         page.goto(
             "http://localhost:3000/english-fight?fake_vk_id=374637778",
