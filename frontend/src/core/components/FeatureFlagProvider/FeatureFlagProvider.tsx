@@ -1,18 +1,19 @@
 import React from 'react'
 import { SplitClient, SplitFactory } from '@splitsoftware/splitio-react'
-import { UserInstance } from '../../user-model'
 import SplitIO from '@splitsoftware/splitio/types/splitio'
 import { Utils } from '../../../utils/Utils'
 import { FeatureFlagService } from '../../FeatureFlagService'
+import { useUserQuery } from '../WithUser/user-query'
 
 type Props = {
   children: JSX.Element
-  user: UserInstance | null
 }
 
 const SPLIT_KEY = process.env.REACT_APP_SPLIT_KEY
 
-function FeatureFlagProvider({ user, children }: Props): JSX.Element {
+function FeatureFlagProvider({ children }: Props): JSX.Element {
+  const { data: user } = useUserQuery()
+
   const splitConfig: SplitIO.IBrowserSettings = {
     core: {
       authorizationKey: SPLIT_KEY,

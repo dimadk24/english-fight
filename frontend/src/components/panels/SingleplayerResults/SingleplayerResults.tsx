@@ -12,24 +12,25 @@ import { AppService } from '../../../AppService'
 import { Card, CardGrid, Div } from '@vkontakte/vkui'
 import Loader from '../../helpers/Loader'
 import { Icon24Cancel } from '@vkontakte/icons'
-import { UserInstance } from '../../../core/user-model'
 import { GameInstance } from '../../../models/game-model'
 import HomeButton from '../../helpers/HomeButton'
-import { setUserData } from '../../../core/components/WithUser/user-query'
+import {
+  setUserData,
+  useUserQuery,
+} from '../../../core/components/WithUser/user-query'
 
 type Props = {
-  user: UserInstance
   onGoBack(): void
   onRetry(): void
   battle: GameInstance
 }
 
 function SingleplayerResults({
-  user = null,
   onGoBack,
   battle = null,
   onRetry,
 }: Props): JSX.Element {
+  const { data: user } = useUserQuery()
   const { questions, points } = battle
   const correctAnswersNumber = questions.filter(({ isCorrect }) => isCorrect)
     .length

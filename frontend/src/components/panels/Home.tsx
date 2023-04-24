@@ -11,12 +11,14 @@ import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
 import { Icon28UserOutline, Icon28UsersOutline } from '@vkontakte/icons'
-import { setUserData } from '../../core/components/WithUser/user-query'
+import {
+  setUserData,
+  useUserQuery,
+} from '../../core/components/WithUser/user-query'
 
 type Props = {
   onStartSingleGame(): void
   onStartMultiplayerGame(): void
-  user: UserInstance
 }
 
 const connectDevLink = 'https://vk.me/english_clash'
@@ -24,8 +26,8 @@ const connectDevLink = 'https://vk.me/english_clash'
 const Home = ({
   onStartSingleGame,
   onStartMultiplayerGame,
-  user = null,
 }: Props): JSX.Element => {
+  const { data: user } = useUserQuery()
   const [loading, setLoading] = useState(false)
 
   const onSwitchNotifications = async (event) => {

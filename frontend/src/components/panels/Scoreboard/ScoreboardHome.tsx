@@ -6,18 +6,15 @@ import { ScoreboardUser } from '../../../models/scoreboard-user-model'
 import './ScoreboardHome.css'
 import ScoreboardItem from './ScoreboardItem'
 import Loader from '../../helpers/Loader'
-import { UserInstance } from '../../../core/user-model'
+import { useUserQuery } from '../../../core/components/WithUser/user-query'
 
 const SCOREBOARD_TYPES = {
   forever: 'forever',
   monthly: 'monthly',
 }
 
-interface Props {
-  user: UserInstance
-}
-
-function ScoreboardHome({ user = null }: Props): JSX.Element {
+function ScoreboardHome(): JSX.Element {
+  const { data: user } = useUserQuery()
   const [usersList, setUsersList] = useState<ScoreboardUser[]>([])
   const [loading, setLoading] = useState(false)
   const [activeTab, setActiveTab] = useState(SCOREBOARD_TYPES.forever)

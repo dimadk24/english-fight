@@ -2,21 +2,14 @@ import { useEffect } from 'react'
 import { AppService } from '../../../AppService'
 import { NOTIFICATIONS_STATUSES } from '../../../constants'
 import { trackers } from '../../trackers/trackers'
-import { UserInstance } from '../../user-model'
 import { setUserData, useUserQuery } from './user-query'
 
 type Props = {
-  children({
-    user,
-    loadingUser,
-  }: {
-    user: UserInstance | null
-    loadingUser: boolean
-  }): JSX.Element
+  children: JSX.Element
 }
 
 function WithUser({ children }: Props): JSX.Element {
-  const { isLoading, isSuccess, data: user } = useUserQuery()
+  const { isSuccess, data: user } = useUserQuery()
 
   const userId = isSuccess && user.id
   const userVkId = isSuccess && user.vkId
@@ -41,10 +34,7 @@ function WithUser({ children }: Props): JSX.Element {
     if (isSuccess) trackers.identify(userId, userVkId)
   }, [isSuccess, userId, userVkId])
 
-  return children({
-    user,
-    loadingUser: isLoading,
-  })
+  return children
 }
 
 export { WithUser }

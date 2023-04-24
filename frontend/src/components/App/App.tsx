@@ -13,7 +13,6 @@ import SingleplayerResults from '../panels/SingleplayerResults/SingleplayerResul
 import { Icon28HomeOutline, Icon28ListOutline } from '@vkontakte/icons'
 import { ScoreboardHome } from '../panels/Scoreboard/ScoreboardHome'
 import { DELAY_BEFORE_LOADER, GameModes, GameType } from '../../constants'
-import { UserInstance } from '../../core/user-model'
 import ChooseGameType from '../panels/ChooseGameType'
 import { VkPixelTracker } from '../../core/trackers/VkPixelTracker'
 import Lobby from '../panels/Lobby/Lobby'
@@ -35,15 +34,17 @@ import MultiplayerResults, {
 import { ScoreboardUserInstance } from '../../models/scoreboard-user-model'
 import { FinishedGameData } from '../../websocket-data-types'
 import useStateRef from '../../core/hooks/use-state-ref'
-import { invalidateUser } from '../../core/components/WithUser/user-query'
+import {
+  invalidateUser,
+  useUserQuery,
+} from '../../core/components/WithUser/user-query'
 
 type Props = {
-  user: UserInstance | null
-  loadingUser: boolean
   popout: JSX.Element | null
 }
 
-const App = ({ user, loadingUser, popout }: Props): JSX.Element => {
+const App = ({ popout }: Props): JSX.Element => {
+  const { isLoading: loadingUser } = useUserQuery()
   const [loadingMultiplayerGameDef, setLoadingMultiplayerGameDef] = useState(
     false
   )
@@ -295,7 +296,6 @@ const App = ({ user, loadingUser, popout }: Props): JSX.Element => {
       <View id="game" activePanel={activePanel} popout={popoutToRender}>
         <Panel id="home">
           <Home
-            user={user}
             onStartSingleGame={() => goToChooseGameTypePanel(GameModes.single)}
             onStartMultiplayerGame={() => {
               setGameMode(GameModes.multi)
@@ -363,7 +363,6 @@ const App = ({ user, loadingUser, popout }: Props): JSX.Element => {
         <Panel id="results">
           {gameMode === GameModes.single && (
             <SingleplayerResults
-              user={user}
               onRetry={() => onStartGame(gameType)}
               onGoBack={goToHomePanel}
               battle={battle}
@@ -387,7 +386,7 @@ const App = ({ user, loadingUser, popout }: Props): JSX.Element => {
       </View>
       <View id="scoreboard" activePanel={activePanel} popout={popout}>
         <Panel id="scoreboard-home">
-          <ScoreboardHome user={user} />
+          <ScoreboardHome />
         </Panel>
       </View>
     </Epic>
