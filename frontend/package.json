@@ -6,7 +6,7 @@
   "homepage": "/english-fight/",
   "scripts": {
     "start": "react-scripts start",
-    "start:e2e": "cross-env HTTPS=false REACT_APP_API_HOST=http://127.0.0.1:8080 react-scripts start",
+    "start:e2e": "cross-env HTTPS=false REACT_APP_API_HOST=http://127.0.0.1:8080 REACT_APP_IS_E2E=1 react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
@@ -42,6 +42,7 @@
     "eslint-plugin-prettier": "^3.1.0",
     "eslint-plugin-react-hooks": "^4.2.0",
     "prettier": "1.18.2",
+    "rimraf": "5.0.0",
     "wait-on": "^7.0.1"
   },
   "dependencies": {

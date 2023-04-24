@@ -1,6 +1,8 @@
 export class Utils {
   static isProductionMode = process.env.NODE_ENV === 'production'
 
+  static isE2E = process.env.REACT_APP_IS_E2E === '1'
+
   /**
    * Wait for passed number of ms
    * @param time in ms

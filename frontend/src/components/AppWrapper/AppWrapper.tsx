@@ -83,7 +83,7 @@ function AppWrapper(): JSX.Element {
           </ThemeContext.Provider>
         </FeatureFlagProvider>
       </WithUser>
-      <ReactQueryDevtools initialIsOpen={false} />
+      {!Utils.isE2E && <ReactQueryDevtools initialIsOpen={false} />}
     </QueryClientProvider>
   )
 }

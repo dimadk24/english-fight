@@ -23,5 +23,5 @@ if (!Utils.isProductionMode) {
     module.hot.accept('./components/App/App', render)
   }
 
-  import('./eruda')
+  if (!Utils.isE2E) import('./eruda')
 }
