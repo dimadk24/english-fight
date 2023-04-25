@@ -34,6 +34,9 @@ SECRET_KEY = env("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env("DEBUG", cast=bool)
 
+IS_E2E_TESTS = env("IS_E2E_TESTS", cast=bool, default=False)
+SKIP_SSL = env("SKIP_SSL", cast=bool, default=False)
+
 DEBUG_SQL_QUERIES = env("DEBUG_SQL_QUERIES", cast=bool, default=False)
 
 ALLOWED_HOSTS = (
@@ -169,7 +172,7 @@ LOGIN_URL = "/admin/login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
 
-if not DEBUG:
+if not SKIP_SSL:
     # SSL related settings not suitable for local environment
     SECURE_SSL_REDIRECT = True
     SECURE_REDIRECT_EXEMPT = ["^_health$"]  # railway checks don't use https
@@ -206,6 +209,8 @@ if DEBUG:
     DEFAULT_RENDERER_CLASSES = DEFAULT_RENDERER_CLASSES + (
         "rest_framework.renderers.BrowsableAPIRenderer",
     )
+
+if DEBUG or IS_E2E_TESTS:
     DEFAULT_AUTHENTICATION_CLASSES = DEFAULT_AUTHENTICATION_CLASSES + (
         "game.authentication."
         "fake_vk_id_authentication.FakeVKIDAuthentication",
@@ -243,7 +248,7 @@ WEBSOCKET_AUTHENTICATION_CLASSES = (
     "game.authentication.vk_app_authentication.VKAppAuthentication",
 )
 
-if DEBUG:
+if DEBUG or IS_E2E_TESTS:
     WEBSOCKET_AUTHENTICATION_CLASSES = WEBSOCKET_AUTHENTICATION_CLASSES + (
         "game.authentication.fake_vk_id_authentication.FakeVKIDAuthentication",
     )
