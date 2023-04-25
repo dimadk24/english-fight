@@ -1,5 +1,5 @@
-import { createModel, ModelInstance } from '../core/model-utils'
 import tcomb from 'tcomb'
+import { createModel, ModelInstance } from '../core/model-utils'
 import { ID, Null } from '../core/tcomb-types'
 
 const attributes = {

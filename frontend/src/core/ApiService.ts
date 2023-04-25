@@ -1,11 +1,11 @@
 import { timeout } from 'promise-timeout'
 import { toCamel, toSnake } from 'convert-keys'
 import castArray from 'lodash.castarray'
+import camelCase from 'lodash.camelcase'
+import pickBy from 'lodash.pickby'
 import { getModelByName, ModelInstance, ModelType } from './model-utils'
 import { Utils } from '../utils/Utils'
 import { URLUtils } from '../utils/URLUtils'
-import camelCase from 'lodash.camelcase'
-import pickBy from 'lodash.pickby'
 
 const API_HOST = process.env.REACT_APP_API_HOST
 const isApiUsingSSL = API_HOST.includes('https://')

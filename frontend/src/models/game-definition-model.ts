@@ -1,5 +1,5 @@
-import { createModel, ModelInstance } from '../core/model-utils'
 import tcomb from 'tcomb'
+import { createModel, ModelInstance } from '../core/model-utils'
 import { ID } from '../core/tcomb-types'
 import { GameType } from '../constants'
 

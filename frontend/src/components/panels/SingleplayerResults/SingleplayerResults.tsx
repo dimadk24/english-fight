@@ -1,23 +1,23 @@
 import React, { useState } from 'react'
-import PanelHeader from '../../helpers/PanelHeader'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
 import Counter from '@vkontakte/vkui/dist/components/Counter/Counter'
 import Group from '@vkontakte/vkui/dist/components/Group/Group'
 import Header from '@vkontakte/vkui/dist/components/Header/Header'
 import Button from '@vkontakte/vkui/dist/components/Button/Button'
-import './SingleplayerResults.css'
 import Icon24Replay from '@vkontakte/icons/dist/24/replay'
-import { NOTIFICATIONS_STATUSES } from '../../../constants'
-import { AppService } from '../../../AppService'
 import { Card, CardGrid, Div } from '@vkontakte/vkui'
-import Loader from '../../helpers/Loader'
 import { Icon24Cancel } from '@vkontakte/icons'
+import PanelHeader from '../../helpers/PanelHeader'
+import Loader from '../../helpers/Loader'
+import { AppService } from '../../../AppService'
+import { NOTIFICATIONS_STATUSES } from '../../../constants'
 import { GameInstance } from '../../../models/game-model'
 import HomeButton from '../../helpers/HomeButton'
 import {
   setUserData,
   useUserQuery,
 } from '../../../core/components/WithUser/user-query'
+import './SingleplayerResults.css'
 
 type Props = {
   onGoBack(): void

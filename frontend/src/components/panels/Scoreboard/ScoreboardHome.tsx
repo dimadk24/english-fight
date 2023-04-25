@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
+import { Div, FixedLayout, Group, List, Tabs, TabsItem } from '@vkontakte/vkui'
 import PanelHeader from '../../helpers/PanelHeader'
 import { ApiService } from '../../../core/ApiService'
-import { Div, FixedLayout, Group, List, Tabs, TabsItem } from '@vkontakte/vkui'
 import { ScoreboardUser } from '../../../models/scoreboard-user-model'
 import './ScoreboardHome.css'
 import ScoreboardItem from './ScoreboardItem'

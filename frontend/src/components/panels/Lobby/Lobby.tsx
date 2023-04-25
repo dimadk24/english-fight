@@ -1,12 +1,12 @@
 import React, { useState } from 'react'
+import { Button, Div, Group, Input, Snackbar } from '@vkontakte/vkui'
+import { Icon28CopyOutline, Icon28ShareExternalOutline } from '@vkontakte/icons'
+import bridge from '@vkontakte/vk-bridge'
 import { GameDefinitionInstance } from '../../../models/game-definition-model'
 import { ApiService } from '../../../core/ApiService'
 import PanelHeader from '../../helpers/PanelHeader'
-import { Button, Div, Group, Input, Snackbar } from '@vkontakte/vkui'
-import { Icon28CopyOutline, Icon28ShareExternalOutline } from '@vkontakte/icons'
-import './Lobby.css'
-import bridge from '@vkontakte/vk-bridge'
 import Loader from '../../helpers/Loader'
+import './Lobby.css'
 
 type Props = {
   gameDefinition?: GameDefinitionInstance

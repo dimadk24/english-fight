@@ -1,6 +1,6 @@
 import React from 'react'
-import PanelHeader from '../../helpers/PanelHeader'
 import { Cell, Group, List } from '@vkontakte/vkui'
+import PanelHeader from '../../helpers/PanelHeader'
 
 type Props = {
   onCreateNew(): void

@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
-import PanelHeader from '../../helpers/PanelHeader'
 import { Button, Div, Input } from '@vkontakte/vkui'
+import PanelHeader from '../../helpers/PanelHeader'
 import './JoinMultiplayerGame.css'
 
 type Props = {

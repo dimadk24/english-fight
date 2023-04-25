@@ -53,7 +53,7 @@ module.exports = {
     ],
     // just cause non-default exports are awesome
     'import/prefer-default-export': 'off',
-    'import/order': 'off',
+    'import/order': 'warn',
     'import/extensions': [
       'error',
       'ignorePackages',

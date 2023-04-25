@@ -1,11 +1,11 @@
 import React from 'react'
-import PanelHeader from '../helpers/PanelHeader'
 import { Cell, Group, Header, List } from '@vkontakte/vkui'
-import { GAME_TYPES } from '../../constants'
 import {
   Icon28PictureOutline,
   Icon28SortHorizontalOutline,
 } from '@vkontakte/icons'
+import PanelHeader from '../helpers/PanelHeader'
+import { GAME_TYPES } from '../../constants'
 
 interface Props {
   onGoBack(): void

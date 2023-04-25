@@ -4,13 +4,13 @@ import Group from '@vkontakte/vkui/dist/components/Group/Group'
 import Cell from '@vkontakte/vkui/dist/components/Cell/Cell'
 import Div from '@vkontakte/vkui/dist/components/Div/Div'
 import Avatar from '@vkontakte/vkui/dist/components/Avatar/Avatar'
-import PanelHeader from '../helpers/PanelHeader'
 import { Link, Switch } from '@vkontakte/vkui'
+import { Icon28UserOutline, Icon28UsersOutline } from '@vkontakte/icons'
+import PanelHeader from '../helpers/PanelHeader'
 import { AppService } from '../../AppService'
 import { UserInstance } from '../../core/user-model'
 import Loader from '../helpers/Loader'
 import { NOTIFICATIONS_STATUSES } from '../../constants'
-import { Icon28UserOutline, Icon28UsersOutline } from '@vkontakte/icons'
 import {
   setUserData,
   useUserQuery,

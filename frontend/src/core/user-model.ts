@@ -1,5 +1,5 @@
-import { createModel, ModelInstance } from './model-utils'
 import tcomb from 'tcomb'
+import { createModel, ModelInstance } from './model-utils'
 import { ID, PositiveNumber } from './tcomb-types'
 import { NOTIFICATIONS_STATUSES } from '../constants'
 

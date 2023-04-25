@@ -1,4 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react'
+import useInterval from 'use-interval'
+import { Div } from '@vkontakte/vkui'
 import PanelHeader from '../../helpers/PanelHeader'
 import { BattleService } from './BattleService'
 import Question from '../../Question/Question'
@@ -7,8 +9,6 @@ import { battleActions, battleReducer, initialState } from './battle-reducer'
 import Loader from '../../helpers/Loader'
 import { GameInstance } from '../../../models/game-model'
 import { GameModes, GameType } from '../../../constants'
-import useInterval from 'use-interval'
-import { Div } from '@vkontakte/vkui'
 import './Battle.css'
 
 const WAIT_TIME_TO_SHOW_CORRECT_ANSWER = 1000
