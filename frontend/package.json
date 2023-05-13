@@ -21,6 +21,7 @@
   "author": "",
   "license": "MIT",
   "devDependencies": {
+    "@argos-ci/cli": "0.4.4",
     "@tanstack/eslint-plugin-query": "4.29.4",
     "@types/jest": "^26.0.19",
     "@types/lodash.camelcase": "^4.3.6",
