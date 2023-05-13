@@ -3,8 +3,6 @@ on: [push, workflow_dispatch]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
-permissions:
-  contents: write
 jobs:
   test:
     name: Run E2E tests
