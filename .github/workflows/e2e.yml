@@ -1,5 +1,5 @@
 name: E2E workflow
-on: [ push, workflow_dispatch ]
+on: [push, workflow_dispatch]
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
@@ -15,11 +15,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - '8888:3306'
+          - "8888:3306"
       redis:
         image: redis:7.0.7
         ports:
-          - '6379:6379'
+          - "6379:6379"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -31,8 +31,8 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install backend dependencies
         run: poetry install
@@ -45,8 +45,8 @@ jobs:
       - name: Setup node
         uses: actions/setup-node@v3
         with:
-          node-version-file: 'frontend/.nvmrc'
-          cache: 'yarn'
+          node-version-file: "frontend/.nvmrc"
+          cache: "yarn"
           cache-dependency-path: frontend/yarn.lock
 
       - name: Install frontend dependencies
@@ -82,20 +82,8 @@ jobs:
           name: playwright-trace
           path: backend/e2e-tests-results/
 
-      - name: Check that screenshots are not changed on main branch
-        if: github.ref == 'refs/heads/main'
-        run: |
-          if [ -n "$(git status --porcelain)" ]; then
-            echo "⚠ Screenshots are changed! Changes:"
-            git status --short
-            exit 1
-          else
-            echo "Screenshots are not changed"
-            exit 0
-          fi
-
-      - name: Update screenshots
-        uses: stefanzweifel/git-auto-commit-action@v4.16.0
-        if: github.ref != 'refs/heads/main'
-        with:
-          commit_message: 'chore: update screenshots'
+      - name: Upload screenshots to argos
+        working-directory: ./frontend
+        env:
+          ARGOS_TOKEN: ${{ secrets.ARGOS_TOKEN }}
+        run: npx @argos-ci/cli upload ../backend/tests/e2e/screenshots
