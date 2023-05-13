@@ -13,3 +13,4 @@ static/**
 !static/.gitkeep
 
 e2e-tests-results/
+tests/e2e/screenshots
