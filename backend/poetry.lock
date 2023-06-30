@@ -737,6 +737,22 @@ files = [
 ]
 
 [[package]]
+name = "logtail-python"
+version = "0.2.6"
+description = "Logtail.com client library"
+category = "main"
+optional = false
+python-versions = "*"
+files = [
+    {file = "logtail-python-0.2.6.tar.gz", hash = "sha256:fcf8b788f3c00acfeac4aadcfa83763962624dfbc9c970ecb03caa2daa878adc"},
+    {file = "logtail_python-0.2.6-py2.py3-none-any.whl", hash = "sha256:c13f9c0f5d48fdf35956cf2c6b0e6b069c954c5d26d92c459a42f3272aa4d37b"},
+]
+
+[package.dependencies]
+msgpack = ">=0.5.6"
+requests = ">=2.18.4"
+
+[[package]]
 name = "mccabe"
 version = "0.6.1"
 description = "McCabe checker, plugin for flake8"
@@ -1652,5 +1668,5 @@ testing = ["coverage (>=5.0.3)", "zope.event", "zope.testing"]
 
 [metadata]
 lock-version = "2.0"
-python-versions = "~3.11"
-content-hash = "9068971033fd6f6c45142750ec25f6f2ac85845f7da7d471947f32249513f230"
+python-versions = "3.11.2"
+content-hash = "0dece54542f55eae9ee944aac0a201baef6286a49928a6129629f04e0a5c49aa"

@@ -293,6 +293,26 @@ if DEBUG and DEBUG_SQL_QUERIES:
 
 if not DEBUG:
     LOGLEVEL = env('LOGLEVEL', default='info').upper()
+    LOGTAIL_TOKEN = env('LOGTAIL_TOKEN', default='')
+
+    handlers = {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'console',
+        },
+    }
+    loggers_handlers = ['console']
+
+    if LOGTAIL_TOKEN:
+        handlers.update(
+            {
+                'logtail': {
+                    'class': 'logtail.LogtailHandler',
+                    'source_token': LOGTAIL_TOKEN,
+                },
+            }
+        )
+        loggers_handlers.append('logtail')
 
     LOGGING = {
         'version': 1,
@@ -302,16 +322,11 @@ if not DEBUG:
                 'format': '%(name)-12s %(levelname)-8s %(message)s',
             },
         },
-        'handlers': {
-            'console': {
-                'class': 'logging.StreamHandler',
-                'formatter': 'console',
-            },
-        },
+        'handlers': handlers,
         'loggers': {
             '': {
                 'level': LOGLEVEL,
-                'handlers': ['console'],
+                'handlers': loggers_handlers,
             },
         },
     }
