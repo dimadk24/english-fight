@@ -4,8 +4,9 @@
 __pycache__
 db.sqlite3
 
-# Local config
+# Local configs
 .env
+docker.env
 
 *.log
 

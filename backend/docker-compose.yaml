@@ -1,0 +1,44 @@
+version: "3.8"
+
+name: enfight-api
+
+services:
+  web:
+    image: dimadk24/enfight-api:latest
+    build:
+      context: .
+      labels:
+        caddy: enfight-api.64.226.108.11.sslip.io
+        caddy.reverse_proxy: "{{upstreams 8080}}"
+    networks:
+      - caddy
+      - app
+    depends_on:
+      - mysql
+      - redis
+    pull_policy: never
+    env_file: docker.env
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app
+    ports:
+      - "3306:3306"
+    restart: unless-stopped
+
+  redis:
+    image: redis:6
+    restart: unless-stopped
+
+networks:
+  app:
+  caddy:
+    name: caddy
+    external: true
+
+volumes:
+  mysql-data:
