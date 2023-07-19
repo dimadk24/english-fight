@@ -2,15 +2,15 @@ name: Backend workflow
 on:
   push:
     paths:
-      - 'backend/**'
-      - '.github/workflows/backend.yml'
+      - "backend/**"
+      - ".github/workflows/backend.yml"
   workflow_dispatch:
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 env:
-#  Of course these env variables are used only on Github Actions
-#  prod env variables are stored in another place
+  #  Of course these env variables are used only on Github Actions
+  #  prod env variables are stored in another place
   SECRET_KEY: "398jy60_15v)f-b=rdg@hryajjfxo6hl*c0ll1+bg7ay-gjr)l"
   DATABASE_URL: "mysql://root:root@127.0.0.1:8888/enfight?charset=utf8mb4"
   REDIS_URL: "redis://127.0.0.1:6379"
@@ -45,8 +45,8 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install dependencies
         run: poetry install
@@ -68,8 +68,8 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install dependencies
         run: poetry install
@@ -91,8 +91,8 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install dependencies
         run: poetry install
@@ -110,11 +110,11 @@ jobs:
           MYSQL_ROOT_PASSWORD: root
           MYSQL_DATABASE: enfight
         ports:
-          - '8888:3306'
+          - "8888:3306"
       redis:
         image: redis:7.0.7
         ports:
-          - '6379:6379'
+          - "6379:6379"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -126,8 +126,8 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install dependencies
         run: poetry install
@@ -146,11 +146,11 @@ jobs:
         env:
           MYSQL_ROOT_PASSWORD: root
         ports:
-          - '8888:3306'
+          - "8888:3306"
       redis:
         image: redis:7.0.7
         ports:
-          - '6379:6379'
+          - "6379:6379"
     steps:
       - name: Checkout code
         uses: actions/checkout@v3
@@ -162,11 +162,71 @@ jobs:
       - name: Setup python
         uses: actions/setup-python@v4
         with:
-          python-version-file: 'backend/.python-version'
-          cache: 'poetry'
+          python-version-file: "backend/.python-version"
+          cache: "poetry"
 
       - name: Install dependencies
         run: poetry install
 
       - name: Test with pytest
         run: poetry run pytest --ignore=tests/e2e
+
+  deploy:
+    name: Deploy to production
+    runs-on: ubuntu-22.04
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup dummy env
+        run: touch docker.env
+
+      - name: Build docker image
+        run: docker compose -f docker-compose.yaml -f docker-compose.prod.yaml build
+
+      - name: Save image
+        run: docker save dimadk24/enfight-api:latest | gzip > docker-image.tar.gz
+
+      - name: Upload docker image to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          source: backend/docker-image.tar.gz
+          target: /srv/apps/enfight-api/
+          strip_components: 1
+
+      - name: Upload docker compose config to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          source: backend/docker-compose.yaml
+          target: /srv/apps/enfight-api/
+          strip_components: 1
+
+      - name: Upload docker compose prod config to server
+        uses: appleboy/scp-action@v0.1.4
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          source: backend/docker-compose.prod.yaml
+          target: /srv/apps/enfight-api/
+          strip_components: 1
+
+      - name: Update containers
+        uses: appleboy/ssh-action@v0.1.10
+        with:
+          host: ${{ secrets.SERVER_HOST }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          key: ${{ secrets.SERVER_KEY }}
+          script_stop: true
+          script: |
+            cd /srv/apps/enfight-api/
+            docker load < docker-image.tar.gz
+            docker compose -f docker-compose.yaml -f docker-compose.prod.yaml --env-file=docker.env restart
+            rm docker-image.tar.gz
+            docker system prune -f
