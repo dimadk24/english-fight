@@ -178,6 +178,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v3
 
+      - name: Setup dummy env
+        run: touch docker.env
+
       - name: Build docker image
         run: docker compose build
 
