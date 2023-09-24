@@ -1,0 +1,27 @@
+version: "3.9"
+
+services:
+  web:
+    build:
+      labels:
+        caddy: enfight-api.64.226.108.11.sslip.io
+        caddy.reverse_proxy: "{{upstreams 8080}}"
+    networks:
+      - default
+      - caddy
+    env_file: docker.env
+    restart: unless-stopped
+
+  mysql:
+    ports:
+      - "3306:3306"
+    env_file: docker.env
+    restart: unless-stopped
+
+  redis:
+    restart: unless-stopped
+
+networks:
+  caddy:
+    name: caddy
+    external: true
