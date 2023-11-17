@@ -45,7 +45,7 @@ function SingleplayerResults({
     <div className="action-buttons-wrapper">
       <HomeButton onClick={onGoBack} />
       <Button onClick={onRetry} size="l" before={<Icon24Replay />}>
-        Еще раз
+        Again
       </Button>
     </div>
   )
@@ -115,27 +115,26 @@ function SingleplayerResults({
   )
   return (
     <>
-      <PanelHeader text="Результаты" onBackButtonClick={onGoBack} />
-      <Group header={<Header mode="secondary">Статистика</Header>}>
+      <PanelHeader text="Results" onBackButtonClick={onGoBack} />
+      <Group header={<Header mode="secondary">Statistics</Header>}>
         <Cell
           indicator={<Counter mode="primary">{correctAnswersNumber}</Counter>}
         >
-          Верных ответов:
+          Correct answers:
         </Cell>
         <Cell
           indicator={<Counter mode="primary">{incorrectAnswersNumber}</Counter>}
         >
-          Неверных ответов:
+          Wrong answers:
         </Cell>
         <Cell indicator={<Counter mode="primary">{points}</Counter>}>
-          Получено очков:
+          Points:
         </Cell>
       </Group>
       {!showNotificationsRequest && navigationButtons}
       {showNotificationsRequest && notificationRequest}
       {rejectedNotifications && (
         <Div className="subscribe-later">
-          Подписаться можно на главном экране
         </Div>
       )}
       {loading && <Loader />}

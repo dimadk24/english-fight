@@ -274,7 +274,7 @@ const App = ({ popout }: Props): JSX.Element => {
       tabbar={
         <Tabbar>
           <TabbarItem
-            text="Главная"
+            text="Home"
             selected={activeStory === 'game'}
             onClick={() => {
               setActiveStory('game')
@@ -284,7 +284,7 @@ const App = ({ popout }: Props): JSX.Element => {
             <Icon28HomeOutline />
           </TabbarItem>
           <TabbarItem
-            text="Рейтинг"
+            text="Rating"
             selected={activeStory === 'scoreboard'}
             onClick={onOpenScoreboard}
           >

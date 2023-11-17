@@ -7,7 +7,7 @@ import Icon24Home from '@vkontakte/icons/dist/24/home'
 function HomeButton(props: ButtonProps): JSX.Element {
   return (
     <Button size="l" before={<Icon24Home />} {...props}>
-      Домой
+      Home
     </Button>
   )
 }
