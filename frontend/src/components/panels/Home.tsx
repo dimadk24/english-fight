@@ -57,8 +57,8 @@ const Home = ({
             before={user.photoUrl ? <Avatar src={user.photoUrl} /> : null}
             description={
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span>Количество очков - {user.score}</span>{' '}
-                <span>Место в рейтинге: {user.foreverRank}</span>
+                <span>Score - {user.score}</span>{' '}
+                <span>Place in the rating: {user.foreverRank}</span>
               </div>
             }
             multiline
@@ -78,7 +78,7 @@ const Home = ({
               onClick={onStartSingleGame}
               disabled={loading}
             >
-              Начать одиночную игру
+              Start single game
             </Button>
           </Cell>
           <Cell>
@@ -89,7 +89,7 @@ const Home = ({
               disabled={loading}
               mode="secondary"
             >
-              Играть с другом
+              Play with a friend
             </Button>
           </Cell>
         </Div>
@@ -109,14 +109,14 @@ const Home = ({
               />
             }
           >
-            Уведомления об обновлениях
+            Notifications about updates
           </Cell>
         </Group>
       )}
       <Group>
         <Cell>
           <Link href={connectDevLink} target="_blank">
-            Связь с разработчиком
+            Contact a developer
           </Link>
         </Cell>
       </Group>

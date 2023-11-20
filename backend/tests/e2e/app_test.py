@@ -41,7 +41,7 @@ def test_game(live_server, page: Page, game_type):
         page.wait_for_load_state("networkidle")  # wait for user image to load
         screenshot("home_before_game")
         start_single_game_button = page.get_by_role(
-            "button", name="Начать одиночную игру"
+            "button", name="Start single game"
         ).nth(1)
         start_single_game_button.click()
         start_single_game_button.wait_for(state="hidden")  # for screenshot
@@ -94,7 +94,7 @@ def test_game(live_server, page: Page, game_type):
 
         screenshot("results")
 
-        home_button = page.get_by_role("button", name="Домой")
+        home_button = page.get_by_role("button", name="Home")
         home_button.click()
         home_button.wait_for(state="hidden")  # for screenshot
 
@@ -102,8 +102,8 @@ def test_game(live_server, page: Page, game_type):
         expected_score = game_index * score_per_game
 
         expect(page.get_by_test_id("user-info")).to_have_text(
-            f"Дмитрий БеляевКоличество очков - {expected_score} "
-            "Место в рейтинге: 1"
+            f"Дмитрий БеляевScore - {expected_score} "
+            "Place in the rating: 1"
         )
         screenshot("home_after_game")
 

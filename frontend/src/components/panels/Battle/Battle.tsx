@@ -77,7 +77,7 @@ const Battle = ({
 
   return (
     <>
-      <PanelHeader onBackButtonClick={onGoBack} text="Игра" />
+      <PanelHeader onBackButtonClick={onGoBack} text="Game" />
       {gameStarted && activeQuestion && (
         <Question
           question={activeQuestion}
